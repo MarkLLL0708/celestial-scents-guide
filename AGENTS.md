@@ -8,3 +8,10 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+## Natal Notes architecture
+- Use TanStack file routes, including real leaf routes for every named screen, because the hosting bootstrap requires this router.
+- Keep all mock services in src/data/api.ts and browser-only state in its provider; screens must not implement persistence or real astrology.
+- Keep bilingual UI strings in the typed English/Vietnamese dictionaries and consume them through the language provider.
+- Define all visual values in the global token/style system and use shared scent controls; original SVG artwork is the only product imagery.
+- Keep the only main element in the root shell and use Radix primitives for keyboard-managed dialogs and city search.
