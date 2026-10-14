@@ -217,3 +217,9 @@ html{background:var(--bg);color:var(--text)}
 .evidence-cell{grid-template-columns:1fr}
 .evidence-cell>*+*{border-left:0;border-top:var(--rule) solid var(--border)}
 }
+@media (max-width:767px){
+.site-header .header-tools{display:flex;gap:8px}
+.site-header .header-tools .language{display:none}
+.evidence-cell .small{text-align:left}
+}
+.evidence-cell .small{text-align:left}
