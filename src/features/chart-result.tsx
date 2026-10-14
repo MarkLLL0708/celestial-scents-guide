@@ -480,7 +480,7 @@ export function AskPage({ state = "" }: { state?: string }) {
           size="icon"
           className="ask-close"
           aria-label={t.close}
-          onClick={() => navigate({ to: store.result ? "/chart/result/$id" : "/", params: store.result ? { id: store.result.id } : {} })}
+          onClick={() => window.history.back()}
         >
           <X size={20} />
         </Button>

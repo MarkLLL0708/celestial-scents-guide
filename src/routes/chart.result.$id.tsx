@@ -1,11 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { validatePreview, metadata } from "@/features/shared";
+import { ResultPage } from "@/features/chart-result";
 function Page() {
-  return (
-    <div className="narrow">
-      <p className="muted">…</p>
-    </div>
-  );
+  const { id } = Route.useParams();
+  const { state } = Route.useSearch();
+  return <ResultPage id={id} state={state ?? ""} />;
 }
 export const Route = createFileRoute("/chart/result/$id")({
   validateSearch: validatePreview,
