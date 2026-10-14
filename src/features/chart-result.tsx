@@ -116,7 +116,7 @@ export function RevealPage({ state = "" }: { state?: string }) {
   if (forced === "loading")
     return (
       <div className="chart-loading">
-        <Orb variant="sun" size="lg" />
+        <SolarSystem />
         <div className="w-full max-w-xs">
           <Skeleton />
         </div>
@@ -133,7 +133,7 @@ export function RevealPage({ state = "" }: { state?: string }) {
   return (
     <div className="reveal-screen">
       <div className="reveal-top">
-        <Orb variant="sun" size="lg" />
+        <SolarSystem />
         <HandleLine chart={chart} heading />
         <div className="reveal-traits">
           <p>{t.trait1}</p>
