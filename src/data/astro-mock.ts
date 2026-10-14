@@ -231,27 +231,29 @@ export function readingFor(topic: Topic, lang: Lang): Reading {
   };
 }
 
-const todayText: Record<Lang, { summary: string; working: string; pushing: string; protect: string }> =
-  {
-    en: {
-      summary: "a quiet day that rewards finishing one thing properly.",
-      working:
-        "Venus is easy on your moon today. Small kindness lands well. Send the message you have been drafting since sunday.",
-      pushing:
-        "Mars squares your mercury. Replies come out sharper than you mean. Read anything important twice before it goes.",
-      protect:
-        "Saturn sits on your venus. Protect the evening. You do not owe anyone a second plan after six.",
-    },
-    vi: {
-      summary: "một ngày yên tĩnh, thưởng cho việc làm xong một việc cho đàng hoàng.",
-      working:
-        "Kim tinh nhẹ nhàng với mặt trăng của bạn hôm nay. Sự tử tế nhỏ được đón nhận. Gửi tin nhắn bạn đã soạn từ chủ nhật.",
-      pushing:
-        "Hỏa tinh vuông góc thủy tinh của bạn. Câu trả lời sắc hơn bạn muốn. Đọc lại điều quan trọng hai lần trước khi gửi.",
-      protect:
-        "Thổ tinh nằm trên kim tinh của bạn. Bảo vệ buổi tối. Sau sáu giờ bạn không nợ ai kế hoạch thứ hai.",
-    },
-  };
+const todayText: Record<
+  Lang,
+  { summary: string; working: string; pushing: string; protect: string }
+> = {
+  en: {
+    summary: "a quiet day that rewards finishing one thing properly.",
+    working:
+      "Venus is easy on your moon today. Small kindness lands well. Send the message you have been drafting since sunday.",
+    pushing:
+      "Mars squares your mercury. Replies come out sharper than you mean. Read anything important twice before it goes.",
+    protect:
+      "Saturn sits on your venus. Protect the evening. You do not owe anyone a second plan after six.",
+  },
+  vi: {
+    summary: "một ngày yên tĩnh, thưởng cho việc làm xong một việc cho đàng hoàng.",
+    working:
+      "Kim tinh nhẹ nhàng với mặt trăng của bạn hôm nay. Sự tử tế nhỏ được đón nhận. Gửi tin nhắn bạn đã soạn từ chủ nhật.",
+    pushing:
+      "Hỏa tinh vuông góc thủy tinh của bạn. Câu trả lời sắc hơn bạn muốn. Đọc lại điều quan trọng hai lần trước khi gửi.",
+    protect:
+      "Thổ tinh nằm trên kim tinh của bạn. Bảo vệ buổi tối. Sau sáu giờ bạn không nợ ai kế hoạch thứ hai.",
+  },
+};
 
 export function todayFor(date: string, lang: Lang): Today {
   const x = todayText[lang];

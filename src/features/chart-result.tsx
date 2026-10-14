@@ -12,7 +12,14 @@ import { demoChart } from "@/data/seed";
 import { ritualForTheme, themeForTopic, topics } from "@/data/astro-mock";
 import type { Aspect, Chart, Planet, Theme, Topic, Transit } from "@/data/types";
 import { PlacementBadge, PlacementRow, ElementBar, Skeleton } from "@/components/scent/controls";
-import { Orb, OrbitDiagram, NoteIcon, CellGrid, Cell, type NoteName } from "@/components/scent/cosmos";
+import {
+  Orb,
+  OrbitDiagram,
+  NoteIcon,
+  CellGrid,
+  Cell,
+  type NoteName,
+} from "@/components/scent/cosmos";
 import { StateMessage } from "./shared";
 
 export const glyphs: Record<Planet, string> = {
@@ -178,7 +185,13 @@ export function ResultPage({ id, state = "" }: { id: string; state?: string }) {
     { p: "mars", sign: chart.mars, label: t.mars, text: t.marsReading },
     { p: "mercury", sign: chart.mercury, label: t.mercury, text: t.mercuryReading },
     { p: "jupiter", sign: chart.jupiter, label: t.jupiter, text: t.jupiterReading, tag: t.tagLuck },
-    { p: "saturn", sign: chart.saturn, label: t.saturn, text: t.saturnReading, tag: t.tagDiscipline },
+    {
+      p: "saturn",
+      sign: chart.saturn,
+      label: t.saturn,
+      text: t.saturnReading,
+      tag: t.tagDiscipline,
+    },
   ];
   const teasers: Record<Topic, string> = {
     you: t.teaserYou,
@@ -294,11 +307,7 @@ export function ReadingPage({
         <>
           <h1 className="xl">{q.data.title}</h1>
           <HandleLine chart={demoChart} />
-          <Accordion.Root
-            type="multiple"
-            defaultValue={["s0"]}
-            className="reading-accordion"
-          >
+          <Accordion.Root type="multiple" defaultValue={["s0"]} className="reading-accordion">
             {q.data.sections.map((s, i) => (
               <Accordion.Item key={s.title} value={`s${i}`} className="reading-item">
                 <Accordion.Header>
@@ -464,7 +473,13 @@ const questionKeys: Record<Theme, (keyof Dictionary)[]> = {
 
 export function AspectGlyph({ aspect }: { aspect: Aspect }) {
   return (
-    <svg className="aspect-glyph" viewBox="0 0 48 48" fill="none" stroke="currentColor" aria-hidden="true">
+    <svg
+      className="aspect-glyph"
+      viewBox="0 0 48 48"
+      fill="none"
+      stroke="currentColor"
+      aria-hidden="true"
+    >
       {aspect === "square" && <rect x="12" y="12" width="24" height="24" />}
       {aspect === "trine" && <path d="M24 10L38 36H10Z" />}
       {aspect === "sextile" && <path d="M24 8V40M10 16L38 32M10 32L38 16" />}
@@ -625,7 +640,11 @@ export function AskPage({ state = "" }: { state?: string }) {
           onChange={(e) => setQuestion(e.target.value)}
           placeholder={t.askPlaceholder}
         />
-        <Button type="submit" className="ask-submit" disabled={!question.trim() || phase === "loading"}>
+        <Button
+          type="submit"
+          className="ask-submit"
+          disabled={!question.trim() || phase === "loading"}
+        >
           {t.askButton}
         </Button>
       </form>

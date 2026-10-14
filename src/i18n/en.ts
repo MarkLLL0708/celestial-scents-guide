@@ -9,7 +9,8 @@ export const en = {
   language: "language",
   eyebrow: "a fragrance written in your stars",
   hero: "your sky, read properly.",
-  subline: "give us the date, time and place you were born. we read the whole chart, not just the sun sign, and tell you what today looks like.",
+  subline:
+    "give us the date, time and place you were born. we read the whole chart, not just the sun sign, and tell you what today looks like.",
   readChart: "READ MY CHART",
   how: "how it works",
   how1: "tell us when and where you were born.",
@@ -424,7 +425,8 @@ export const en = {
   aspectOpposite: "opposite",
   transitFormat: "transiting {a} {aspect} natal {b}",
   jupiterReading: "jupiter in sagittarius: luck comes through travel, teachers and strangers.",
-  saturnReading: "saturn in pisces: discipline arrives late, and properly, once the edges are written down.",
+  saturnReading:
+    "saturn in pisces: discipline arrives late, and properly, once the edges are written down.",
   elementsTitle: "ELEMENT BALANCE",
   readMore: "READ MORE",
   topicYou: "you",
@@ -480,7 +482,8 @@ export const en = {
   qLuck5: "what is jupiter doing for me now?",
   qLuck6: "who should i call back?",
   ritualsTitle: "rituals",
-  ritualsIntro: "small, specific, a few minutes each. every ritual works with any perfume you already own.",
+  ritualsIntro:
+    "small, specific, a few minutes each. every ritual works with any perfume you already own.",
   ritualsError: "the rituals didn't load. try again.",
   stepsLabel: "STEPS",
   timingLabel: "WHEN",

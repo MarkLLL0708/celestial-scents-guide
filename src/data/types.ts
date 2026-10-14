@@ -75,14 +75,7 @@ export interface CartItem {
   quantity: number;
 }
 export type Planet =
-  | "sun"
-  | "moon"
-  | "rising"
-  | "venus"
-  | "mars"
-  | "mercury"
-  | "jupiter"
-  | "saturn";
+  "sun" | "moon" | "rising" | "venus" | "mars" | "mercury" | "jupiter" | "saturn";
 export type Aspect = "conjunct" | "sextile" | "square" | "trine" | "opposite";
 export type Theme = "self" | "love" | "work" | "luck";
 export type Topic = "you" | "love" | "work" | "luck";

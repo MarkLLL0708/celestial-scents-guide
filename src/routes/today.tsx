@@ -8,6 +8,7 @@ function Page() {
 }
 export const Route = createFileRoute("/today")({
   validateSearch: validatePreview,
-  head: () => metadata("today", "What is working, what is pushing back, and what to protect today."),
+  head: () =>
+    metadata("today", "What is working, what is pushing back, and what to protect today."),
   component: Page,
 });

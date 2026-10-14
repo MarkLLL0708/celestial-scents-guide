@@ -10,7 +10,8 @@ export const vi: Dictionary = {
   language: "ngôn ngữ",
   eyebrow: "mùi hương được viết trong các vì sao",
   hero: "bầu trời của bạn, được đọc cho đàng hoàng.",
-  subline: "cho chúng tôi ngày, giờ và nơi bạn sinh ra. chúng tôi đọc cả bản đồ, không chỉ cung mặt trời, và cho bạn biết hôm nay thế nào.",
+  subline:
+    "cho chúng tôi ngày, giờ và nơi bạn sinh ra. chúng tôi đọc cả bản đồ, không chỉ cung mặt trời, và cho bạn biết hôm nay thế nào.",
   readChart: "XEM BẢN ĐỒ SAO",
   how: "cách hoạt động",
   how1: "cho chúng tôi biết bạn sinh ra khi nào và ở đâu.",
@@ -481,7 +482,8 @@ export const vi: Dictionary = {
   qLuck5: "mộc tinh đang làm gì cho tôi?",
   qLuck6: "tôi nên gọi lại cho ai?",
   ritualsTitle: "nghi thức",
-  ritualsIntro: "nhỏ, cụ thể, mỗi cái vài phút. nghi thức nào cũng dùng được với mùi hương bạn đang có.",
+  ritualsIntro:
+    "nhỏ, cụ thể, mỗi cái vài phút. nghi thức nào cũng dùng được với mùi hương bạn đang có.",
   ritualsError: "các nghi thức chưa tải được. thử lại.",
   stepsLabel: "CÁC BƯỚC",
   timingLabel: "KHI NÀO",

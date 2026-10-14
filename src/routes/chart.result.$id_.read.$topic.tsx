@@ -14,6 +14,7 @@ export const Route = createFileRoute("/chart/result/$id_/read/$topic")({
   beforeLoad: ({ params }) => {
     if (!topics.includes(params.topic as Topic)) throw notFound();
   },
-  head: ({ params }) => metadata(`reading: ${params.topic}`, "A long reading, written for your whole chart."),
+  head: ({ params }) =>
+    metadata(`reading: ${params.topic}`, "A long reading, written for your whole chart."),
   component: Page,
 });

@@ -196,7 +196,11 @@ export async function getChartById(id: string): Promise<ChartRecord> {
   const r = saved.find((x) => x.id === id);
   return wait({ id, name: r?.profile.name || "An", chart: r?.chart ?? demoChart });
 }
-export async function getReading(chartId: string, topic: Topic, lang: "en" | "vi"): Promise<Reading> {
+export async function getReading(
+  chartId: string,
+  topic: Topic,
+  lang: "en" | "vi",
+): Promise<Reading> {
   void chartId;
   if (!topics.includes(topic)) throw new Error("NOT_FOUND");
   return wait(readingFor(topic, lang));
