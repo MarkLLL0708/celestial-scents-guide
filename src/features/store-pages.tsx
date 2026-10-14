@@ -13,12 +13,13 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/i18n/provider";
+import { LanguageToggle } from "@/components/scent/shell";
 import { useStore } from "@/data/context";
 import * as api from "@/data/api";
 import { perfumeQuery, productQuery, cartQuery, savedQuery } from "@/data/queries";
 import { ProductCard, Notes, AddButton } from "@/components/scent/product";
 import { Bottle, ChartWheel } from "@/components/scent/artwork";
-import { UnderlineInput, Skeleton } from "@/components/scent/controls";
+import { UnderlineInput, Skeleton, SectionHeader } from "@/components/scent/controls";
 import { ScentDialog } from "@/components/scent/dialog";
 import { StateMessage, ProductSkeletons } from "./shared";
 import type { Perfume } from "@/data/types";
@@ -386,7 +387,7 @@ export function LoginPage({ state = "" }: { state?: string }) {
             return;
           }
           store.setUser(true);
-          navigate({ to: "/saved" });
+          navigate({ to: "/you" });
         }}
       >
         <UnderlineInput
@@ -409,14 +410,13 @@ export function LoginPage({ state = "" }: { state?: string }) {
     </div>
   );
 }
-export function SavedPage({ state = "" }: { state?: string }) {
+export function SavedList({ state = "" }: { state?: string }) {
   const { t, word } = useLanguage();
   const { user } = useStore();
   const { data } = useSuspenseQuery(savedQuery());
   const [forced, setForced] = useState(state);
   return (
-    <div className="narrow">
-      <h1 className="xl">{t.navSaved}</h1>
+    <div>
       {forced === "loading" ? (
         <div className="section">
           <Skeleton />
@@ -456,6 +456,35 @@ export function SavedPage({ state = "" }: { state?: string }) {
           ))}
         </div>
       )}
+    </div>
+  );
+}
+export function YouPage({ state = "" }: { state?: string }) {
+  const { t } = useLanguage();
+  const { user, setUser } = useStore();
+  return (
+    <div className="narrow">
+      <h1 className="xl">{t.youTitle}</h1>
+      <section className="section">
+        <SectionHeader>{t.myCharts}</SectionHeader>
+        <SavedList state={state} />
+      </section>
+      <section className="section">
+        <SectionHeader>{t.language}</SectionHeader>
+        <LanguageToggle />
+      </section>
+      <section className="section stack">
+        <p className="small muted">{user ? t.signedIn : t.signedOut}</p>
+        {user ? (
+          <Button variant="secondary" onClick={() => setUser(false)}>
+            {t.logout}
+          </Button>
+        ) : (
+          <Button asChild>
+            <Link to="/login">{t.login}</Link>
+          </Button>
+        )}
+      </section>
     </div>
   );
 }

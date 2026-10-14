@@ -1,11 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { validatePreview, metadata } from "@/features/shared";
+import { ChartFlow } from "@/features/chart-flow";
 function Page() {
-  return (
-    <div className="narrow">
-      <p className="muted">…</p>
-    </div>
-  );
+  const { step } = Route.useSearch();
+  return <ChartFlow step={step} />;
 }
 export const Route = createFileRoute("/chart/new")({
   validateSearch: validatePreview,
