@@ -25,6 +25,7 @@ import { Route as RitualsIndexRouteImport } from './routes/rituals.index'
 import { Route as RitualsIdRouteImport } from './routes/rituals.$id'
 import { Route as ShopIdRouteImport } from './routes/shop.$id'
 import { Route as ChartResultIdRouteImport } from './routes/chart.result.$id'
+import { Route as ChartResultIdShelfRouteImport } from './routes/chart.result.$id_.shelf'
 import { Route as ChartResultIdReadTopicRouteImport } from './routes/chart.result.$id_.read.$topic'
 
 const IndexRoute = IndexRouteImport.update({
@@ -107,6 +108,11 @@ const ChartResultIdRoute = ChartResultIdRouteImport.update({
   path: '/chart/result/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ChartResultIdShelfRoute = ChartResultIdShelfRouteImport.update({
+  id: '/chart/result/$id_/shelf',
+  path: '/chart/result/$id/shelf',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ChartResultIdReadTopicRoute = ChartResultIdReadTopicRouteImport.update({
   id: '/chart/result/$id_/read/$topic',
   path: '/chart/result/$id/read/$topic',
@@ -130,6 +136,7 @@ export interface FileRoutesByFullPath {
   '/shop/$id': typeof ShopIdRoute
   '/rituals/': typeof RitualsIndexRoute
   '/chart/result/$id': typeof ChartResultIdRoute
+  '/chart/result/$id/shelf': typeof ChartResultIdShelfRoute
   '/chart/result/$id/read/$topic': typeof ChartResultIdReadTopicRoute
 }
 export interface FileRoutesByTo {
@@ -149,6 +156,7 @@ export interface FileRoutesByTo {
   '/shop/$id': typeof ShopIdRoute
   '/rituals': typeof RitualsIndexRoute
   '/chart/result/$id': typeof ChartResultIdRoute
+  '/chart/result/$id/shelf': typeof ChartResultIdShelfRoute
   '/chart/result/$id/read/$topic': typeof ChartResultIdReadTopicRoute
 }
 export interface FileRoutesById {
@@ -169,6 +177,7 @@ export interface FileRoutesById {
   '/shop/$id': typeof ShopIdRoute
   '/rituals/': typeof RitualsIndexRoute
   '/chart/result/$id': typeof ChartResultIdRoute
+  '/chart/result/$id_/shelf': typeof ChartResultIdShelfRoute
   '/chart/result/$id_/read/$topic': typeof ChartResultIdReadTopicRoute
 }
 export interface FileRouteTypes {
@@ -190,6 +199,7 @@ export interface FileRouteTypes {
     | '/shop/$id'
     | '/rituals/'
     | '/chart/result/$id'
+    | '/chart/result/$id/shelf'
     | '/chart/result/$id/read/$topic'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -209,6 +219,7 @@ export interface FileRouteTypes {
     | '/shop/$id'
     | '/rituals'
     | '/chart/result/$id'
+    | '/chart/result/$id/shelf'
     | '/chart/result/$id/read/$topic'
   id:
     | '__root__'
@@ -228,6 +239,7 @@ export interface FileRouteTypes {
     | '/shop/$id'
     | '/rituals/'
     | '/chart/result/$id'
+    | '/chart/result/$id_/shelf'
     | '/chart/result/$id_/read/$topic'
   fileRoutesById: FileRoutesById
 }
@@ -247,6 +259,7 @@ export interface RootRouteChildren {
   RitualsIdRoute: typeof RitualsIdRoute
   RitualsIndexRoute: typeof RitualsIndexRoute
   ChartResultIdRoute: typeof ChartResultIdRoute
+  ChartResultIdShelfRoute: typeof ChartResultIdShelfRoute
   ChartResultIdReadTopicRoute: typeof ChartResultIdReadTopicRoute
 }
 
@@ -364,6 +377,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ChartResultIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/chart/result/$id_/shelf': {
+      id: '/chart/result/$id_/shelf'
+      path: '/chart/result/$id/shelf'
+      fullPath: '/chart/result/$id/shelf'
+      preLoaderRoute: typeof ChartResultIdShelfRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/chart/result/$id_/read/$topic': {
       id: '/chart/result/$id_/read/$topic'
       path: '/chart/result/$id/read/$topic'
@@ -400,6 +420,7 @@ const rootRouteChildren: RootRouteChildren = {
   RitualsIdRoute: RitualsIdRoute,
   RitualsIndexRoute: RitualsIndexRoute,
   ChartResultIdRoute: ChartResultIdRoute,
+  ChartResultIdShelfRoute: ChartResultIdShelfRoute,
   ChartResultIdReadTopicRoute: ChartResultIdReadTopicRoute,
 }
 export const routeTree = rootRouteImport
