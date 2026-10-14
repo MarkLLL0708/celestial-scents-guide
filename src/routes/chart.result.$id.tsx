@@ -8,6 +8,6 @@ function Page() {
 }
 export const Route = createFileRoute("/chart/result/$id")({
   validateSearch: validatePreview,
-  head: () => metadata("your chart", "Your chart and perfume matches."),
+  head: () => metadata("your sky", "Your placements, element balance and readings."),
   component: Page,
 });

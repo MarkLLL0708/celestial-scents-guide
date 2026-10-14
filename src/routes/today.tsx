@@ -1,22 +1,13 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { metadata } from "@/features/shared";
-import { useLanguage } from "@/i18n/provider";
-import { Orb } from "@/components/scent/cosmos";
+import { createFileRoute } from "@tanstack/react-router";
+import { validatePreview, metadata } from "@/features/shared";
+import { TodayPage } from "@/features/chart-result";
 
-function Today() {
-  const { t } = useLanguage();
-  return (
-    <div className="narrow result-simple">
-      <Orb variant="sun" size="md" />
-      <h1 className="question">{t.todayTitle}</h1>
-      <Link to="/chart/result/$id" params={{ id: "demo" }} className="label muted underline">
-        {t.back}
-      </Link>
-    </div>
-  );
+function Page() {
+  const { state } = Route.useSearch();
+  return <TodayPage state={state ?? ""} />;
 }
-
 export const Route = createFileRoute("/today")({
-  head: () => metadata("today", "Your sky for today."),
-  component: Today,
+  validateSearch: validatePreview,
+  head: () => metadata("today", "What is working, what is pushing back, and what to protect today."),
+  component: Page,
 });
