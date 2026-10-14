@@ -17,6 +17,8 @@ import { LanguageProvider, useLanguage } from "@/i18n/provider";
 import { StoreProvider } from "@/data/context";
 import { Header, Footer, Toast, TabBar } from "@/components/scent/shell";
 import { Button } from "@/components/ui/button";
+import { StarField } from "@/components/scent/cosmos";
+import { themeFor, bareRoutes } from "@/lib/theme";
 
 function NotFoundComponent() {
   const { t } = useLanguage();
@@ -108,8 +110,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 });
 
 function RootShell({ children }: { children: ReactNode }) {
+  const path = useRouterState({ select: (s) => s.location.pathname });
   return (
-    <html lang="en">
+    <html lang="en" data-theme={themeFor(path)}>
       <head>
         <HeadContent />
       </head>
@@ -121,11 +124,11 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
-const bareRoutes = ["/chart/loading", "/chart/reveal", "/ask"];
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const path = useRouterState({ select: (s) => s.location.pathname });
   const bare = bareRoutes.includes(path);
+  const theme = themeFor(path);
   useEffect(() => {
     document.body.classList.toggle("bare", bare);
     return () => document.body.classList.remove("bare");
@@ -135,13 +138,16 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <LanguageProvider>
         <StoreProvider>
-          {!bare && <Header />}
-          <main id="main-content">
-            <Outlet />
-          </main>
-          {!bare && <Footer />}
-          {!bare && <TabBar />}
-          <Toast />
+          <div className="theme-shell" data-theme={theme}>
+            {theme === "dark" && <StarField />}
+            {!bare && <Header />}
+            <main id="main-content">
+              <Outlet />
+            </main>
+            {!bare && <Footer />}
+            {!bare && <TabBar />}
+            <Toast />
+          </div>
         </StoreProvider>
       </LanguageProvider>
     </QueryClientProvider>

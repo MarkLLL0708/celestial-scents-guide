@@ -18,6 +18,15 @@ import {
 } from "@/components/scent/controls";
 import { ProductCard, AddButton } from "@/components/scent/product";
 import { Logo, ChartWheel, Bottle } from "@/components/scent/artwork";
+import {
+  StarField,
+  Orb,
+  OrbitDiagram,
+  NoteIcon,
+  CellGrid,
+  Cell,
+  noteNames,
+} from "@/components/scent/cosmos";
 import { CrescentSpinner } from "./chart-loading";
 import { FeedbackRow, EvidenceCell, GrainDisc } from "./chart-result";
 import { demoChart, perfumes } from "@/data/seed";
@@ -43,18 +52,13 @@ const demoProfile: BirthProfile = {
   country: "Vietnam",
 };
 
-export function DesignPage() {
+function Library() {
   const { t } = useLanguage();
   const [profile, setProfile] = useState(demoProfile);
   const [city, setCity] = useState("Hanoi");
   const p = perfumes[0];
-
   return (
-    <div className="narrow design-page">
-      <p className="label muted">{t.designIntro}</p>
-      <h1 className="xl">{t.designTitle}</h1>
-      <LanguageToggle />
-
+    <>
       <SectionHeader>{t.button}</SectionHeader>
       <Row label={`${t.primary} / ${t.default}`}>
         <Button>{t.next}</Button>
@@ -196,21 +200,71 @@ export function DesignPage() {
         </div>
       </Row>
 
-      <SectionHeader>{t.inverted}</SectionHeader>
-      <div className="ink design-invert">
-        <Row label={t.button}>
-          <Button>{t.continue}</Button>
-        </Row>
-        <Row label="spinner">
-          <CrescentSpinner />
-        </Row>
-        <Row label="grain disc">
-          <GrainDisc />
-        </Row>
-        <Row label={t.productCard}>
-          <ProductCard perfume={p} variant="signature" score={94} compact />
-        </Row>
-      </div>
+      <SectionHeader>art</SectionHeader>
+      <Row label="star field">
+        <div className="design-stars">
+          <StarField />
+        </div>
+      </Row>
+      <Row label="orb / sun · moon · disc">
+        <div className="design-icons">
+          <Orb variant="sun" size="sm" />
+          <Orb variant="moon" size="md" />
+          <Orb variant="disc" size="sm" />
+        </div>
+      </Row>
+      <Row label="orbit diagram">
+        <OrbitDiagram />
+      </Row>
+      <Row label="note icons">
+        <div className="design-icons">
+          {noteNames.map((n) => {
+            const key = `note${n[0].toUpperCase()}${n.slice(1)}` as const;
+            return (
+              <figure key={n}>
+                <NoteIcon name={n} label={t[key as keyof typeof t] as string} />
+                <figcaption className="label muted">
+                  {t[key as keyof typeof t] as string}
+                </figcaption>
+              </figure>
+            );
+          })}
+        </div>
+      </Row>
+      <Row label="cell grid">
+        <CellGrid>
+          <Cell>
+            <p className="label">{t.youAsked}</p>
+          </Cell>
+          <Cell>
+            <p>{t.askEvidence}</p>
+          </Cell>
+          <Cell wide>
+            <p>{t.askAnswer}</p>
+          </Cell>
+        </CellGrid>
+      </Row>
+    </>
+  );
+}
+
+export function DesignPage() {
+  const { t } = useLanguage();
+
+  return (
+    <div className="narrow design-page">
+      <p className="label muted">{t.designIntro}</p>
+      <h1 className="xl">{t.designTitle}</h1>
+      <LanguageToggle />
+
+      <section className="design-theme" data-theme="light">
+        <p className="label">{t.themeLight}</p>
+        <Library />
+      </section>
+      <section className="design-theme" data-theme="dark">
+        <p className="label">{t.themeDark}</p>
+        <Library />
+      </section>
     </div>
   );
 }
