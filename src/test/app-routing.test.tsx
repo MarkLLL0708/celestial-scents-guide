@@ -18,7 +18,7 @@ describe("App routing", () => {
     const router = createRouter({ routeTree, context: { queryClient: new QueryClient() } });
     const product = router.routesById["/shop/$id"];
     expect(product?.fullPath).toBe("/shop/$id");
-    expect(product?.parentRoute.id).toBe(rootRouteId);
-    expect(router.routesById["/shop/"]?.parentRoute.id).toBe(rootRouteId);
+    expect(product?.parentRoute.id).toBe("/shop");
+    expect(router.routesById["/shop/"]?.parentRoute.id).toBe("/shop");
   });
 });

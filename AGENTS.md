@@ -20,4 +20,4 @@
 - All routes use the same theme from themeFor(), applied to the document and shell during SSR; global font aliases share the navigation family so navigation cannot introduce theme or typography flashes.
 - Mock astrology copy (readings, today, ask answers, rituals) lives in src/data/astro-mock.ts and reaches screens only through api.ts, so a real engine can replace one file.
 - Soft-sell limits live in src/lib/sellRules.ts (tested); ProductCard hides itself on no-sell screens, so new screens inherit the rule.
-- Shop listings use an index route, not a parent screen, so product leaf routes render their own content; keep filtered results visible with React transitions while replacement data loads.
+- Shop uses an Outlet-only parent with separate index listing and product leaves, so details render correctly; keep filtered results visible with React transitions while replacement data loads.
