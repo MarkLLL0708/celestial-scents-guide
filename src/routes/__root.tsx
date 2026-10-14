@@ -120,19 +120,26 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
+const bareRoutes = ["/chart/loading", "/chart/reveal", "/ask"];
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const path = useRouterState({ select: (s) => s.location.pathname });
+  const bare = bareRoutes.includes(path);
+  useEffect(() => {
+    document.body.classList.toggle("bare", bare);
+    return () => document.body.classList.remove("bare");
+  }, [bare]);
 
   return (
     <QueryClientProvider client={queryClient}>
       <LanguageProvider>
         <StoreProvider>
-          <Header />
+          {!bare && <Header />}
           <main id="main-content">
             <Outlet />
           </main>
-          <Footer />
-          <TabBar />
+          {!bare && <Footer />}
+          {!bare && <TabBar />}
           <Toast />
         </StoreProvider>
       </LanguageProvider>
