@@ -99,9 +99,9 @@ const ShopIndexRoute = ShopIndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const ShopIdRoute = ShopIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => ShopRoute,
+  id: '/shop/$id',
+  path: '/shop/$id',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ChartResultIdRoute = ChartResultIdRouteImport.update({
   id: '/chart/result/$id',
@@ -256,6 +256,7 @@ export interface RootRouteChildren {
   ChartNewRoute: typeof ChartNewRoute
   ChartRevealRoute: typeof ChartRevealRoute
   RitualsIdRoute: typeof RitualsIdRoute
+  ShopIdRoute: typeof ShopIdRoute
   RitualsIndexRoute: typeof RitualsIndexRoute
   ShopIndexRoute: typeof ShopIndexRoute
   ChartResultIdRoute: typeof ChartResultIdRoute
@@ -365,10 +366,10 @@ declare module '@tanstack/react-router' {
     }
     '/shop/$id': {
       id: '/shop/$id'
-      path: '/$id'
+      path: '/shop/$id'
       fullPath: '/shop/$id'
       preLoaderRoute: typeof ShopIdRouteImport
-      parentRoute: typeof ShopRoute
+      parentRoute: typeof rootRouteImport
     }
     '/chart/result/$id': {
       id: '/chart/result/$id'
@@ -407,6 +408,7 @@ const rootRouteChildren: RootRouteChildren = {
   ChartNewRoute: ChartNewRoute,
   ChartRevealRoute: ChartRevealRoute,
   RitualsIdRoute: RitualsIdRoute,
+  ShopIdRoute: ShopIdRoute,
   RitualsIndexRoute: RitualsIndexRoute,
   ShopIndexRoute: ShopIndexRoute,
   ChartResultIdRoute: ChartResultIdRoute,
