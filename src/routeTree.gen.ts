@@ -21,8 +21,11 @@ import { Route as YouRouteImport } from './routes/you'
 import { Route as ChartLoadingRouteImport } from './routes/chart.loading'
 import { Route as ChartNewRouteImport } from './routes/chart.new'
 import { Route as ChartRevealRouteImport } from './routes/chart.reveal'
+import { Route as RitualsIndexRouteImport } from './routes/rituals.index'
+import { Route as RitualsIdRouteImport } from './routes/rituals.$id'
 import { Route as ShopIdRouteImport } from './routes/shop.$id'
 import { Route as ChartResultIdRouteImport } from './routes/chart.result.$id'
+import { Route as ChartResultIdReadTopicRouteImport } from './routes/chart.result.$id_.read.$topic'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -84,6 +87,16 @@ const ChartRevealRoute = ChartRevealRouteImport.update({
   path: '/chart/reveal',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RitualsIndexRoute = RitualsIndexRouteImport.update({
+  id: '/rituals/',
+  path: '/rituals/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RitualsIdRoute = RitualsIdRouteImport.update({
+  id: '/rituals/$id',
+  path: '/rituals/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ShopIdRoute = ShopIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -92,6 +105,11 @@ const ShopIdRoute = ShopIdRouteImport.update({
 const ChartResultIdRoute = ChartResultIdRouteImport.update({
   id: '/chart/result/$id',
   path: '/chart/result/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChartResultIdReadTopicRoute = ChartResultIdReadTopicRouteImport.update({
+  id: '/chart/result/$id_/read/$topic',
+  path: '/chart/result/$id/read/$topic',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -108,8 +126,11 @@ export interface FileRoutesByFullPath {
   '/chart/loading': typeof ChartLoadingRoute
   '/chart/new': typeof ChartNewRoute
   '/chart/reveal': typeof ChartRevealRoute
+  '/rituals/$id': typeof RitualsIdRoute
   '/shop/$id': typeof ShopIdRoute
+  '/rituals/': typeof RitualsIndexRoute
   '/chart/result/$id': typeof ChartResultIdRoute
+  '/chart/result/$id/read/$topic': typeof ChartResultIdReadTopicRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -124,8 +145,11 @@ export interface FileRoutesByTo {
   '/chart/loading': typeof ChartLoadingRoute
   '/chart/new': typeof ChartNewRoute
   '/chart/reveal': typeof ChartRevealRoute
+  '/rituals/$id': typeof RitualsIdRoute
   '/shop/$id': typeof ShopIdRoute
+  '/rituals': typeof RitualsIndexRoute
   '/chart/result/$id': typeof ChartResultIdRoute
+  '/chart/result/$id/read/$topic': typeof ChartResultIdReadTopicRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -141,8 +165,11 @@ export interface FileRoutesById {
   '/chart/loading': typeof ChartLoadingRoute
   '/chart/new': typeof ChartNewRoute
   '/chart/reveal': typeof ChartRevealRoute
+  '/rituals/$id': typeof RitualsIdRoute
   '/shop/$id': typeof ShopIdRoute
+  '/rituals/': typeof RitualsIndexRoute
   '/chart/result/$id': typeof ChartResultIdRoute
+  '/chart/result/$id_/read/$topic': typeof ChartResultIdReadTopicRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -159,8 +186,11 @@ export interface FileRouteTypes {
     | '/chart/loading'
     | '/chart/new'
     | '/chart/reveal'
+    | '/rituals/$id'
     | '/shop/$id'
+    | '/rituals/'
     | '/chart/result/$id'
+    | '/chart/result/$id/read/$topic'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -175,8 +205,11 @@ export interface FileRouteTypes {
     | '/chart/loading'
     | '/chart/new'
     | '/chart/reveal'
+    | '/rituals/$id'
     | '/shop/$id'
+    | '/rituals'
     | '/chart/result/$id'
+    | '/chart/result/$id/read/$topic'
   id:
     | '__root__'
     | '/'
@@ -191,8 +224,11 @@ export interface FileRouteTypes {
     | '/chart/loading'
     | '/chart/new'
     | '/chart/reveal'
+    | '/rituals/$id'
     | '/shop/$id'
+    | '/rituals/'
     | '/chart/result/$id'
+    | '/chart/result/$id_/read/$topic'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -208,7 +244,10 @@ export interface RootRouteChildren {
   ChartLoadingRoute: typeof ChartLoadingRoute
   ChartNewRoute: typeof ChartNewRoute
   ChartRevealRoute: typeof ChartRevealRoute
+  RitualsIdRoute: typeof RitualsIdRoute
+  RitualsIndexRoute: typeof RitualsIndexRoute
   ChartResultIdRoute: typeof ChartResultIdRoute
+  ChartResultIdReadTopicRoute: typeof ChartResultIdReadTopicRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -297,6 +336,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ChartRevealRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/rituals/': {
+      id: '/rituals/'
+      path: '/rituals'
+      fullPath: '/rituals/'
+      preLoaderRoute: typeof RitualsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rituals/$id': {
+      id: '/rituals/$id'
+      path: '/rituals/$id'
+      fullPath: '/rituals/$id'
+      preLoaderRoute: typeof RitualsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/shop/$id': {
       id: '/shop/$id'
       path: '/$id'
@@ -309,6 +362,13 @@ declare module '@tanstack/react-router' {
       path: '/chart/result/$id'
       fullPath: '/chart/result/$id'
       preLoaderRoute: typeof ChartResultIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/chart/result/$id_/read/$topic': {
+      id: '/chart/result/$id_/read/$topic'
+      path: '/chart/result/$id/read/$topic'
+      fullPath: '/chart/result/$id/read/$topic'
+      preLoaderRoute: typeof ChartResultIdReadTopicRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -337,7 +397,10 @@ const rootRouteChildren: RootRouteChildren = {
   ChartLoadingRoute: ChartLoadingRoute,
   ChartNewRoute: ChartNewRoute,
   ChartRevealRoute: ChartRevealRoute,
+  RitualsIdRoute: RitualsIdRoute,
+  RitualsIndexRoute: RitualsIndexRoute,
   ChartResultIdRoute: ChartResultIdRoute,
+  ChartResultIdReadTopicRoute: ChartResultIdReadTopicRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
