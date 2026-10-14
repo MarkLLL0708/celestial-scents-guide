@@ -448,7 +448,7 @@ const questionKeys: Record<(typeof categories)[number], string[]> = {
 export function AskPage({ state = "" }: { state?: string }) {
   const { t } = useLanguage();
   const store = useStore();
-  const navigate = useNavigate();
+
   const [category, setCategory] = useState<(typeof categories)[number]>("catDaily");
   const [question, setQuestion] = useState("");
   const [phase, setPhase] = useState<"idle" | "loading" | "answered" | "error">(
