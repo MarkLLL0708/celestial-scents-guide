@@ -28,6 +28,7 @@ import { PlacementBadge, PlacementRow, ElementBar, Skeleton } from "@/components
 import {
   Orb,
   OrbitDiagram,
+  SolarSystem,
   NoteIcon,
   CellGrid,
   Cell,
