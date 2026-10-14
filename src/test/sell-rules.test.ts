@@ -7,7 +7,7 @@ describe("soft-sell rules", () => {
     (p) => expect(allowsPrice(p)).toBe(false),
   );
   it("ritual page shows one product card", () =>
-    expect(maxProductCards("/rituals/desk-reset")).toBe(1));
+    expect(maxProductCards("/rituals/clean-desk-scent")).toBe(1));
   it("shelf shows three", () => expect(maxProductCards("/chart/result/demo/shelf")).toBe(3));
   it("shop is unlimited", () => expect(maxProductCards("/shop")).toBe(Infinity));
   it("astrology screens show none", () => expect(maxProductCards("/today")).toBe(0));

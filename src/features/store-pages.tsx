@@ -27,8 +27,8 @@ import type { Perfume } from "@/data/types";
 export function Landing({ state = "" }: { state?: string }) {
   const { t, lang } = useLanguage();
   const ritual = useQuery({
-    queryKey: ["ritual", "morning-line", lang],
-    queryFn: () => api.getRitual("morning-line", lang),
+    queryKey: ["ritual", "three-breath-doorway", lang],
+    queryFn: () => api.getRitual("three-breath-doorway", lang),
   });
   return (
     <>

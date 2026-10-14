@@ -30,23 +30,23 @@ const readingText: Record<Lang, Record<Topic, { title: string; sections: Section
       title: "an air sign who wants a door to close",
       sections: [
         [
-          "the sun in aquarius",
+          "how you start",
           "Your sun sits at 25° aquarius, late in the sign, where the ideas are already formed and only need a room. You think in systems and group plans. People read you as calm. Mostly you are thinking about something else, and you would rather finish the thought than be polite about interrupting it.",
         ],
         [
-          "the moon in cancer",
+          "how you react",
           "The moon in cancer is the soft part under the theory. You need a fixed place to come back to: the same mug, the same chair, the same three people. When that place is shaken you go quiet before you go angry. Most people never see the second step, because you leave first.",
         ],
         [
-          "libra rising",
+          "how you rest",
           "Libra rising is the face at the door. It is polite, balanced, a little slow to say no. Strangers find you easy. The cost is that you agree to small things you do not want, then spend an evening undoing them. A shorter yes would save you most of the week.",
         ],
         [
-          "where they argue",
+          "what you hide",
           "Aquarius wants distance, cancer wants closeness, libra wants everyone to be fine. The three rarely agree on a plan. You solve it by keeping one life for ideas and another for home, and by not letting the two meet. It works, until a single person ends up belonging to both.",
         ],
         [
-          "what to keep",
+          "what you're building",
           "Keep the routines that look boring from outside. They are what lets the aquarius part go wandering without getting lost. Keep one person who knows both sides of you. And keep saying the late, odd idea out loud. Usually it turns out to be the one everyone uses next month.",
         ],
       ],
@@ -55,23 +55,23 @@ const readingText: Record<Lang, Record<Topic, { title: string; sections: Section
       title: "careful at the door, generous inside",
       sections: [
         [
-          "venus in pisces",
+          "how you give",
           "Venus at 14° pisces is the most generous placement in your chart. You love by noticing: the song someone hums, the tea they ordered once. You forgive early and sometimes too early. Pisces venus does not keep score, which is lovely, until you realise nobody else was counting your side either.",
         ],
         [
-          "the moon asks for safety",
+          "how you receive",
           "With the moon in cancer, love has to feel like home before it can feel like anything else. Fast and loud does not register as romance. Being remembered does. If someone is consistent for three months you will give them more than they asked for. If they are clever but unpredictable, you will drift.",
         ],
         [
-          "mars in gemini",
+          "what unsettles you",
           "Mars in gemini means you flirt by talking. Long messages, odd questions, a joke that runs for weeks. Arguments are fast and verbal and over quickly. The risk is talking around a feeling instead of naming it. Try one plain sentence with a feeling in it. It lands harder than a clever paragraph.",
         ],
         [
-          "what pushes back",
+          "what steadies you",
           "Libra rising wants peace, so you smooth things that should be said. The aquarius sun then takes a step back to think, which reads as cold. Partners feel the gap and fill it with guesses. The fix is boring: say the small irritation on the day it happens, not at the end of the month.",
         ],
         [
-          "what lasts",
+          "what to ask for",
           "You stay with people who give you room and still turn up. Pick the friend who texts back late but always texts back. Pisces venus will make anyone sound magical in your head. The cancer moon is the better judge. Ask it one question: do I feel calmer after seeing them, or more alert?",
         ],
       ],
@@ -80,23 +80,23 @@ const readingText: Record<Lang, Record<Topic, { title: string; sections: Section
       title: "good at the plan, slower at the paperwork",
       sections: [
         [
-          "mercury in capricorn",
+          "how you work",
           "Mercury at 29° capricorn gives you a practical mind with a long view. You write short, plan in stages and distrust vague promises. Late-degree mercury tends to check the work once more than needed. That last check is usually where you find the mistake, so keep doing it, just set a time limit.",
         ],
         [
-          "the aquarius sun at work",
+          "who you work well with",
           "You do best where the problem is bigger than any one person. Systems, communities, tools other people will use. You dislike hierarchy for its own sake and will quietly route around a manager who adds nothing. Choose places that let you build something and then leave it running without you.",
         ],
         [
-          "saturn in pisces",
+          "what stalls you",
           "Saturn at 22° pisces is the strict teacher in a soft room. Structure does not come naturally around feelings, deadlines that depend on other people, or anything without edges. You learn discipline late but properly. Write the edges down: start time, end time, what done means. Saturn here respects lists.",
         ],
         [
-          "mars in gemini",
+          "what you're for",
           "Mars in gemini runs several projects at once and gets bored at seventy percent. Your best weeks have two tasks, not six. Talking a problem through helps more than staring at it. Find one colleague who lets you think aloud and then asks you, plainly, which of the six you are actually finishing.",
         ],
         [
-          "what to protect",
+          "what to build next",
           "Protect the mornings. The capricorn mercury does its best thinking before the messages arrive. Protect your name on the work you did, because the libra rising will happily share credit until it disappears. And protect one afternoon a week that has no meetings at all. That is where the aquarius ideas come from.",
         ],
       ],
@@ -105,23 +105,23 @@ const readingText: Record<Lang, Record<Topic, { title: string; sections: Section
       title: "luck that arrives through other people",
       sections: [
         [
-          "jupiter in sagittarius",
+          "your lucky ground",
           "Jupiter at 11° sagittarius sits in its own sign, which astrologers read as luck that works without much effort. Yours comes through travel, teachers and strangers with strong opinions. It rarely knocks on the door at home. You have to go somewhere slightly unfamiliar for it to find you.",
         ],
         [
-          "how it shows up",
+          "what opens doors",
           "Expect openings, not prizes. An introduction, a course that happens to have a free place, a city you visit for a weekend and keep thinking about. Sagittarius jupiter likes a yes said quickly. The aquarius sun will want to research it first. Do the research after you have said yes.",
         ],
         [
-          "venus supports it",
+          "what wastes your energy",
           "Venus in pisces trines your cancer moon in the chart, a soft and easy link. Luck often arrives with kindness attached: someone helps because they like you, not because it pays. Say thank you properly, in writing. These people tend to come back with a second, bigger favour a year later.",
         ],
         [
-          "what blocks it",
+          "this season",
           "Saturn in pisces asks whether you deserve the good thing before you take it. That pause costs you more chances than any bad transit. Libra rising adds a second pause to check nobody else wanted it. Notice both pauses. You do not need to remove them, only make them shorter.",
         ],
         [
-          "this year",
+          "your small ritual",
           "Transiting jupiter moves toward your libra rising over the next months, which is read as a time for being seen. Say yes to the small public things: a talk, a post, a dinner with people you half know. The luck is not in the event. It is in the one person you meet there.",
         ],
       ],
@@ -132,23 +132,23 @@ const readingText: Record<Lang, Record<Topic, { title: string; sections: Section
       title: "một cung khí muốn có một cánh cửa đóng lại",
       sections: [
         [
-          "mặt trời ở bảo bình",
+          "cách bạn bắt đầu",
           "Mặt trời của bạn ở 25° bảo bình, cuối cung, nơi ý tưởng đã hình thành và chỉ cần một căn phòng. Bạn nghĩ theo hệ thống và kế hoạch nhóm. Người khác thấy bạn bình tĩnh. Thật ra bạn đang nghĩ chuyện khác, và muốn nghĩ xong hơn là lịch sự khi bị cắt ngang.",
         ],
         [
-          "mặt trăng ở cự giải",
+          "cách bạn phản ứng",
           "Mặt trăng ở cự giải là phần mềm bên dưới lý thuyết. Bạn cần một chỗ cố định để quay về: cùng cái cốc, cùng cái ghế, cùng ba người. Khi chỗ đó lung lay, bạn im lặng trước khi tức giận. Hầu hết mọi người không thấy bước thứ hai, vì bạn đã rời đi trước.",
         ],
         [
-          "cung mọc thiên bình",
+          "cách bạn nghỉ ngơi",
           "Cung mọc thiên bình là gương mặt ở cửa. Lịch sự, cân bằng, hơi chậm khi nói không. Người lạ thấy bạn dễ gần. Cái giá là bạn đồng ý những việc nhỏ mình không muốn, rồi mất một buổi tối để gỡ ra. Một lời đồng ý ngắn hơn sẽ cứu bạn gần cả tuần.",
         ],
         [
-          "nơi chúng tranh cãi",
+          "điều bạn che giấu",
           "Bảo bình muốn khoảng cách, cự giải muốn gần gũi, thiên bình muốn mọi người đều ổn. Ba phần hiếm khi đồng ý. Bạn giải quyết bằng một đời sống cho ý tưởng, một đời sống cho nhà, và không để hai thứ gặp nhau. Cách này ổn, cho đến khi có một người thuộc về cả hai.",
         ],
         [
-          "điều nên giữ",
+          "điều bạn đang xây dựng",
           "Giữ những thói quen trông nhàm chán từ bên ngoài. Chúng cho phần bảo bình đi lang thang mà không lạc. Giữ một người hiểu cả hai phía của bạn. Và cứ nói to ý tưởng muộn màng, kỳ lạ đó. Thường thì đó là ý mà tháng sau ai cũng dùng.",
         ],
       ],
@@ -157,23 +157,23 @@ const readingText: Record<Lang, Record<Topic, { title: string; sections: Section
       title: "cẩn thận ở cửa, rộng lượng bên trong",
       sections: [
         [
-          "kim tinh ở song ngư",
+          "cách bạn cho đi",
           "Kim tinh ở 14° song ngư là vị trí rộng lượng nhất trong bản đồ của bạn. Bạn yêu bằng cách để ý: bài hát ai đó ngân nga, loại trà họ gọi một lần. Bạn tha thứ sớm, đôi khi quá sớm. Kim tinh song ngư không đếm điểm, điều đó đẹp, cho đến khi bạn nhận ra cũng chẳng ai đếm phần của bạn.",
         ],
         [
-          "mặt trăng cần an toàn",
+          "cách bạn đón nhận",
           "Với mặt trăng ở cự giải, tình yêu phải giống như nhà trước khi giống bất cứ điều gì khác. Nhanh và ồn không được tính là lãng mạn. Được nhớ đến thì có. Nếu ai đó đều đặn trong ba tháng, bạn sẽ cho họ nhiều hơn họ xin. Nếu họ thông minh nhưng thất thường, bạn sẽ trôi đi.",
         ],
         [
-          "hỏa tinh ở song tử",
+          "điều làm bạn chao đảo",
           "Hỏa tinh ở song tử nghĩa là bạn tán tỉnh bằng lời. Tin nhắn dài, câu hỏi lạ, một câu đùa kéo dài nhiều tuần. Cãi nhau nhanh, bằng lời, và qua nhanh. Rủi ro là nói vòng quanh một cảm xúc thay vì gọi tên nó. Thử một câu đơn giản có cảm xúc. Nó có sức nặng hơn một đoạn văn khéo.",
         ],
         [
-          "điều cản lại",
+          "điều giữ bạn vững",
           "Cung mọc thiên bình muốn yên ổn, nên bạn làm phẳng những điều đáng nói. Mặt trời bảo bình lùi lại để suy nghĩ, trông như lạnh lùng. Người kia cảm thấy khoảng trống và lấp bằng phỏng đoán. Cách sửa rất nhàm: nói điều khó chịu nhỏ ngay trong ngày, đừng để đến cuối tháng.",
         ],
         [
-          "điều bền lâu",
+          "điều nên đề nghị",
           "Bạn ở lại với người cho bạn khoảng trống mà vẫn có mặt. Chọn người bạn nhắn lại muộn nhưng luôn nhắn lại. Kim tinh song ngư sẽ khiến ai cũng nghe như phép màu trong đầu bạn. Mặt trăng cự giải là giám khảo tốt hơn. Hỏi nó một câu: gặp họ xong mình bình tĩnh hơn hay cảnh giác hơn?",
         ],
       ],
@@ -182,23 +182,23 @@ const readingText: Record<Lang, Record<Topic, { title: string; sections: Section
       title: "giỏi lập kế hoạch, chậm hơn với giấy tờ",
       sections: [
         [
-          "thủy tinh ở ma kết",
+          "cách bạn làm việc",
           "Thủy tinh ở 29° ma kết cho bạn đầu óc thực tế với tầm nhìn dài. Bạn viết ngắn, lập kế hoạch theo từng giai đoạn và không tin lời hứa mơ hồ. Thủy tinh ở độ cuối thường kiểm tra lại thêm một lần. Lần đó thường là lúc bạn tìm ra lỗi, nên cứ làm, chỉ cần đặt giới hạn thời gian.",
         ],
         [
-          "mặt trời bảo bình trong công việc",
+          "người bạn hợp tác tốt",
           "Bạn làm tốt nhất khi vấn đề lớn hơn bất kỳ một người nào. Hệ thống, cộng đồng, công cụ người khác sẽ dùng. Bạn không thích thứ bậc chỉ vì thứ bậc và sẽ lặng lẽ đi vòng qua người quản lý không đóng góp gì. Chọn nơi cho bạn xây một thứ rồi để nó tự chạy.",
         ],
         [
-          "thổ tinh ở song ngư",
+          "điều khiến bạn chững lại",
           "Thổ tinh ở 22° song ngư là người thầy nghiêm trong một căn phòng mềm. Kỷ luật không đến tự nhiên quanh cảm xúc, những hạn chót phụ thuộc người khác, hay bất cứ thứ gì không có ranh giới. Bạn học kỷ luật muộn nhưng chắc. Viết ranh giới ra: giờ bắt đầu, giờ kết thúc, thế nào là xong.",
         ],
         [
-          "hỏa tinh ở song tử",
+          "điều bạn sinh ra để làm",
           "Hỏa tinh ở song tử chạy nhiều dự án cùng lúc và chán khi đến bảy mươi phần trăm. Tuần tốt nhất của bạn có hai việc, không phải sáu. Nói ra vấn đề giúp nhiều hơn nhìn chằm chằm vào nó. Tìm một đồng nghiệp để bạn nghĩ thành tiếng, rồi hỏi thẳng bạn sẽ hoàn thành việc nào.",
         ],
         [
-          "điều cần bảo vệ",
+          "điều nên xây tiếp theo",
           "Bảo vệ buổi sáng. Thủy tinh ma kết nghĩ tốt nhất trước khi tin nhắn đến. Bảo vệ tên bạn trên việc bạn đã làm, vì cung mọc thiên bình sẵn sàng chia công cho đến khi nó biến mất. Và bảo vệ một buổi chiều mỗi tuần không có cuộc họp nào. Ý tưởng bảo bình đến từ đó.",
         ],
       ],
@@ -207,23 +207,23 @@ const readingText: Record<Lang, Record<Topic, { title: string; sections: Section
       title: "may mắn đến qua người khác",
       sections: [
         [
-          "mộc tinh ở nhân mã",
+          "mảnh đất may mắn của bạn",
           "Mộc tinh ở 11° nhân mã nằm trong cung của chính nó, thường được đọc là may mắn đến mà không cần nhiều công sức. May mắn của bạn đến qua đi xa, thầy cô và những người lạ có ý kiến mạnh. Nó hiếm khi gõ cửa nhà. Bạn phải đến một nơi hơi lạ để nó tìm thấy bạn.",
         ],
         [
-          "nó xuất hiện thế nào",
+          "điều mở ra cánh cửa",
           "Hãy chờ những cơ hội, không phải giải thưởng. Một lời giới thiệu, một khóa học còn chỗ trống, một thành phố bạn ghé cuối tuần rồi nhớ mãi. Mộc tinh nhân mã thích một lời đồng ý nhanh. Mặt trời bảo bình muốn tìm hiểu trước. Hãy tìm hiểu sau khi đã đồng ý.",
         ],
         [
-          "kim tinh hỗ trợ",
+          "điều làm hao năng lượng",
           "Kim tinh song ngư tam hợp mặt trăng cự giải trong bản đồ, một liên kết mềm và dễ. May mắn thường đến kèm sự tử tế: ai đó giúp vì họ quý bạn, không vì lợi. Hãy cảm ơn tử tế, bằng chữ viết. Những người này thường quay lại với một ân huệ lớn hơn một năm sau.",
         ],
         [
-          "điều chặn nó",
+          "mùa này",
           "Thổ tinh song ngư hỏi bạn có xứng đáng với điều tốt trước khi nhận nó. Khoảng dừng đó làm bạn mất nhiều cơ hội hơn bất kỳ quá cảnh xấu nào. Cung mọc thiên bình thêm một khoảng dừng nữa để xem có ai khác muốn nó không. Để ý cả hai. Không cần bỏ, chỉ cần ngắn lại.",
         ],
         [
-          "năm nay",
+          "nghi thức nhỏ của bạn",
           "Mộc tinh quá cảnh tiến về cung mọc thiên bình của bạn trong vài tháng tới, thường được đọc là thời gian được nhìn thấy. Đồng ý với những việc công khai nhỏ: một buổi nói chuyện, một bài đăng, một bữa tối với người nửa quen. May mắn không nằm ở sự kiện. Nó nằm ở một người bạn gặp ở đó.",
         ],
       ],
@@ -247,20 +247,18 @@ const todayText: Record<
   en: {
     summary: "a quiet day that rewards finishing one thing properly.",
     working:
-      "Venus is easy on your moon today. Small kindness lands well. Send the message you have been drafting since sunday.",
+      "people are easier to talk to today, and so are you. say the thing you have been rehearsing.",
     pushing:
-      "Mars squares your mercury. Replies come out sharper than you mean. Read anything important twice before it goes.",
-    protect:
-      "Saturn sits on your venus. Protect the evening. You do not owe anyone a second plan after six.",
+      "your patience runs short after lunch. write the reply, then wait an hour before sending.",
+    protect: "your energy. say no to one thing before noon.",
   },
   vi: {
     summary: "một ngày yên tĩnh, thưởng cho việc làm xong một việc cho đàng hoàng.",
     working:
-      "Kim tinh nhẹ nhàng với mặt trăng của bạn hôm nay. Sự tử tế nhỏ được đón nhận. Gửi tin nhắn bạn đã soạn từ chủ nhật.",
+      "hôm nay mọi người dễ trò chuyện hơn, bạn cũng vậy. hãy nói điều bạn vẫn đang tập dượt.",
     pushing:
-      "Hỏa tinh vuông góc thủy tinh của bạn. Câu trả lời sắc hơn bạn muốn. Đọc lại điều quan trọng hai lần trước khi gửi.",
-    protect:
-      "Thổ tinh nằm trên kim tinh của bạn. Bảo vệ buổi tối. Sau sáu giờ bạn không nợ ai kế hoạch thứ hai.",
+      "sau bữa trưa bạn dễ mất kiên nhẫn. hãy viết câu trả lời, rồi chờ một tiếng trước khi gửi.",
+    protect: "năng lượng của bạn. hãy từ chối một việc trước buổi trưa.",
   },
 };
 
@@ -272,8 +270,8 @@ export function todayFor(date: string, lang: Lang): Today {
     tone: { self: 3, love: 4, work: 2, luck: 3 },
     working: { transit: tr("venus", "trine", "moon", 2, "love", 4), text: x.working },
     pushing: { transit: tr("mars", "square", "mercury", 1, "work", 3), text: x.pushing },
-    protect: { transit: tr("saturn", "conjunct", "venus", 3, "self", 3), text: x.protect },
-    ritualId: "evening-close",
+    protect: { transit: tr("saturn", "opposite", "sun", 3, "self", 3), text: x.protect },
+    ritualId: "slow-evening",
   };
 }
 
@@ -330,10 +328,10 @@ const answerTransits: Record<Theme, Transit[]> = {
 };
 
 export const ritualForTheme: Record<Theme, string> = {
-  self: "slow-breath",
-  love: "letter-unsent",
-  work: "desk-reset",
-  luck: "open-door",
+  self: "mirror-inventory",
+  love: "first-date-pulse",
+  work: "clean-desk-scent",
+  luck: "coin-and-note",
 };
 export const themeForTopic: Record<Topic, Theme> = {
   you: "self",
@@ -353,210 +351,204 @@ export function answerFor(question: string, theme: Theme, lang: Lang): AstroAnsw
 
 type RitualText = Pick<
   Ritual,
-  "title" | "intention" | "timing" | "needs" | "steps" | "why" | "reason"
+  "title" | "intention" | "timing" | "needs" | "steps" | "why" | "reason" | "noteFamily"
 >;
 const ritualText: Record<Lang, Record<string, RitualText>> = {
   en: {
-    "slow-breath": {
-      title: "four slow breaths",
-      intention: "come back to the room before you answer anyone.",
-      timing: "when the day gets loud",
-      needs: ["a window", "any scent you own"],
+    "three-breath-doorway": {
+      title: "the three-breath doorway",
+      intention: "walk into the day at your own pace.",
+      timing: "before you leave home",
+      needs: ["your scent"],
       steps: [
-        "Stand by a window and put one drop of scent on the inside of your wrist.",
-        "Breathe in for four counts with the wrist near you. Out for six.",
-        "Do it four times. Count out loud if your head is busy.",
-        "Name one thing you can see outside. Then go back to the day.",
+        "stand at your front door with your keys in your hand. don't open it yet.",
+        "put one spray or dab on each wrist. rub nothing in.",
+        "hold your wrists near your face and take three slow breaths. on the third, name one thing you will not rush today.",
+        "open the door.",
       ],
-      why: "a familiar smell is a short way back to your own attention.",
-      reason: "lavender settles, vetiver holds it there.",
+      why: "a smell paired with an intention becomes a cue you can return to.",
+      reason: "bergamot at the door, vetiver for the rest of the morning.",
+      noteFamily: "bergamot, tea, vetiver",
     },
-    "letter-unsent": {
-      title: "the letter you do not send",
-      intention: "name a feeling clearly before you decide what to do with it.",
-      timing: "a friday evening",
-      needs: ["paper", "a pen", "twenty quiet minutes"],
+    "first-date-pulse": {
+      title: "the first-date pulse",
+      intention: "arrive as yourself, not as a performance.",
+      timing: "thirty minutes before you leave",
+      needs: ["a mirror", "your scent"],
       steps: [
-        "Choose a scent you already wear around this person, or none.",
-        "Write them a short letter you will not send. Use plain sentences.",
-        "Underline the one sentence you would actually say.",
-        "Fold the letter away. Keep only the underlined sentence.",
+        'write one word on your phone: "tonight i want to be ____."',
+        "apply the scent once to each wrist and once to the side of your neck.",
+        "look in the mirror and say the word out loud, once, at normal volume.",
+        "put the phone away and leave without checking your outfit again.",
       ],
-      why: "venus in pisces says too much or nothing. writing it first finds the middle.",
-      reason: "pear and bergamot open, musk stays close.",
+      why: "one word said out loud is easier to keep than a plan for the whole evening.",
+      reason: "rose up close, sandalwood and musk once you sit down.",
+      noteFamily: "rose, musk, sandalwood",
     },
-    "desk-reset": {
-      title: "a reset for the desk",
-      intention: "finish the week with a clear surface and a short list.",
-      timing: "friday, last half hour",
-      needs: ["a card", "a pen", "a cloth"],
+    "clean-desk-scent": {
+      title: "the clean-desk scent",
+      intention: "start the work that matters first.",
+      timing: "the first ten minutes of work",
+      needs: ["a pen", "paper", "your scent"],
       steps: [
-        "Clear the desk completely. Wipe it.",
-        "Put back only three things.",
-        "Write next week's two tasks on one card and leave it face up.",
-        "Apply a scent you own, so monday starts with something familiar.",
+        "clear one surface the size of your notebook.",
+        "write the single task that would make today a good day.",
+        "dab the scent on one wrist and keep that wrist near the paper while you write.",
+        "don't open messages until the task is underway.",
       ],
-      why: "mercury in capricorn works better from a short list than a long one.",
-      reason: "bergamot opens, vetiver steadies.",
+      why: "a small cleared space and one written task make the first decision for you.",
+      reason: "lemon to begin, cedar to stay at the desk.",
+      noteFamily: "rosemary, cedar, lemon",
     },
-    "open-door": {
-      title: "leave a door open",
-      intention: "notice one small chance you would usually walk past.",
-      timing: "any morning this week",
-      needs: ["the scent you save for occasions"],
+    "coin-and-note": {
+      title: "the coin and the note",
+      intention: "notice luck when it arrives.",
+      timing: "a new moon or any quiet evening",
+      needs: ["a coin", "paper", "a pen", "your scent"],
       steps: [
-        "Wear the scent you save for occasions on an ordinary day.",
-        "Take a slightly different route somewhere.",
-        "Say yes to the first small, slightly unfamiliar offer.",
-        "At night, write down who you met because of it.",
+        "write one small thing you hope for this month, small enough to happen by accident.",
+        "fold the paper around the coin.",
+        "hold the scent at arm's length and spray the folded paper once. keep the coin dry.",
+        "keep it in a bag or coat pocket for the month. each time you smell it, note one coincidence in your favour.",
       ],
-      why: "jupiter in sagittarius rewards the unfamiliar room. this just makes you notice it.",
-      reason: "salt and lemon keep it light enough for a weekday.",
+      why: "the smell doesn't bring anything. it reminds you to look.",
+      reason: "cardamom and amber, slow enough to last a month on paper.",
+      noteFamily: "amber, cardamom, vanilla",
     },
-    "morning-line": {
-      title: "one line before the phone",
-      intention: "start the day with your own thought, not someone else's.",
-      timing: "on waking",
-      needs: ["a notebook", "a pen"],
+    "mirror-inventory": {
+      title: "the mirror inventory",
+      intention: "see yourself before you edit yourself.",
+      timing: "in the evening",
+      needs: ["a mirror", "your scent"],
       steps: [
-        "Before you check anything, sit up.",
-        "Put one drop of a scent you own on your wrist.",
-        "Write one line about what today is for.",
-        "Read it once, close the notebook, then pick up the phone.",
+        "stand in front of a mirror without fixing anything.",
+        "apply the scent to your wrists and collarbone.",
+        "say three true things about today, out loud: one hard, one funny, one unfinished.",
+        "turn off the light on your way out.",
       ],
-      why: "the aquarius sun thinks best before other people's ideas arrive.",
-      reason: "bergamot wakes it up, cedar keeps it short.",
+      why: "saying the day plainly, once, lets you stop rehearsing it.",
+      reason: "pepper and iris, honest at the top, steady underneath.",
+      noteFamily: "iris, cedar, pink pepper",
     },
-    "evening-close": {
-      title: "close the evening",
-      intention: "end the day on purpose instead of letting it run out.",
-      timing: "after six",
-      needs: ["a tissue", "any scent you own"],
+    "slow-evening": {
+      title: "the slow evening",
+      intention: "end the day on purpose.",
+      timing: "after dinner",
+      needs: ["a lamp or candle", "a glass of water", "your scent"],
       steps: [
-        "Turn off one light and one screen.",
-        "Put a drop of scent on a tissue near you.",
-        "Write the three things you did today.",
-        "Stop there. Nothing else gets added tonight.",
+        "dim the lights and put your phone in another room.",
+        "apply the scent lightly to one wrist only.",
+        "sit with the water and notice three things you can smell in the room, including the scent.",
+        "finish the water, then turn off the lamp.",
       ],
-      why: "the cancer moon rests when the day has a clear edge.",
-      reason: "orange fades, vanilla and tonka stay warm.",
+      why: "a day with a clear edge is easier to leave behind.",
+      reason: "tonka and vanilla, warm and close to the skin.",
+      noteFamily: "vanilla, tonka, incense",
     },
   },
   vi: {
-    "slow-breath": {
-      title: "bốn hơi thở chậm",
-      intention: "quay về căn phòng trước khi trả lời bất kỳ ai.",
-      timing: "khi ngày trở nên ồn ào",
-      needs: ["một ô cửa sổ", "mùi hương bất kỳ bạn có"],
+    "three-breath-doorway": {
+      title: "ô cửa ba hơi thở",
+      intention: "bước vào ngày mới theo nhịp của riêng bạn.",
+      timing: "trước khi ra khỏi nhà",
+      needs: ["mùi hương của bạn"],
       steps: [
-        "Đứng cạnh cửa sổ và chấm một giọt hương lên mặt trong cổ tay.",
-        "Hít vào bốn nhịp với cổ tay gần mình. Thở ra sáu nhịp.",
-        "Làm bốn lần. Đếm thành tiếng nếu đầu óc đang bận.",
-        "Gọi tên một thứ bạn thấy bên ngoài. Rồi quay lại với ngày.",
+        "đứng trước cửa nhà, chìa khóa trong tay. chưa mở cửa vội.",
+        "xịt hoặc chấm một lần lên mỗi cổ tay. đừng chà xát.",
+        "đưa cổ tay lại gần mặt và hít thở chậm ba lần. ở hơi thở thứ ba, gọi tên một điều hôm nay bạn sẽ không vội.",
+        "mở cửa.",
       ],
-      why: "một mùi quen là đường ngắn để quay về sự chú ý của chính mình.",
-      reason: "oải hương lắng xuống, cỏ hương bài giữ nó lại.",
+      why: "một mùi hương gắn với một ý định sẽ thành tín hiệu để bạn quay lại.",
+      reason: "cam bergamot ở cửa, cỏ vetiver cho cả buổi sáng.",
+      noteFamily: "cam bergamot, trà, cỏ vetiver",
     },
-    "letter-unsent": {
-      title: "lá thư không gửi",
-      intention: "gọi tên một cảm xúc rõ ràng trước khi quyết định làm gì với nó.",
-      timing: "một tối thứ sáu",
-      needs: ["giấy", "một cây bút", "hai mươi phút yên tĩnh"],
+    "first-date-pulse": {
+      title: "nhịp hẹn đầu",
+      intention: "đến như chính bạn, không phải một màn trình diễn.",
+      timing: "ba mươi phút trước khi đi",
+      needs: ["một chiếc gương", "mùi hương của bạn"],
       steps: [
-        "Chọn mùi hương bạn vẫn dùng khi gặp người này, hoặc không dùng gì.",
-        "Viết cho họ một lá thư ngắn bạn sẽ không gửi. Dùng câu đơn giản.",
-        "Gạch dưới câu bạn thật sự sẽ nói.",
-        "Gấp lá thư cất đi. Chỉ giữ câu đã gạch dưới.",
+        'viết một từ vào điện thoại: "tối nay tôi muốn là ____."',
+        "dùng mùi hương một lần ở mỗi cổ tay và một lần ở bên cổ.",
+        "nhìn vào gương và nói to từ đó, một lần, bằng giọng bình thường.",
+        "cất điện thoại và ra khỏi nhà mà không kiểm tra lại trang phục.",
       ],
-      why: "kim tinh song ngư nói quá nhiều hoặc không nói gì. viết ra trước giúp tìm điểm giữa.",
-      reason: "lê và bergamot mở đầu, xạ hương ở gần.",
+      why: "một từ nói thành tiếng dễ giữ hơn một kế hoạch cho cả buổi tối.",
+      reason: "hoa hồng khi ở gần, đàn hương và xạ hương khi đã ngồi xuống.",
+      noteFamily: "hoa hồng, xạ hương, đàn hương",
     },
-    "desk-reset": {
-      title: "dọn lại bàn làm việc",
-      intention: "kết thúc tuần với mặt bàn trống và một danh sách ngắn.",
-      timing: "thứ sáu, nửa tiếng cuối",
-      needs: ["một tấm thẻ", "một cây bút", "một chiếc khăn"],
+    "clean-desk-scent": {
+      title: "mùi hương bàn sạch",
+      intention: "bắt đầu việc quan trọng nhất trước.",
+      timing: "mười phút đầu tiên của buổi làm việc",
+      needs: ["một cây bút", "giấy", "mùi hương của bạn"],
       steps: [
-        "Dọn sạch bàn. Lau nó.",
-        "Chỉ đặt lại ba món.",
-        "Viết hai việc của tuần sau lên một tấm thẻ và để ngửa.",
-        "Xịt một mùi hương bạn có, để thứ hai bắt đầu bằng điều quen thuộc.",
+        "dọn một khoảng trống bằng cuốn sổ của bạn.",
+        "viết ra một việc duy nhất khiến hôm nay là một ngày tốt.",
+        "chấm mùi hương lên một cổ tay và để cổ tay đó gần tờ giấy khi bạn viết.",
+        "đừng mở tin nhắn cho đến khi việc đó đã bắt đầu.",
       ],
-      why: "thủy tinh ma kết làm việc tốt hơn với danh sách ngắn.",
-      reason: "bergamot mở đầu, cỏ hương bài giữ vững.",
+      why: "một khoảng trống nhỏ và một việc được viết ra sẽ quyết định giúp bạn bước đầu tiên.",
+      reason: "chanh để bắt đầu, tuyết tùng để ngồi lại với bàn làm việc.",
+      noteFamily: "hương thảo, tuyết tùng, chanh",
     },
-    "open-door": {
-      title: "để ngỏ một cánh cửa",
-      intention: "để ý một cơ hội nhỏ mà bạn thường bước qua.",
-      timing: "một buổi sáng tuần này",
-      needs: ["mùi hương bạn để dành cho dịp đặc biệt"],
+    "coin-and-note": {
+      title: "đồng xu và mảnh giấy",
+      intention: "nhận ra may mắn khi nó đến.",
+      timing: "đêm trăng non hoặc bất kỳ buổi tối yên tĩnh nào",
+      needs: ["một đồng xu", "giấy", "bút", "mùi hương của bạn"],
       steps: [
-        "Dùng mùi hương để dành cho dịp đặc biệt vào một ngày bình thường.",
-        "Đi một con đường hơi khác đến đâu đó.",
-        "Đồng ý với lời đề nghị nhỏ, hơi lạ đầu tiên.",
-        "Buổi tối, viết lại bạn đã gặp ai nhờ nó.",
+        "viết một điều nhỏ bạn mong trong tháng này, nhỏ đến mức có thể xảy ra tình cờ.",
+        "gấp tờ giấy quanh đồng xu.",
+        "cầm chai nước hoa xa tầm tay và xịt lên tờ giấy gấp một lần. giữ đồng xu khô.",
+        "giữ nó trong túi xách hoặc túi áo suốt tháng. mỗi lần ngửi thấy, ghi lại một sự trùng hợp có lợi cho bạn.",
       ],
-      why: "mộc tinh nhân mã ưu ái căn phòng lạ. nghi thức này chỉ giúp bạn để ý.",
-      reason: "muối và chanh giữ nó đủ nhẹ cho ngày thường.",
+      why: "mùi hương không mang điều gì đến. nó chỉ nhắc bạn nhìn.",
+      reason: "bạch đậu khấu và hổ phách, đủ chậm để lưu trên giấy cả tháng.",
+      noteFamily: "hổ phách, bạch đậu khấu, vani",
     },
-    "morning-line": {
-      title: "một dòng trước điện thoại",
-      intention: "bắt đầu ngày bằng suy nghĩ của mình, không phải của người khác.",
-      timing: "khi thức dậy",
-      needs: ["một cuốn sổ", "một cây bút"],
+    "mirror-inventory": {
+      title: "kiểm kê trước gương",
+      intention: "nhìn thấy mình trước khi chỉnh sửa mình.",
+      timing: "vào buổi tối",
+      needs: ["một chiếc gương", "mùi hương của bạn"],
       steps: [
-        "Trước khi xem bất cứ thứ gì, ngồi dậy.",
-        "Chấm một giọt mùi hương bạn có lên cổ tay.",
-        "Viết một dòng về hôm nay để làm gì.",
-        "Đọc một lần, gấp sổ lại, rồi mới cầm điện thoại.",
+        "đứng trước gương mà không chỉnh sửa gì.",
+        "dùng mùi hương ở cổ tay và xương quai xanh.",
+        "nói to ba điều có thật về hôm nay: một điều khó, một điều buồn cười, một điều còn dang dở.",
+        "tắt đèn khi bạn rời đi.",
       ],
-      why: "mặt trời bảo bình nghĩ tốt nhất trước khi ý tưởng của người khác đến.",
-      reason: "bergamot đánh thức, tuyết tùng giữ nó ngắn gọn.",
+      why: "nói thẳng về một ngày, một lần, để bạn thôi tập dượt nó.",
+      reason: "tiêu và diên vĩ, thật thà lúc đầu, vững vàng bên dưới.",
+      noteFamily: "diên vĩ, tuyết tùng, tiêu hồng",
     },
-    "evening-close": {
-      title: "khép lại buổi tối",
-      intention: "kết thúc ngày một cách có chủ ý thay vì để nó tự cạn.",
-      timing: "sau sáu giờ",
-      needs: ["một tờ khăn giấy", "mùi hương bất kỳ bạn có"],
+    "slow-evening": {
+      title: "buổi tối chậm",
+      intention: "kết thúc ngày một cách có chủ đích.",
+      timing: "sau bữa tối",
+      needs: ["một chiếc đèn hoặc nến", "một ly nước", "mùi hương của bạn"],
       steps: [
-        "Tắt một ngọn đèn và một màn hình.",
-        "Chấm một giọt hương lên khăn giấy gần mình.",
-        "Viết ba việc bạn đã làm hôm nay.",
-        "Dừng ở đó. Tối nay không thêm gì nữa.",
+        "làm dịu ánh đèn và để điện thoại ở phòng khác.",
+        "dùng mùi hương nhẹ ở một cổ tay.",
+        "ngồi cùng ly nước và nhận ra ba mùi trong phòng, kể cả mùi hương bạn vừa dùng.",
+        "uống hết ly nước, rồi tắt đèn.",
       ],
-      why: "mặt trăng cự giải nghỉ ngơi khi ngày có một ranh giới rõ ràng.",
-      reason: "cam phai đi, vani và tonka còn ấm.",
+      why: "một ngày có ranh giới rõ ràng thì dễ khép lại hơn.",
+      reason: "tonka và vani, ấm và gần da.",
+      noteFamily: "vani, tonka, trầm hương",
     },
   },
 };
 
-const ritualMeta: Record<
-  string,
-  { theme: RitualTheme; durationMin: number; noteFamily: string; perfumeId: string }
-> = {
-  "slow-breath": {
-    theme: "calm",
-    durationMin: 3,
-    noteFamily: "Aromatic",
-    perfumeId: "herbarium-no-4",
-  },
-  "letter-unsent": {
-    theme: "love",
-    durationMin: 20,
-    noteFamily: "Floral",
-    perfumeId: "petal-theory",
-  },
-  "desk-reset": { theme: "work", durationMin: 30, noteFamily: "Woody", perfumeId: "paper-woods" },
-  "open-door": { theme: "luck", durationMin: 5, noteFamily: "Fresh", perfumeId: "salt-index" },
-  "morning-line": { theme: "self", durationMin: 3, noteFamily: "Citrus", perfumeId: "open-orbit" },
-  "evening-close": {
-    theme: "evening",
-    durationMin: 10,
-    noteFamily: "Gourmand",
-    perfumeId: "after-hours",
-  },
-};
-
+const ritualMeta: Record<string, { theme: RitualTheme; durationMin: number; perfumeId: string }> =
+  {
+    "three-breath-doorway": { theme: "calm", durationMin: 2, perfumeId: "paper-woods" },
+    "first-date-pulse": { theme: "love", durationMin: 5, perfumeId: "white-margin" },
+    "clean-desk-scent": { theme: "work", durationMin: 3, perfumeId: "open-orbit" },
+    "coin-and-note": { theme: "luck", durationMin: 7, perfumeId: "velvet-error" },
+    "mirror-inventory": { theme: "self", durationMin: 4, perfumeId: "quiet-hide" },
+    "slow-evening": { theme: "evening", durationMin: 6, perfumeId: "after-hours" },
+  };
 export const ritualIds = Object.keys(ritualMeta);
 export const ritualThemes: RitualTheme[] = ["calm", "love", "work", "luck", "self", "evening"];
 
@@ -581,19 +573,19 @@ const shelfText: Record<Lang, { chart: string; week: string; shadow: string }> =
 export const shelfPlan = {
   forChart: {
     perfumeId: "white-margin",
-    ritualId: "evening-close",
+    ritualId: "slow-evening",
     planet: "moon" as const,
     sign: "Cancer",
   },
   forWeek: {
     perfumeId: "salt-index",
-    ritualId: "open-door",
+    ritualId: "coin-and-note",
     planet: "venus" as const,
     sign: "Pisces",
   },
   forShadow: {
     perfumeId: "velvet-error",
-    ritualId: "letter-unsent",
+    ritualId: "first-date-pulse",
     planet: "mars" as const,
     sign: "Gemini",
   },
