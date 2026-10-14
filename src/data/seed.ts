@@ -166,6 +166,9 @@ export const demoChart: Chart = {
   venus: "Pisces",
   mars: "Gemini",
   mercury: "Capricorn",
+  jupiter: "Sagittarius",
+  saturn: "Pisces",
+  degrees: { sun: 25, moon: 8, rising: 17, venus: 14, mars: 3, mercury: 29, jupiter: 11, saturn: 22 },
   elements: { fire: 15, earth: 20, air: 40, water: 25 },
 };
 export const cities = [
