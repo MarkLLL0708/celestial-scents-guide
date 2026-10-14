@@ -14,4 +14,11 @@ describe("App routing", () => {
 
     expect(matches.at(-1)?.routeId).not.toBe(rootRouteId);
   });
+  it("renders product details without a shop listing parent", () => {
+    const router = createRouter({ routeTree, context: { queryClient: new QueryClient() } });
+    const product = router.routesById["/shop/$id"];
+    expect(product?.fullPath).toBe("/shop/$id");
+    expect(product?.parentRoute.id).toBe("/shop");
+    expect(router.routesById["/shop/"]?.parentRoute.id).toBe("/shop");
+  });
 });

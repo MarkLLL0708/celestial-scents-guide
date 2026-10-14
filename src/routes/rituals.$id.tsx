@@ -9,6 +9,6 @@ function Page() {
 }
 export const Route = createFileRoute("/rituals/$id")({
   validateSearch: validatePreview,
-  head: () => metadata("a small ritual", "Steps, timing and an intention."),
+  head: ({ params }) => metadata(params.id.replaceAll("-", " "), "Steps, timing and an intention."),
   component: Page,
 });

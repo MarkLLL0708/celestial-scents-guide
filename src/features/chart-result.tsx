@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery, useQueryClient } from "@tanstack/react-query";
 import * as Accordion from "@radix-ui/react-accordion";
 import { ArrowRight, ChevronDown, ChevronLeft, ThumbsUp, ThumbsDown, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -557,14 +557,8 @@ export function AskPage({ state = "" }: { state?: string }) {
   return (
     <div className="ask-screen">
       <header className="ask-header">
-        <Button
-          variant="text"
-          size="icon"
-          className="ask-close"
-          aria-label={t.close}
-          onClick={() => window.history.back()}
-        >
-          <X size={20} />
+        <Button asChild variant="text" size="icon" className="ask-close">
+          <Link to="/today" aria-label={t.close}><X size={20} /></Link>
         </Button>
         <h1 className="label">{t.askTitle}</h1>
         <span className="chart-step-spacer" aria-hidden="true" />
@@ -573,7 +567,7 @@ export function AskPage({ state = "" }: { state?: string }) {
       <div className="ask-body">
         <div className="ask-tabs" role="tablist" aria-label={t.categories}>
           {categories.map((c) => (
-            <button
+            <Button variant="text"
               key={c.theme}
               role="tab"
               aria-selected={category === c.theme}
@@ -585,7 +579,7 @@ export function AskPage({ state = "" }: { state?: string }) {
             >
               <NoteIcon name={c.note} label="" />
               {t[c.key]}
-            </button>
+            </Button>
           ))}
         </div>
 
@@ -639,9 +633,9 @@ export function AskPage({ state = "" }: { state?: string }) {
               <ul>
                 {questionKeys[category].map((k) => (
                   <li key={k}>
-                    <button className="label ask-question" onClick={() => setQuestion(t[k])}>
+                    <Button variant="text" className="label ask-question" onClick={() => setQuestion(t[k])}>
                       {t[k]}
-                    </button>
+                    </Button>
                   </li>
                 ))}
               </ul>
@@ -685,12 +679,15 @@ const themeLabel = (t: Dictionary, th: RitualTheme) => t[`theme${cap(th)}` as ke
 export function RitualsPage({ state = "" }: { state?: string }) {
   const { t, lang } = useLanguage();
   const [theme, setTheme] = useState<RitualTheme | undefined>(undefined);
+  const [forced, setForced] = useState(state);
+  useEffect(() => setForced(state), [state]);
   const q = useQuery({
     queryKey: ["rituals", lang, theme],
     queryFn: () => api.listRituals(lang, theme),
+    placeholderData: keepPreviousData,
   });
-  const loading = state === "loading" || (!state && q.isPending);
-  const failed = state === "error" || (!state && q.isError);
+  const loading = forced === "loading" || (!forced && q.isPending);
+  const failed = forced === "error" || (!forced && q.isError);
   return (
     <div className="narrow">
       <h1 className="xl">{t.ritualsTitle}</h1>
@@ -712,8 +709,8 @@ export function RitualsPage({ state = "" }: { state?: string }) {
         {loading ? (
           <Skeleton />
         ) : failed ? (
-          <StateMessage message={t.ritualsError} retry={() => void q.refetch()} />
-        ) : state === "empty" || !q.data?.length ? (
+          <StateMessage message={t.ritualsError} retry={() => { setForced(""); void q.refetch(); }} />
+        ) : forced === "empty" || !q.data?.length ? (
           <StateMessage message={t.ritualsEmpty} />
         ) : (
           <ul className="read-more">
@@ -786,6 +783,9 @@ function ScentThatFits({ perfume, reason }: { perfume: Perfume; reason: string }
 export function RitualPage({ id, state = "" }: { id: string; state?: string }) {
   const { t, lang } = useLanguage();
   const store = useStore();
+  const queryClient = useQueryClient();
+  const [forced, setForced] = useState(state);
+  useEffect(() => { setForced(state); setSaved(false); }, [state, id]);
   const [saved, setSaved] = useState(false);
   const q = useQuery({
     queryKey: ["ritual-full", id, lang],
@@ -799,7 +799,7 @@ export function RitualPage({ id, state = "" }: { id: string; state?: string }) {
   const { markJourney } = store;
   useEffect(() => markJourney("ritualOpened"), [markJourney]);
 
-  if (state === "loading" || (!state && q.isPending))
+  if (forced === "loading" || (!forced && q.isPending))
     return (
       <div className="narrow stack">
         <Orb variant="moon" size="md" />
@@ -807,7 +807,7 @@ export function RitualPage({ id, state = "" }: { id: string; state?: string }) {
       </div>
     );
   const notFoundErr = q.error instanceof Error && q.error.message === "NOT_FOUND";
-  if (state === "not-found" || (!state && notFoundErr))
+  if (forced === "not-found" || (!forced && notFoundErr))
     return (
       <div className="narrow">
         <StateMessage message={t.ritualNotFound}>
@@ -817,10 +817,10 @@ export function RitualPage({ id, state = "" }: { id: string; state?: string }) {
         </StateMessage>
       </div>
     );
-  if (state === "error" || (!state && q.isError) || !q.data)
+  if (forced === "error" || (!forced && q.isError) || !q.data)
     return (
       <div className="narrow">
-        <StateMessage message={t.ritualsError} retry={() => void q.refetch()} />
+        <StateMessage message={t.ritualsError} retry={() => { setForced(""); void q.refetch(); }} />
       </div>
     );
   const r = q.data.ritual;
@@ -870,6 +870,7 @@ export function RitualPage({ id, state = "" }: { id: string; state?: string }) {
           disabled={saved}
           onClick={async () => {
             await api.saveRitual(r.id);
+            await queryClient.invalidateQueries({ queryKey: ["saved-rituals"] });
             setSaved(true);
             store.notify(t.ritualSaved);
           }}
@@ -896,9 +897,11 @@ export function RitualPage({ id, state = "" }: { id: string; state?: string }) {
 /* ---------- shelf ---------- */
 export function ShelfPage({ id, state = "" }: { id: string; state?: string }) {
   const { t, lang, word } = useLanguage();
+  const [forced, setForced] = useState(state);
+  useEffect(() => setForced(state), [state]);
   const q = useQuery({ queryKey: ["shelf", id, lang], queryFn: () => api.getShelf(id, lang) });
-  const loading = state === "loading" || (!state && q.isPending);
-  const failed = state === "error" || (!state && q.isError);
+  const loading = forced === "loading" || (!forced && q.isPending);
+  const failed = forced === "error" || (!forced && q.isError);
   const entries: { key: string; label: string; note: NoteName; e: ShelfEntry | null }[] = q.data
     ? [
         { key: "chart", label: t.shelfChart, note: "musk", e: q.data.forChart },
@@ -924,7 +927,7 @@ export function ShelfPage({ id, state = "" }: { id: string; state?: string }) {
           <Skeleton product />
         </div>
       ) : failed ? (
-        <StateMessage message={t.shelfError} retry={() => void q.refetch()} />
+        <StateMessage message={t.shelfError} retry={() => { setForced(""); void q.refetch(); }} />
       ) : (
         entries
           .filter((x) => x.e)
