@@ -227,5 +227,31 @@ html{background:var(--bg);color:var(--text)}
 .site-header .header-tools{display:flex;gap:8px}
 .site-header .header-tools .language{display:none}
 .evidence-cell .small{text-align:left}
+/* One stable visual system across all screens. */
+html{color-scheme:dark;scrollbar-gutter:stable}
+body{font-size:15px;line-height:24px}
+h1,h2,h3{font-family:var(--font-mono)}
+.xl{font-size:36px;line-height:44px}
+.question{font-size:24px;line-height:32px}
+.wordmark{font-size:24px;line-height:32px}
+.detail-layout h1{font-size:36px;line-height:44px}
+.display{font-size:64px;line-height:72px}
+.reveal-traits p{font-size:24px;line-height:34px}
+.nn-primary,.ink .nn-primary{background:var(--surface);color:var(--text);border-color:var(--text)}
+.nn-primary:hover,.nn-primary[data-demo=hover],.ink .nn-primary:hover{background:var(--surface);color:var(--accent);border-color:var(--accent)}
+.nn-secondary:hover,.nn-secondary[data-demo=hover],.chip[aria-pressed=true]{background:var(--surface);color:var(--accent);border-color:var(--accent)}
+.nn-button:active,.nn-button[data-demo=active]{transform:none}
+.step-fade,.chart-step-body{animation:none}
+.chart-step-bottom{min-height:132px;justify-content:flex-end}
+.chart-step-body{padding:32px 0}
+.dialog-overlay{background:color-mix(in oklch,var(--bg) 80%,transparent)}
+.landing-how .solar{margin:auto}
+.site-header{gap:20px}
+.header-nav{gap:24px}
+.header-tools{gap:16px}
+.ask-bar{z-index:40}
+.toast-stack{z-index:100}
+@media(max-width:1100px) and (min-width:768px){.site-header{flex-wrap:wrap;height:auto;min-height:100px;padding-top:16px;padding-bottom:16px;gap:12px}.header-nav{order:3;width:100%;justify-content:center;gap:32px}.header-tools{margin-left:auto}}
+@media(max-width:767px){.xl,.detail-layout h1{font-size:28px;line-height:36px}.wordmark{font-size:22px;line-height:30px}.display{font-size:40px;line-height:48px}.placement-badge .question{font-size:18px;line-height:26px}.answer-input,.answer-city input{font-size:24px;line-height:32px}.reading-trigger .question{font-size:20px;line-height:28px}.landing-hero{padding-bottom:48px}.site-header{gap:12px}.toast-stack{bottom:calc(var(--control-height) + 16px + env(safe-area-inset-bottom))}body.bare .toast-stack{bottom:96px}}
 }
 .evidence-cell .small{text-align:left}
