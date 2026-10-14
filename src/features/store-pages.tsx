@@ -19,7 +19,7 @@ import * as api from "@/data/api";
 import { perfumeQuery, productQuery, cartQuery, savedQuery } from "@/data/queries";
 import { ProductCard, Notes, AddButton } from "@/components/scent/product";
 import { Bottle, ChartWheel } from "@/components/scent/artwork";
-import { UnderlineInput, Skeleton } from "@/components/scent/controls";
+import { UnderlineInput, Skeleton, SectionHeader } from "@/components/scent/controls";
 import { ScentDialog } from "@/components/scent/dialog";
 import { StateMessage, ProductSkeletons } from "./shared";
 import type { Perfume } from "@/data/types";

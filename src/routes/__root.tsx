@@ -14,7 +14,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { LanguageProvider, useLanguage } from "@/i18n/provider";
 import { StoreProvider } from "@/data/context";
-import { Header, Footer, Toast } from "@/components/scent/shell";
+import { Header, Footer, Toast, TabBar } from "@/components/scent/shell";
 import { Button } from "@/components/ui/button";
 
 function NotFoundComponent() {
@@ -132,6 +132,7 @@ function RootComponent() {
             <Outlet />
           </main>
           <Footer />
+          <TabBar />
           <Toast />
         </StoreProvider>
       </LanguageProvider>

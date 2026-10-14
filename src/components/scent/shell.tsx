@@ -1,11 +1,10 @@
-import { Link } from "@tanstack/react-router";
-import { Menu, ShoppingBag, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Link, useRouterState } from "@tanstack/react-router";
+import { ShoppingBag, X } from "lucide-react";
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/i18n/provider";
 import { useStore } from "@/data/context";
 import { Logo } from "./artwork";
-import { ScentDialog } from "./dialog";
 export function LanguageToggle() {
   const { lang, setLang, t } = useLanguage();
   return (
@@ -32,10 +31,16 @@ export function LanguageToggle() {
     </div>
   );
 }
+const tabs = [
+  { to: "/", key: "tabHome" },
+  { to: "/chart/new", key: "tabChart" },
+  { to: "/shop", key: "tabShop" },
+  { to: "/cart", key: "tabCart" },
+  { to: "/you", key: "tabYou" },
+] as const;
 export function Header() {
   const { t } = useLanguage();
   const { cartItems } = useStore();
-  const [open, setOpen] = useState(false);
   const count = cartItems.reduce((n, p) => n + p.quantity, 0);
   return (
     <header className="site-header">
@@ -43,9 +48,12 @@ export function Header() {
         <Logo />
         {t.brand}
       </Link>
-      <nav className="header-nav">
+      <Link to="/" className="label mobile-wordmark">
+        {t.brand}
+      </Link>
+      <nav className="header-nav" aria-label={t.tabsLabel}>
         <Link to="/shop">{t.navShop}</Link>
-        <Link to="/saved">{t.navSaved}</Link>
+        <Link to="/you">{t.navYou}</Link>
         <Link to="/login">{t.navLogin}</Link>
       </nav>
       <div className="header-tools">
@@ -54,34 +62,33 @@ export function Header() {
           <ShoppingBag size={19} />
           <span className="label">{String(count).padStart(2, "0")}</span>
         </Link>
-        <Button
-          variant="text"
-          size="icon"
-          aria-label={t.menu}
-          className="mobile-menu-button"
-          onClick={() => setOpen(true)}
-        >
-          <Menu size={20} />
-        </Button>
       </div>
-      <ScentDialog open={open} onOpenChange={setOpen} title={t.menu} menu>
-        <nav>
-          {(
-            [
-              { to: "/shop", label: t.navShop },
-              { to: "/saved", label: t.navSaved },
-              { to: "/cart", label: t.navCart },
-              { to: "/login", label: t.navLogin },
-            ] as const
-          ).map((n) => (
-            <Link key={n.to} to={n.to} onClick={() => setOpen(false)}>
-              {n.label}
-            </Link>
-          ))}
-        </nav>
-        <LanguageToggle />
-      </ScentDialog>
     </header>
+  );
+}
+export function TabBar() {
+  const { t } = useLanguage();
+  const { cartItems } = useStore();
+  const count = cartItems.reduce((n, p) => n + p.quantity, 0);
+  const path = useRouterState({ select: (s) => s.location.pathname });
+  return (
+    <nav className="tab-bar" aria-label={t.tabsLabel}>
+      {tabs.map((tab) => {
+        const active =
+          tab.to === "/" ? path === "/" : path.startsWith(tab.to === "/chart/new" ? "/chart" : tab.to);
+        return (
+          <Link
+            key={tab.to}
+            to={tab.to}
+            className={`label tab ${active ? "tab-active" : ""}`}
+            aria-current={active ? "page" : undefined}
+          >
+            {t[tab.key]}
+            {tab.key === "tabCart" && count > 0 && <span className="tab-count"> {count}</span>}
+          </Link>
+        );
+      })}
+    </nav>
   );
 }
 export function Footer() {
