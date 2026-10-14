@@ -174,7 +174,7 @@ export function Shop({ state = "" }: { state?: string }) {
                   max={220}
                   step={5}
                   value={price}
-                  onChange={(e) => startFilterTransition(() => setPrice(Number(e.target.value))))}
+                  onChange={(e) => startFilterTransition(() => setPrice(Number(e.target.value)))}
                 />
               </div>
               <Button
