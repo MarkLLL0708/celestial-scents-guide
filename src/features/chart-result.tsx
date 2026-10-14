@@ -834,7 +834,7 @@ export function RitualPage({ id, state = "" }: { id: string; state?: string }) {
         ← {t.allRituals}
       </Link>
       <div className="ritual-hero">
-        <Orb variant="moon" size="lg" />
+        <SolarSystem />
         <h1 className="xl">{r.title}</h1>
         <p className="question ritual-intention-lg">{r.intention}</p>
       </div>
@@ -1035,7 +1035,7 @@ export function ShareDialog({
           <div className="share-inner">
             <p className="label">{t.brand}</p>
             <div className="share-mid">
-              <Orb variant="sun" size="lg" />
+              <SolarSystem />
               <h3 className="share-name">{name}</h3>
               <HandleLine chart={chart} />
               {q.data && (

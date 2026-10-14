@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useSuspenseQuery, useQueryClient, useQuery } from "@tanstack/react-query";
-import { StarField, Orb } from "@/components/scent/cosmos";
+import { StarField, SolarSystem } from "@/components/scent/cosmos";
 import {
   ArrowRight,
   ChevronDown,
@@ -69,7 +69,7 @@ export function Landing({ state = "" }: { state?: string }) {
               ))}
             </ol>
           </div>
-          <Orb variant="moon" size="lg" />
+          <SolarSystem />
         </div>
       </section>
 
