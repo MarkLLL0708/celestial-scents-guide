@@ -18,7 +18,15 @@ import {
 } from "@/components/scent/controls";
 import { ProductCard, AddButton } from "@/components/scent/product";
 import { Logo, ChartWheel, Bottle } from "@/components/scent/artwork";
-import { StarField, Orb, OrbitDiagram, NoteIcon, CellGrid, Cell, noteNames } from "@/components/scent/cosmos";
+import {
+  StarField,
+  Orb,
+  OrbitDiagram,
+  NoteIcon,
+  CellGrid,
+  Cell,
+  noteNames,
+} from "@/components/scent/cosmos";
 import { CrescentSpinner } from "./chart-loading";
 import { FeedbackRow, EvidenceCell, GrainDisc } from "./chart-result";
 import { demoChart, perfumes } from "@/data/seed";
@@ -215,7 +223,9 @@ function Library() {
             return (
               <figure key={n}>
                 <NoteIcon name={n} label={t[key as keyof typeof t] as string} />
-                <figcaption className="label muted">{t[key as keyof typeof t] as string}</figcaption>
+                <figcaption className="label muted">
+                  {t[key as keyof typeof t] as string}
+                </figcaption>
               </figure>
             );
           })}

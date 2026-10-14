@@ -147,7 +147,6 @@ export function RevealPage({ state = "" }: { state?: string }) {
   );
 }
 
-
 export function ResultPage({ id, state = "" }: { id: string; state?: string }) {
   const { t } = useLanguage();
   const store = useStore();

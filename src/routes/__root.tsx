@@ -139,14 +139,14 @@ function RootComponent() {
       <LanguageProvider>
         <StoreProvider>
           <div className="theme-shell" data-theme={theme}>
-          {theme === "dark" && <StarField />}
-          {!bare && <Header />}
-          <main id="main-content">
-            <Outlet />
-          </main>
-          {!bare && <Footer />}
-          {!bare && <TabBar />}
-          <Toast />
+            {theme === "dark" && <StarField />}
+            {!bare && <Header />}
+            <main id="main-content">
+              <Outlet />
+            </main>
+            {!bare && <Footer />}
+            {!bare && <TabBar />}
+            <Toast />
           </div>
         </StoreProvider>
       </LanguageProvider>

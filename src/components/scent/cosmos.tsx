@@ -60,7 +60,11 @@ export function Orb({
         </filter>
         <radialGradient id={`g${id}`} cx={variant === "moon" ? "30%" : "42%"} cy="40%" r="65%">
           <stop offset="0" stopColor="#fff" stopOpacity={light} />
-          <stop offset={variant === "moon" ? "0.5" : "0.75"} stopColor="#fff" stopOpacity={light * 0.5} />
+          <stop
+            offset={variant === "moon" ? "0.5" : "0.75"}
+            stopColor="#fff"
+            stopOpacity={light * 0.5}
+          />
           <stop offset="1" stopColor="#fff" stopOpacity="0.04" />
         </radialGradient>
         <mask id={`m${id}`}>
@@ -68,8 +72,22 @@ export function Orb({
         </mask>
       </defs>
       <circle cx="100" cy="100" r="92" fill="var(--surface)" />
-      <rect width="200" height="200" filter={`url(#n${id})`} mask={`url(#m${id})`} className="orb-grain" />
-      <circle cx="100" cy="100" r="92" fill="none" stroke="currentColor" strokeOpacity={variant === "disc" ? 0.4 : 0.8} strokeWidth="1" />
+      <rect
+        width="200"
+        height="200"
+        filter={`url(#n${id})`}
+        mask={`url(#m${id})`}
+        className="orb-grain"
+      />
+      <circle
+        cx="100"
+        cy="100"
+        r="92"
+        fill="none"
+        stroke="currentColor"
+        strokeOpacity={variant === "disc" ? 0.4 : 0.8}
+        strokeWidth="1"
+      />
     </svg>
   );
 }
@@ -84,8 +102,21 @@ export function OrbitDiagram() {
           const a = (i * 53 * Math.PI) / 180;
           return (
             <g key={rx}>
-              <ellipse cx="180" cy="100" rx={rx} ry={ry} stroke="currentColor" strokeWidth="1" opacity=".5" />
-              <circle cx={180 + rx * Math.cos(a)} cy={100 + ry * Math.sin(a)} r="3.5" fill="currentColor" />
+              <ellipse
+                cx="180"
+                cy="100"
+                rx={rx}
+                ry={ry}
+                stroke="currentColor"
+                strokeWidth="1"
+                opacity=".5"
+              />
+              <circle
+                cx={180 + rx * Math.cos(a)}
+                cy={100 + ry * Math.sin(a)}
+                r="3.5"
+                fill="currentColor"
+              />
             </g>
           );
         })}
@@ -158,7 +189,15 @@ export function NoteIcon({ name, label }: { name: NoteName; label: string }) {
       />
     );
   return (
-    <svg className="note-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1" role="img" aria-label={label}>
+    <svg
+      className="note-icon"
+      viewBox="0 0 48 48"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1"
+      role="img"
+      aria-label={label}
+    >
       {notePaths[name]}
     </svg>
   );
