@@ -14,11 +14,23 @@ import type {
   ChartRecord,
   Reading,
   Ritual,
+  RitualTheme,
+  Shelf,
+  ShelfEntry,
   Theme,
   Today,
   Topic,
 } from "./types";
-import { answerFor, readingFor, ritualFor, ritualIds, todayFor, topics } from "./astro-mock";
+import {
+  answerFor,
+  readingFor,
+  ritualFor,
+  ritualIds,
+  shelfPlan,
+  shelfReason,
+  todayFor,
+  topics,
+} from "./astro-mock";
 export * from "./types";
 const wait = <T>(value: T): Promise<T> =>
   new Promise((resolve) => setTimeout(() => resolve(structuredClone(value)), 600));
@@ -219,11 +231,43 @@ export async function askNotes(
   if (!question.trim()) throw new Error("EMPTY_QUESTION");
   return wait(answerFor(question, category, lang));
 }
-export async function listRituals(lang: "en" | "vi"): Promise<Ritual[]> {
-  return wait(ritualIds.map((id) => ritualFor(id, lang)).filter((r): r is Ritual => r !== null));
+export async function listRituals(lang: "en" | "vi", theme?: RitualTheme): Promise<Ritual[]> {
+  const all = ritualIds.map((id) => ritualFor(id, lang)).filter((r): r is Ritual => r !== null);
+  return wait(theme ? all.filter((r) => r.theme === theme) : all);
 }
 export async function getRitual(id: string, lang: "en" | "vi"): Promise<Ritual> {
   const r = ritualFor(id, lang);
   if (!r) throw new Error("NOT_FOUND");
   return wait(r);
+}
+export async function getShelf(chartId: string, lang: "en" | "vi"): Promise<Shelf> {
+  void chartId;
+  const reasons = shelfReason(lang);
+  const entry = (k: keyof typeof shelfPlan, reason: string): ShelfEntry | null => {
+    const plan = shelfPlan[k];
+    const perfume = inventory.find((p) => p.id === plan.perfumeId);
+    const ritual = ritualFor(plan.ritualId, lang);
+    if (!perfume || !ritual) return null;
+    return {
+      perfume,
+      score: 0,
+      reason,
+      evidence: { planet: plan.planet, sign: plan.sign, why: reason },
+      ritualId: ritual.id,
+      ritualTitle: ritual.title,
+    };
+  };
+  return wait({
+    forChart: entry("forChart", reasons.chart),
+    forWeek: entry("forWeek", reasons.week),
+    forShadow: entry("forShadow", reasons.shadow),
+  });
+}
+let savedRituals: string[] = [];
+export async function saveRitual(id: string): Promise<string[]> {
+  if (!savedRituals.includes(id)) savedRituals = [...savedRituals, id];
+  return wait(savedRituals);
+}
+export async function listSavedRituals(lang: "en" | "vi"): Promise<Ritual[]> {
+  return wait(savedRituals.map((id) => ritualFor(id, lang)).filter((r): r is Ritual => r !== null));
 }
