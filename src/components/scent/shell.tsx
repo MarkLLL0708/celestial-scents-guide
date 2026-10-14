@@ -1,12 +1,114 @@
-import {Link} from '@tanstack/react-router';
-import {Menu,ShoppingBag,X} from 'lucide-react';
-import {useEffect,useState} from 'react';
-import {Button} from '@/components/ui/button';
-import {useLanguage} from '@/i18n/provider';
-import {useStore} from '@/data/context';
-import {Logo} from './artwork';
-import {ScentDialog} from './dialog';
-export function LanguageToggle(){const {lang,setLang,t}=useLanguage();return <div className="language" role="group" aria-label={t.language}><Button variant="text" className="lang-button" aria-pressed={lang==='en'} onClick={()=>setLang('en')}>EN</Button><span className="small muted" aria-hidden="true">/</span><Button variant="text" className="lang-button" aria-pressed={lang==='vi'} onClick={()=>setLang('vi')}>VI</Button></div>}
-export function Header(){const {t}=useLanguage();const {cartItems}=useStore();const [open,setOpen]=useState(false);const count=cartItems.reduce((n,p)=>n+p.quantity,0);return <header className="site-header"><Link to="/" className="wordmark"><Logo/>{t.brand}</Link><nav className="header-nav"><Link to="/shop">{t.navShop}</Link><Link to="/saved">{t.navSaved}</Link><Link to="/login">{t.navLogin}</Link></nav><div className="header-tools"><LanguageToggle/><Link to="/cart" className="cart-link" aria-label={`${t.navCart} (${count})`}><ShoppingBag size={19}/><span className="label">{String(count).padStart(2,'0')}</span></Link><Button variant="text" size="icon" aria-label={t.menu} className="mobile-menu-button" onClick={()=>setOpen(true)}><Menu size={20}/></Button></div><ScentDialog open={open} onOpenChange={setOpen} title={t.menu} menu><nav>{([{to:'/shop',label:t.navShop},{to:'/saved',label:t.navSaved},{to:'/cart',label:t.navCart},{to:'/login',label:t.navLogin}] as const).map(n=><Link key={n.to} to={n.to} onClick={()=>setOpen(false)}>{n.label}</Link>)}</nav><LanguageToggle/></ScentDialog></header>}
-export function Footer(){const {t}=useLanguage();return <footer className="site-footer"><p className="muted">{t.disclaimer}</p><LanguageToggle/></footer>}
-export function Toast(){const {notice,dismiss}=useStore();const {t}=useLanguage();useEffect(()=>{if(!notice)return;const timer=setTimeout(dismiss,5000);return()=>clearTimeout(timer);},[notice]);return notice?<div className="toast-stack"><div className="toast-item" role={notice.kind==='error'?'alert':'status'}><p className="small">{notice.text}</p><Button variant="text" size="icon" aria-label={t.close} onClick={dismiss}><X size={18}/></Button></div></div>:null}
+import { Link } from "@tanstack/react-router";
+import { Menu, ShoppingBag, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/i18n/provider";
+import { useStore } from "@/data/context";
+import { Logo } from "./artwork";
+import { ScentDialog } from "./dialog";
+export function LanguageToggle() {
+  const { lang, setLang, t } = useLanguage();
+  return (
+    <div className="language" role="group" aria-label={t.language}>
+      <Button
+        variant="text"
+        className="lang-button"
+        aria-pressed={lang === "en"}
+        onClick={() => setLang("en")}
+      >
+        EN
+      </Button>
+      <span className="small muted" aria-hidden="true">
+        /
+      </span>
+      <Button
+        variant="text"
+        className="lang-button"
+        aria-pressed={lang === "vi"}
+        onClick={() => setLang("vi")}
+      >
+        VI
+      </Button>
+    </div>
+  );
+}
+export function Header() {
+  const { t } = useLanguage();
+  const { cartItems } = useStore();
+  const [open, setOpen] = useState(false);
+  const count = cartItems.reduce((n, p) => n + p.quantity, 0);
+  return (
+    <header className="site-header">
+      <Link to="/" className="wordmark">
+        <Logo />
+        {t.brand}
+      </Link>
+      <nav className="header-nav">
+        <Link to="/shop">{t.navShop}</Link>
+        <Link to="/saved">{t.navSaved}</Link>
+        <Link to="/login">{t.navLogin}</Link>
+      </nav>
+      <div className="header-tools">
+        <LanguageToggle />
+        <Link to="/cart" className="cart-link" aria-label={`${t.navCart} (${count})`}>
+          <ShoppingBag size={19} />
+          <span className="label">{String(count).padStart(2, "0")}</span>
+        </Link>
+        <Button
+          variant="text"
+          size="icon"
+          aria-label={t.menu}
+          className="mobile-menu-button"
+          onClick={() => setOpen(true)}
+        >
+          <Menu size={20} />
+        </Button>
+      </div>
+      <ScentDialog open={open} onOpenChange={setOpen} title={t.menu} menu>
+        <nav>
+          {(
+            [
+              { to: "/shop", label: t.navShop },
+              { to: "/saved", label: t.navSaved },
+              { to: "/cart", label: t.navCart },
+              { to: "/login", label: t.navLogin },
+            ] as const
+          ).map((n) => (
+            <Link key={n.to} to={n.to} onClick={() => setOpen(false)}>
+              {n.label}
+            </Link>
+          ))}
+        </nav>
+        <LanguageToggle />
+      </ScentDialog>
+    </header>
+  );
+}
+export function Footer() {
+  const { t } = useLanguage();
+  return (
+    <footer className="site-footer">
+      <p className="muted">{t.disclaimer}</p>
+      <LanguageToggle />
+    </footer>
+  );
+}
+export function Toast() {
+  const { notice, dismiss } = useStore();
+  const { t } = useLanguage();
+  useEffect(() => {
+    if (!notice) return;
+    const timer = setTimeout(dismiss, 5000);
+    return () => clearTimeout(timer);
+  }, [notice]);
+  return notice ? (
+    <div className="toast-stack">
+      <div className="toast-item" role={notice.kind === "error" ? "alert" : "status"}>
+        <p className="small">{notice.text}</p>
+        <Button variant="text" size="icon" aria-label={t.close} onClick={dismiss}>
+          <X size={18} />
+        </Button>
+      </div>
+    </div>
+  ) : null;
+}

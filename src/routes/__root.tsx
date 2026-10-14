@@ -12,10 +12,10 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
-import { LanguageProvider, useLanguage } from '@/i18n/provider';
-import { StoreProvider } from '@/data/context';
-import { Header, Footer, Toast } from '@/components/scent/shell';
-import { Button } from '@/components/ui/button';
+import { LanguageProvider, useLanguage } from "@/i18n/provider";
+import { StoreProvider } from "@/data/context";
+import { Header, Footer, Toast } from "@/components/scent/shell";
+import { Button } from "@/components/ui/button";
 
 function NotFoundComponent() {
   const { t } = useLanguage();
@@ -48,9 +48,7 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
-        <h1 className="text-xl font-semibold tracking-tight text-foreground">
-          {t.shopError}
-        </h1>
+        <h1 className="text-xl font-semibold tracking-tight text-foreground">{t.shopError}</h1>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <Button
             onClick={() => {
@@ -79,7 +77,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Natal Notes — fragrance and your stars" },
-      { name: "description", content: "A small perfume store with a different starting point: your birth chart." },
+      {
+        name: "description",
+        content: "A small perfume store with a different starting point: your birth chart.",
+      },
       { property: "og:title", content: "Natal Notes" },
       { property: "og:description", content: "Perfumes, written in your stars." },
       { property: "og:type", content: "website" },
@@ -91,9 +92,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: appCss,
       },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
-      { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
-      { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossOrigin: 'anonymous' },
-      { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=IBM+Plex+Mono:wght@500&family=Cormorant+Garamond:wght@500&family=Be+Vietnam+Pro:wght@400;500&display=swap' },
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=IBM+Plex+Mono:wght@500&family=Cormorant+Garamond:wght@500&family=Be+Vietnam+Pro:wght@400;500&display=swap",
+      },
     ],
   }),
   shellComponent: RootShell,
@@ -121,7 +125,16 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <LanguageProvider><StoreProvider><Header /><main id="main-content"><Outlet /></main><Footer /><Toast /></StoreProvider></LanguageProvider>
+      <LanguageProvider>
+        <StoreProvider>
+          <Header />
+          <main id="main-content">
+            <Outlet />
+          </main>
+          <Footer />
+          <Toast />
+        </StoreProvider>
+      </LanguageProvider>
     </QueryClientProvider>
   );
 }
