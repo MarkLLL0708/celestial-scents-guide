@@ -17,3 +17,4 @@
 - Keep the only main element in the root shell and use Radix primitives for keyboard-managed dialogs and city search.
 - Chart questions live in one ChartFlow driven by the optional ?step search param, with answers held in the store provider so moving back never loses input.
 - Phones use a fixed bottom tab bar instead of a menu overlay; /saved permanently redirects to /you.
+- Route themes come from themeFor() in src/lib/theme.ts, applied as data-theme on <html> and the shell so SSR paints the right background with no flash.
