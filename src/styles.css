@@ -259,3 +259,7 @@ h1,h2,h3{font-family:var(--font-mono)}
 @media(max-width:1100px) and (min-width:768px){.site-header{flex-wrap:wrap;height:auto;min-height:100px;padding-top:16px;padding-bottom:16px;gap:12px}.header-nav{order:3;width:100%;justify-content:center;gap:32px}.header-tools{margin-left:auto}}
 @media(max-width:767px){.xl,.detail-layout h1{font-size:28px;line-height:36px}.wordmark{font-size:22px;line-height:30px}.display{font-size:40px;line-height:48px}.placement-badge .question{font-size:18px;line-height:26px}.answer-input,.answer-city input{font-size:24px;line-height:32px}.reading-trigger .question{font-size:20px;line-height:28px}.landing-hero{padding-bottom:48px}.site-header{gap:12px}.toast-stack{bottom:calc(var(--control-height) + 16px + env(safe-area-inset-bottom))}body.bare .toast-stack{bottom:96px}}
 .evidence-cell .small{text-align:left}
+/* one muted divider per section, site-wide */
+.section,.section-heading,.plain-row,.note-row,.collection-title,.hero-bottom,.site-header,.site-footer,.placement-expand{border-color:color-mix(in oklab,var(--border) 28%,transparent)}
+.section .section-heading,.section>.section-heading:first-child{border-top:0;padding-top:0}
+.plain-row:last-child{border-bottom:0}
