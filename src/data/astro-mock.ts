@@ -247,20 +247,18 @@ const todayText: Record<
   en: {
     summary: "a quiet day that rewards finishing one thing properly.",
     working:
-      "Venus is easy on your moon today. Small kindness lands well. Send the message you have been drafting since sunday.",
+      "people are easier to talk to today, and so are you. say the thing you have been rehearsing.",
     pushing:
-      "Mars squares your mercury. Replies come out sharper than you mean. Read anything important twice before it goes.",
-    protect:
-      "Saturn sits on your venus. Protect the evening. You do not owe anyone a second plan after six.",
+      "your patience runs short after lunch. write the reply, then wait an hour before sending.",
+    protect: "your energy. say no to one thing before noon.",
   },
   vi: {
     summary: "một ngày yên tĩnh, thưởng cho việc làm xong một việc cho đàng hoàng.",
     working:
-      "Kim tinh nhẹ nhàng với mặt trăng của bạn hôm nay. Sự tử tế nhỏ được đón nhận. Gửi tin nhắn bạn đã soạn từ chủ nhật.",
+      "hôm nay mọi người dễ trò chuyện hơn, bạn cũng vậy. hãy nói điều bạn vẫn đang tập dượt.",
     pushing:
-      "Hỏa tinh vuông góc thủy tinh của bạn. Câu trả lời sắc hơn bạn muốn. Đọc lại điều quan trọng hai lần trước khi gửi.",
-    protect:
-      "Thổ tinh nằm trên kim tinh của bạn. Bảo vệ buổi tối. Sau sáu giờ bạn không nợ ai kế hoạch thứ hai.",
+      "sau bữa trưa bạn dễ mất kiên nhẫn. hãy viết câu trả lời, rồi chờ một tiếng trước khi gửi.",
+    protect: "năng lượng của bạn. hãy từ chối một việc trước buổi trưa.",
   },
 };
 
