@@ -15,7 +15,6 @@ import { Route as CartRouteImport } from './routes/cart'
 import { Route as DesignRouteImport } from './routes/design'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as SavedRouteImport } from './routes/saved'
-import { Route as ShopRouteImport } from './routes/shop'
 import { Route as TodayRouteImport } from './routes/today'
 import { Route as YouRouteImport } from './routes/you'
 import { Route as ChartLoadingRouteImport } from './routes/chart.loading'
@@ -23,6 +22,7 @@ import { Route as ChartNewRouteImport } from './routes/chart.new'
 import { Route as ChartRevealRouteImport } from './routes/chart.reveal'
 import { Route as RitualsIndexRouteImport } from './routes/rituals.index'
 import { Route as RitualsIdRouteImport } from './routes/rituals.$id'
+import { Route as ShopIndexRouteImport } from './routes/shop.index'
 import { Route as ShopIdRouteImport } from './routes/shop.$id'
 import { Route as ChartResultIdRouteImport } from './routes/chart.result.$id'
 import { Route as ChartResultIdShelfRouteImport } from './routes/chart.result.$id_.shelf'
@@ -56,11 +56,6 @@ const LoginRoute = LoginRouteImport.update({
 const SavedRoute = SavedRouteImport.update({
   id: '/saved',
   path: '/saved',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ShopRoute = ShopRouteImport.update({
-  id: '/shop',
-  path: '/shop',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TodayRoute = TodayRouteImport.update({
@@ -98,10 +93,15 @@ const RitualsIdRoute = RitualsIdRouteImport.update({
   path: '/rituals/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ShopIndexRoute = ShopIndexRouteImport.update({
+  id: '/shop/',
+  path: '/shop/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ShopIdRoute = ShopIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => ShopRoute,
+  id: '/shop/$id',
+  path: '/shop/$id',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ChartResultIdRoute = ChartResultIdRouteImport.update({
   id: '/chart/result/$id',
@@ -126,7 +126,6 @@ export interface FileRoutesByFullPath {
   '/design': typeof DesignRoute
   '/login': typeof LoginRoute
   '/saved': typeof SavedRoute
-  '/shop': typeof ShopRouteWithChildren
   '/today': typeof TodayRoute
   '/you': typeof YouRoute
   '/chart/loading': typeof ChartLoadingRoute
@@ -135,6 +134,7 @@ export interface FileRoutesByFullPath {
   '/rituals/$id': typeof RitualsIdRoute
   '/shop/$id': typeof ShopIdRoute
   '/rituals/': typeof RitualsIndexRoute
+  '/shop/': typeof ShopIndexRoute
   '/chart/result/$id': typeof ChartResultIdRoute
   '/chart/result/$id/shelf': typeof ChartResultIdShelfRoute
   '/chart/result/$id/read/$topic': typeof ChartResultIdReadTopicRoute
@@ -146,7 +146,6 @@ export interface FileRoutesByTo {
   '/design': typeof DesignRoute
   '/login': typeof LoginRoute
   '/saved': typeof SavedRoute
-  '/shop': typeof ShopRouteWithChildren
   '/today': typeof TodayRoute
   '/you': typeof YouRoute
   '/chart/loading': typeof ChartLoadingRoute
@@ -155,6 +154,7 @@ export interface FileRoutesByTo {
   '/rituals/$id': typeof RitualsIdRoute
   '/shop/$id': typeof ShopIdRoute
   '/rituals': typeof RitualsIndexRoute
+  '/shop': typeof ShopIndexRoute
   '/chart/result/$id': typeof ChartResultIdRoute
   '/chart/result/$id/shelf': typeof ChartResultIdShelfRoute
   '/chart/result/$id/read/$topic': typeof ChartResultIdReadTopicRoute
@@ -167,7 +167,6 @@ export interface FileRoutesById {
   '/design': typeof DesignRoute
   '/login': typeof LoginRoute
   '/saved': typeof SavedRoute
-  '/shop': typeof ShopRouteWithChildren
   '/today': typeof TodayRoute
   '/you': typeof YouRoute
   '/chart/loading': typeof ChartLoadingRoute
@@ -176,6 +175,7 @@ export interface FileRoutesById {
   '/rituals/$id': typeof RitualsIdRoute
   '/shop/$id': typeof ShopIdRoute
   '/rituals/': typeof RitualsIndexRoute
+  '/shop/': typeof ShopIndexRoute
   '/chart/result/$id': typeof ChartResultIdRoute
   '/chart/result/$id_/shelf': typeof ChartResultIdShelfRoute
   '/chart/result/$id_/read/$topic': typeof ChartResultIdReadTopicRoute
@@ -189,7 +189,6 @@ export interface FileRouteTypes {
     | '/design'
     | '/login'
     | '/saved'
-    | '/shop'
     | '/today'
     | '/you'
     | '/chart/loading'
@@ -198,6 +197,7 @@ export interface FileRouteTypes {
     | '/rituals/$id'
     | '/shop/$id'
     | '/rituals/'
+    | '/shop/'
     | '/chart/result/$id'
     | '/chart/result/$id/shelf'
     | '/chart/result/$id/read/$topic'
@@ -209,7 +209,6 @@ export interface FileRouteTypes {
     | '/design'
     | '/login'
     | '/saved'
-    | '/shop'
     | '/today'
     | '/you'
     | '/chart/loading'
@@ -218,6 +217,7 @@ export interface FileRouteTypes {
     | '/rituals/$id'
     | '/shop/$id'
     | '/rituals'
+    | '/shop'
     | '/chart/result/$id'
     | '/chart/result/$id/shelf'
     | '/chart/result/$id/read/$topic'
@@ -229,7 +229,6 @@ export interface FileRouteTypes {
     | '/design'
     | '/login'
     | '/saved'
-    | '/shop'
     | '/today'
     | '/you'
     | '/chart/loading'
@@ -238,6 +237,7 @@ export interface FileRouteTypes {
     | '/rituals/$id'
     | '/shop/$id'
     | '/rituals/'
+    | '/shop/'
     | '/chart/result/$id'
     | '/chart/result/$id_/shelf'
     | '/chart/result/$id_/read/$topic'
@@ -250,14 +250,15 @@ export interface RootRouteChildren {
   DesignRoute: typeof DesignRoute
   LoginRoute: typeof LoginRoute
   SavedRoute: typeof SavedRoute
-  ShopRoute: typeof ShopRouteWithChildren
   TodayRoute: typeof TodayRoute
   YouRoute: typeof YouRoute
   ChartLoadingRoute: typeof ChartLoadingRoute
   ChartNewRoute: typeof ChartNewRoute
   ChartRevealRoute: typeof ChartRevealRoute
   RitualsIdRoute: typeof RitualsIdRoute
+  ShopIdRoute: typeof ShopIdRoute
   RitualsIndexRoute: typeof RitualsIndexRoute
+  ShopIndexRoute: typeof ShopIndexRoute
   ChartResultIdRoute: typeof ChartResultIdRoute
   ChartResultIdShelfRoute: typeof ChartResultIdShelfRoute
   ChartResultIdReadTopicRoute: typeof ChartResultIdReadTopicRoute
@@ -305,13 +306,6 @@ declare module '@tanstack/react-router' {
       path: '/saved'
       fullPath: '/saved'
       preLoaderRoute: typeof SavedRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/shop': {
-      id: '/shop'
-      path: '/shop'
-      fullPath: '/shop'
-      preLoaderRoute: typeof ShopRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/today': {
@@ -363,12 +357,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RitualsIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/shop/': {
+      id: '/shop/'
+      path: '/shop'
+      fullPath: '/shop/'
+      preLoaderRoute: typeof ShopIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/shop/$id': {
       id: '/shop/$id'
-      path: '/$id'
+      path: '/shop/$id'
       fullPath: '/shop/$id'
       preLoaderRoute: typeof ShopIdRouteImport
-      parentRoute: typeof ShopRoute
+      parentRoute: typeof rootRouteImport
     }
     '/chart/result/$id': {
       id: '/chart/result/$id'
@@ -394,16 +395,6 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface ShopRouteChildren {
-  ShopIdRoute: typeof ShopIdRoute
-}
-
-const ShopRouteChildren: ShopRouteChildren = {
-  ShopIdRoute: ShopIdRoute,
-}
-
-const ShopRouteWithChildren = ShopRoute._addFileChildren(ShopRouteChildren)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AskRoute: AskRoute,
@@ -411,14 +402,15 @@ const rootRouteChildren: RootRouteChildren = {
   DesignRoute: DesignRoute,
   LoginRoute: LoginRoute,
   SavedRoute: SavedRoute,
-  ShopRoute: ShopRouteWithChildren,
   TodayRoute: TodayRoute,
   YouRoute: YouRoute,
   ChartLoadingRoute: ChartLoadingRoute,
   ChartNewRoute: ChartNewRoute,
   ChartRevealRoute: ChartRevealRoute,
   RitualsIdRoute: RitualsIdRoute,
+  ShopIdRoute: ShopIdRoute,
   RitualsIndexRoute: RitualsIndexRoute,
+  ShopIndexRoute: ShopIndexRoute,
   ChartResultIdRoute: ChartResultIdRoute,
   ChartResultIdShelfRoute: ChartResultIdShelfRoute,
   ChartResultIdReadTopicRoute: ChartResultIdReadTopicRoute,
