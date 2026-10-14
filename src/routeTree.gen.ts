@@ -15,6 +15,7 @@ import { Route as CartRouteImport } from './routes/cart'
 import { Route as DesignRouteImport } from './routes/design'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as SavedRouteImport } from './routes/saved'
+import { Route as ShopRouteImport } from './routes/shop'
 import { Route as TodayRouteImport } from './routes/today'
 import { Route as YouRouteImport } from './routes/you'
 import { Route as ChartLoadingRouteImport } from './routes/chart.loading'
@@ -58,6 +59,11 @@ const SavedRoute = SavedRouteImport.update({
   path: '/saved',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ShopRoute = ShopRouteImport.update({
+  id: '/shop',
+  path: '/shop',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TodayRoute = TodayRouteImport.update({
   id: '/today',
   path: '/today',
@@ -94,14 +100,14 @@ const RitualsIdRoute = RitualsIdRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const ShopIndexRoute = ShopIndexRouteImport.update({
-  id: '/shop/',
-  path: '/shop/',
-  getParentRoute: () => rootRouteImport,
+  id: '/',
+  path: '/',
+  getParentRoute: () => ShopRoute,
 } as any)
 const ShopIdRoute = ShopIdRouteImport.update({
-  id: '/shop/$id',
-  path: '/shop/$id',
-  getParentRoute: () => rootRouteImport,
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => ShopRoute,
 } as any)
 const ChartResultIdRoute = ChartResultIdRouteImport.update({
   id: '/chart/result/$id',
@@ -126,6 +132,7 @@ export interface FileRoutesByFullPath {
   '/design': typeof DesignRoute
   '/login': typeof LoginRoute
   '/saved': typeof SavedRoute
+  '/shop': typeof ShopRouteWithChildren
   '/today': typeof TodayRoute
   '/you': typeof YouRoute
   '/chart/loading': typeof ChartLoadingRoute
@@ -167,6 +174,7 @@ export interface FileRoutesById {
   '/design': typeof DesignRoute
   '/login': typeof LoginRoute
   '/saved': typeof SavedRoute
+  '/shop': typeof ShopRouteWithChildren
   '/today': typeof TodayRoute
   '/you': typeof YouRoute
   '/chart/loading': typeof ChartLoadingRoute
@@ -189,6 +197,7 @@ export interface FileRouteTypes {
     | '/design'
     | '/login'
     | '/saved'
+    | '/shop'
     | '/today'
     | '/you'
     | '/chart/loading'
@@ -229,6 +238,7 @@ export interface FileRouteTypes {
     | '/design'
     | '/login'
     | '/saved'
+    | '/shop'
     | '/today'
     | '/you'
     | '/chart/loading'
@@ -250,15 +260,14 @@ export interface RootRouteChildren {
   DesignRoute: typeof DesignRoute
   LoginRoute: typeof LoginRoute
   SavedRoute: typeof SavedRoute
+  ShopRoute: typeof ShopRouteWithChildren
   TodayRoute: typeof TodayRoute
   YouRoute: typeof YouRoute
   ChartLoadingRoute: typeof ChartLoadingRoute
   ChartNewRoute: typeof ChartNewRoute
   ChartRevealRoute: typeof ChartRevealRoute
   RitualsIdRoute: typeof RitualsIdRoute
-  ShopIdRoute: typeof ShopIdRoute
   RitualsIndexRoute: typeof RitualsIndexRoute
-  ShopIndexRoute: typeof ShopIndexRoute
   ChartResultIdRoute: typeof ChartResultIdRoute
   ChartResultIdShelfRoute: typeof ChartResultIdShelfRoute
   ChartResultIdReadTopicRoute: typeof ChartResultIdReadTopicRoute
@@ -306,6 +315,13 @@ declare module '@tanstack/react-router' {
       path: '/saved'
       fullPath: '/saved'
       preLoaderRoute: typeof SavedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/shop': {
+      id: '/shop'
+      path: '/shop'
+      fullPath: '/shop'
+      preLoaderRoute: typeof ShopRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/today': {
@@ -359,17 +375,17 @@ declare module '@tanstack/react-router' {
     }
     '/shop/': {
       id: '/shop/'
-      path: '/shop'
+      path: '/'
       fullPath: '/shop/'
       preLoaderRoute: typeof ShopIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof ShopRoute
     }
     '/shop/$id': {
       id: '/shop/$id'
-      path: '/shop/$id'
+      path: '/$id'
       fullPath: '/shop/$id'
       preLoaderRoute: typeof ShopIdRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof ShopRoute
     }
     '/chart/result/$id': {
       id: '/chart/result/$id'
@@ -395,6 +411,18 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface ShopRouteChildren {
+  ShopIdRoute: typeof ShopIdRoute
+  ShopIndexRoute: typeof ShopIndexRoute
+}
+
+const ShopRouteChildren: ShopRouteChildren = {
+  ShopIdRoute: ShopIdRoute,
+  ShopIndexRoute: ShopIndexRoute,
+}
+
+const ShopRouteWithChildren = ShopRoute._addFileChildren(ShopRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AskRoute: AskRoute,
@@ -402,15 +430,14 @@ const rootRouteChildren: RootRouteChildren = {
   DesignRoute: DesignRoute,
   LoginRoute: LoginRoute,
   SavedRoute: SavedRoute,
+  ShopRoute: ShopRouteWithChildren,
   TodayRoute: TodayRoute,
   YouRoute: YouRoute,
   ChartLoadingRoute: ChartLoadingRoute,
   ChartNewRoute: ChartNewRoute,
   ChartRevealRoute: ChartRevealRoute,
   RitualsIdRoute: RitualsIdRoute,
-  ShopIdRoute: ShopIdRoute,
   RitualsIndexRoute: RitualsIndexRoute,
-  ShopIndexRoute: ShopIndexRoute,
   ChartResultIdRoute: ChartResultIdRoute,
   ChartResultIdShelfRoute: ChartResultIdShelfRoute,
   ChartResultIdReadTopicRoute: ChartResultIdReadTopicRoute,
