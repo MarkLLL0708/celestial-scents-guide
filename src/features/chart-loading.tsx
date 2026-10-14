@@ -5,7 +5,12 @@ import { useLanguage } from "@/i18n/provider";
 export function CrescentSpinner() {
   return (
     <svg className="crescent-spinner" viewBox="0 0 48 48" fill="none" aria-hidden="true">
-      <path d="M24 4A20 20 0 1 1 6.7 34" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      <path
+        d="M24 4A20 20 0 1 1 6.7 34"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
       <circle cx="24" cy="4" r="1.5" fill="currentColor" />
     </svg>
   );

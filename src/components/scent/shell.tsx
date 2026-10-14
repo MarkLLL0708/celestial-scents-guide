@@ -75,7 +75,9 @@ export function TabBar() {
     <nav className="tab-bar" aria-label={t.tabsLabel}>
       {tabs.map((tab) => {
         const active =
-          tab.to === "/" ? path === "/" : path.startsWith(tab.to === "/chart/new" ? "/chart" : tab.to);
+          tab.to === "/"
+            ? path === "/"
+            : path.startsWith(tab.to === "/chart/new" ? "/chart" : tab.to);
         return (
           <Link
             key={tab.to}

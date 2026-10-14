@@ -15,7 +15,9 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as SavedRouteImport } from './routes/saved'
 import { Route as ShopRouteImport } from './routes/shop'
 import { Route as YouRouteImport } from './routes/you'
+import { Route as ChartLoadingRouteImport } from './routes/chart.loading'
 import { Route as ChartNewRouteImport } from './routes/chart.new'
+import { Route as ChartRevealRouteImport } from './routes/chart.reveal'
 import { Route as ShopIdRouteImport } from './routes/shop.$id'
 import { Route as ChartResultIdRouteImport } from './routes/chart.result.$id'
 
@@ -49,9 +51,19 @@ const YouRoute = YouRouteImport.update({
   path: '/you',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ChartLoadingRoute = ChartLoadingRouteImport.update({
+  id: '/chart/loading',
+  path: '/chart/loading',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ChartNewRoute = ChartNewRouteImport.update({
   id: '/chart/new',
   path: '/chart/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChartRevealRoute = ChartRevealRouteImport.update({
+  id: '/chart/reveal',
+  path: '/chart/reveal',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ShopIdRoute = ShopIdRouteImport.update({
@@ -72,7 +84,9 @@ export interface FileRoutesByFullPath {
   '/saved': typeof SavedRoute
   '/shop': typeof ShopRouteWithChildren
   '/you': typeof YouRoute
+  '/chart/loading': typeof ChartLoadingRoute
   '/chart/new': typeof ChartNewRoute
+  '/chart/reveal': typeof ChartRevealRoute
   '/shop/$id': typeof ShopIdRoute
   '/chart/result/$id': typeof ChartResultIdRoute
 }
@@ -83,7 +97,9 @@ export interface FileRoutesByTo {
   '/saved': typeof SavedRoute
   '/shop': typeof ShopRouteWithChildren
   '/you': typeof YouRoute
+  '/chart/loading': typeof ChartLoadingRoute
   '/chart/new': typeof ChartNewRoute
+  '/chart/reveal': typeof ChartRevealRoute
   '/shop/$id': typeof ShopIdRoute
   '/chart/result/$id': typeof ChartResultIdRoute
 }
@@ -95,7 +111,9 @@ export interface FileRoutesById {
   '/saved': typeof SavedRoute
   '/shop': typeof ShopRouteWithChildren
   '/you': typeof YouRoute
+  '/chart/loading': typeof ChartLoadingRoute
   '/chart/new': typeof ChartNewRoute
+  '/chart/reveal': typeof ChartRevealRoute
   '/shop/$id': typeof ShopIdRoute
   '/chart/result/$id': typeof ChartResultIdRoute
 }
@@ -108,7 +126,9 @@ export interface FileRouteTypes {
     | '/saved'
     | '/shop'
     | '/you'
+    | '/chart/loading'
     | '/chart/new'
+    | '/chart/reveal'
     | '/shop/$id'
     | '/chart/result/$id'
   fileRoutesByTo: FileRoutesByTo
@@ -119,7 +139,9 @@ export interface FileRouteTypes {
     | '/saved'
     | '/shop'
     | '/you'
+    | '/chart/loading'
     | '/chart/new'
+    | '/chart/reveal'
     | '/shop/$id'
     | '/chart/result/$id'
   id:
@@ -130,7 +152,9 @@ export interface FileRouteTypes {
     | '/saved'
     | '/shop'
     | '/you'
+    | '/chart/loading'
     | '/chart/new'
+    | '/chart/reveal'
     | '/shop/$id'
     | '/chart/result/$id'
   fileRoutesById: FileRoutesById
@@ -142,7 +166,9 @@ export interface RootRouteChildren {
   SavedRoute: typeof SavedRoute
   ShopRoute: typeof ShopRouteWithChildren
   YouRoute: typeof YouRoute
+  ChartLoadingRoute: typeof ChartLoadingRoute
   ChartNewRoute: typeof ChartNewRoute
+  ChartRevealRoute: typeof ChartRevealRoute
   ChartResultIdRoute: typeof ChartResultIdRoute
 }
 
@@ -190,11 +216,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof YouRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/chart/loading': {
+      id: '/chart/loading'
+      path: '/chart/loading'
+      fullPath: '/chart/loading'
+      preLoaderRoute: typeof ChartLoadingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/chart/new': {
       id: '/chart/new'
       path: '/chart/new'
       fullPath: '/chart/new'
       preLoaderRoute: typeof ChartNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/chart/reveal': {
+      id: '/chart/reveal'
+      path: '/chart/reveal'
+      fullPath: '/chart/reveal'
+      preLoaderRoute: typeof ChartRevealRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/shop/$id': {
@@ -231,7 +271,9 @@ const rootRouteChildren: RootRouteChildren = {
   SavedRoute: SavedRoute,
   ShopRoute: ShopRouteWithChildren,
   YouRoute: YouRoute,
+  ChartLoadingRoute: ChartLoadingRoute,
   ChartNewRoute: ChartNewRoute,
+  ChartRevealRoute: ChartRevealRoute,
   ChartResultIdRoute: ChartResultIdRoute,
 }
 export const routeTree = rootRouteImport

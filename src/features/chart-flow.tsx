@@ -22,7 +22,14 @@ export const clampStep = (step?: number) =>
 export function timeIsValid(p: Pick<BirthProfile, "hour" | "minute">) {
   if (p.hour === null) return true;
   const m = p.minute ?? 0;
-  return Number.isInteger(p.hour) && p.hour >= 0 && p.hour <= 23 && Number.isInteger(m) && m >= 0 && m <= 59;
+  return (
+    Number.isInteger(p.hour) &&
+    p.hour >= 0 &&
+    p.hour <= 23 &&
+    Number.isInteger(m) &&
+    m >= 0 &&
+    m <= 59
+  );
 }
 export function stepIsValid(step: number, p: BirthProfile) {
   if (step === 1) return p.name.trim().length > 0;
@@ -78,7 +85,9 @@ export function ChartFlow({ step: rawStep }: { step?: number }) {
       first.current = false;
       return;
     }
-    const prompt = body.current?.querySelector<HTMLElement>("[data-prompt], .answer-prompt, .label.muted");
+    const prompt = body.current?.querySelector<HTMLElement>(
+      "[data-prompt], .answer-prompt, .label.muted",
+    );
     if (prompt) {
       prompt.tabIndex = -1;
       prompt.focus();
