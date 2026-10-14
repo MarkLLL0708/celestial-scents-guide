@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useSuspenseQuery, useQueryClient, useQuery } from "@tanstack/react-query";
-import { StarField, Orb } from "@/components/scent/cosmos";
+import { StarField, Orb, SolarSystem } from "@/components/scent/cosmos";
 import {
   ArrowRight,
   ChevronDown,
