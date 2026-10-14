@@ -26,6 +26,8 @@ import { StateMessage, ProductSkeletons } from "./shared";
 import type { Perfume } from "@/data/types";
 export function Landing({ state = "" }: { state?: string }) {
   const { t, lang } = useLanguage();
+  const [forced, setForced] = useState(state);
+  useEffect(() => setForced(state), [state]);
   const ritual = useQuery({
     queryKey: ["ritual", "three-breath-doorway", lang],
     queryFn: () => api.getRitual("three-breath-doorway", lang),
@@ -75,10 +77,10 @@ export function Landing({ state = "" }: { state?: string }) {
 
       <section className="narrow ritual-teaser">
         <p className="label muted">{t.ritualTeaserLabel}</p>
-        {state === "loading" || ritual.isPending ? (
+        {forced === "loading" || ritual.isPending ? (
           <Skeleton />
-        ) : state === "error" || ritual.isError || !ritual.data ? (
-          <StateMessage message={t.ritualsError} retry={() => void ritual.refetch()} />
+        ) : forced === "error" || ritual.isError || !ritual.data ? (
+          <StateMessage message={t.ritualsError} retry={() => { setForced(""); void ritual.refetch(); }} />
         ) : (
           <>
             <h2 className="question">{ritual.data.title}</h2>
@@ -221,6 +223,7 @@ export function ProductDetail({ id, state = "" }: { id: string; state?: string }
   const { t, word } = useLanguage();
   const { data } = useSuspenseQuery(productQuery(id));
   const [forced, setForced] = useState(state);
+  useEffect(() => setForced(state), [id, state]);
   if (forced === "loading")
     return (
       <div className="wide">
