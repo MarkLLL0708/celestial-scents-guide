@@ -1,4 +1,5 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
+import { allowsPrice } from "@/lib/sellRules";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/i18n/provider";
@@ -60,6 +61,8 @@ export function ProductCard({
   forceInCart?: boolean;
 }) {
   const { t } = useLanguage();
+  const path = useRouterState({ select: (s) => s.location.pathname });
+  if (!allowsPrice(path)) return null;
   return (
     <article className={`product product-${variant} ${variant === "signature" ? "ink" : ""}`}>
       {variant === "shadow" && <p className="label mb-4">{t.shadow}</p>}
