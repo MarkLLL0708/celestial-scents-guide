@@ -88,6 +88,11 @@ html{background:var(--bg);color:var(--text)}
 .orbit{width:100%;max-width:360px;height:auto;color:var(--text)}
 .orbit-spin{transform-origin:180px 100px;animation:orbit-turn 120s linear infinite}
 @keyframes orbit-turn{to{transform:rotate(360deg)}}
+.solar{display:block;color:var(--text)}
+.solar-md{width:160px;height:160px}.solar-lg{width:min(320px,78vw);height:min(320px,78vw)}
+.solar-orbit{transform-origin:110px 110px;animation:orbit-turn linear infinite}
+.solar-glow{animation:solar-pulse 6s ease-in-out infinite}
+@keyframes solar-pulse{0%,100%{opacity:.75}50%{opacity:1}}
 .note-icon{width:48px;height:48px;color:var(--text);object-fit:contain}
 .cell-grid{display:grid;border-top:var(--rule) solid var(--border);border-left:var(--rule) solid var(--border)}
 .cell-grid-1{grid-template-columns:1fr}.cell-grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}.cell-grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
@@ -100,7 +105,7 @@ html{background:var(--bg);color:var(--text)}
 .design-icons figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:8px}
 .design-stars{position:relative;height:220px;overflow:hidden;border:var(--rule) solid var(--border)}
 .design-stars .star-field{position:absolute;z-index:0}
-@media (prefers-reduced-motion:reduce){.star-twinkle,.orbit-spin{animation:none}}
+@media (prefers-reduced-motion:reduce){.star-twinkle,.orbit-spin,.solar-orbit,.solar-glow{animation:none}}
 /* ---- redo part 2: astrology screens ---- */
 .ask-screen{background:none}
 .ask-header,.ask-cell,.ask-question,.ask-input,.ask-bar{border-color:var(--border)}

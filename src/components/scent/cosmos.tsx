@@ -92,6 +92,51 @@ export function Orb({
   );
 }
 
+// Solar-system scene: glowing sun, orbiting planets (one ringed), twinkling stars.
+export function SolarSystem({ size = "lg" }: { size?: "md" | "lg" }) {
+  const id = useId().replace(/:/g, "");
+  const planets = [
+    { r: 46, size: 5, dur: 26, start: 0, ring: false, bright: 0.9 },
+    { r: 66, size: 7, dur: 44, start: 140, ring: false, bright: 0.75 },
+    { r: 86, size: 6, dur: 68, start: 250, ring: true, bright: 0.85 },
+    { r: 104, size: 4, dur: 96, start: 60, ring: false, bright: 0.6 },
+  ];
+  const stars = [
+    [14, 22, 1.1], [178, 16, 0.9], [190, 60, 1.2], [12, 150, 1], [30, 188, 0.8],
+    [168, 182, 1.1], [196, 140, 0.7], [52, 10, 0.8], [96, 6, 1], [8, 84, 0.7],
+  ];
+  return (
+    <svg className={`solar solar-${size}`} viewBox="0 0 220 220" aria-hidden="true">
+      <defs>
+        <radialGradient id={`sg${id}`} cx="50%" cy="50%" r="50%">
+          <stop offset="0" stopColor="#fff" stopOpacity="1" />
+          <stop offset="0.35" stopColor="#fff" stopOpacity="0.9" />
+          <stop offset="1" stopColor="#fff" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      {stars.map(([x, y, r], i) => (
+        <circle key={i} cx={x} cy={y} r={r} fill="currentColor" className="star-twinkle" style={{ animationDelay: `${i * 0.7}s` }} />
+      ))}
+      {planets.map((p, i) => (
+        <circle key={i} cx="110" cy="110" r={p.r} fill="none" stroke="currentColor" strokeOpacity="0.18" strokeWidth="0.75" />
+      ))}
+      <circle cx="110" cy="110" r="26" fill={`url(#sg${id})`} className="solar-glow" />
+      <circle cx="110" cy="110" r="9" fill="#fff" />
+      {planets.map((p, i) => (
+        <g key={i} className="solar-orbit" style={{ animationDuration: `${p.dur}s`, animationDelay: `${-p.start / 3.6}s` }}>
+          <g transform={`translate(${110 + p.r} 110)`}>
+            <circle r={p.size} fill="currentColor" opacity={p.bright} />
+            <circle r={p.size} fill="none" stroke="var(--bg)" strokeWidth="1" opacity="0.35" strokeDasharray={`${p.size} ${p.size * 2}`} />
+            {p.ring && (
+              <ellipse rx={p.size + 4.5} ry={(p.size + 4.5) * 0.32} fill="none" stroke="currentColor" strokeWidth="1" opacity="0.8" transform="rotate(-18)" />
+            )}
+          </g>
+        </g>
+      ))}
+    </svg>
+  );
+}
+
 export function OrbitDiagram({ size = "md" }: { size?: "sm" | "md" }) {
   const orbits = [40, 60, 80, 100, 120, 140, 160];
   return (
