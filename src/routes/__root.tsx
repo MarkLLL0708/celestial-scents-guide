@@ -99,7 +99,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=IBM+Plex+Mono:wght@500&family=Cormorant+Garamond:wght@500&family=Be+Vietnam+Pro:wght@400;500&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=optional",
       },
     ],
   }),
@@ -116,7 +116,7 @@ function RootShell({ children }: { children: ReactNode }) {
       <head>
         <HeadContent />
       </head>
-      <body>
+      <body className={bareRoutes.includes(path) ? "bare" : undefined}>
         {children}
         <Scripts />
       </body>
@@ -129,11 +129,6 @@ function RootComponent() {
   const path = useRouterState({ select: (s) => s.location.pathname });
   const bare = bareRoutes.includes(path);
   const theme = themeFor(path);
-  useEffect(() => {
-    document.body.classList.toggle("bare", bare);
-    return () => document.body.classList.remove("bare");
-  }, [bare]);
-
   return (
     <QueryClientProvider client={queryClient}>
       <LanguageProvider>

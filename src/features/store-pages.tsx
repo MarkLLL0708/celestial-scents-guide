@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useSuspenseQuery, useQueryClient, useQuery } from "@tanstack/react-query";
 import { StarField, SolarSystem } from "@/components/scent/cosmos";
@@ -99,6 +99,7 @@ export function Shop({ state = "" }: { state?: string }) {
   const [price, setPrice] = useState(220);
   const [open, setOpen] = useState(false);
   const [forced, setForced] = useState(state);
+  const [filterPending, startFilterTransition] = useTransition();
   const { data } = useSuspenseQuery(perfumeQuery({ family, style, maxPrice: price }));
   useEffect(() => setForced(state), [state]);
   return (
@@ -138,7 +139,7 @@ export function Shop({ state = "" }: { state?: string }) {
                       variant="secondary"
                       size="sm"
                       aria-pressed={family === f}
-                      onClick={() => setFamily(f)}
+                      onClick={() => startFilterTransition(() => setFamily(f))}
                     >
                       {f ? word(f) : t.all}
                     </Button>
@@ -154,7 +155,7 @@ export function Shop({ state = "" }: { state?: string }) {
                       variant="secondary"
                       size="sm"
                       aria-pressed={style === s}
-                      onClick={() => setStyle(s)}
+                      onClick={() => startFilterTransition(() => setStyle(s))}
                     >
                       {s ? word(s) : t.all}
                     </Button>
@@ -173,15 +174,17 @@ export function Shop({ state = "" }: { state?: string }) {
                   max={220}
                   step={5}
                   value={price}
-                  onChange={(e) => setPrice(Number(e.target.value))}
+                  onChange={(e) => startFilterTransition(() => setPrice(Number(e.target.value))))}
                 />
               </div>
               <Button
                 variant="text"
                 onClick={() => {
-                  setFamily("");
-                  setStyle("");
-                  setPrice(220);
+                  startFilterTransition(() => {
+                    setFamily("");
+                    setStyle("");
+                    setPrice(220);
+                  });
                   setForced("");
                 }}
               >
@@ -190,7 +193,7 @@ export function Shop({ state = "" }: { state?: string }) {
             </div>
           </div>
         </aside>
-        <section>
+        <section aria-busy={filterPending}>
           {forced === "loading" ? (
             <ProductSkeletons />
           ) : forced === "error" ? (

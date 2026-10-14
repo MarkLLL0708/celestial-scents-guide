@@ -90,11 +90,11 @@ export function ChartFlow({ step: rawStep }: { step?: number }) {
     );
     if (prompt) {
       prompt.tabIndex = -1;
-      prompt.focus();
+      prompt.focus({ preventScroll: true });
     }
   }, [step]);
 
-  const go = (n: number) => navigate({ to: "/chart/new", search: { step: n } });
+  const go = (n: number) => navigate({ to: "/chart/new", search: { step: n }, resetScroll: false });
   const valid = stepIsValid(step, profile);
   const showError = !!touched[step];
   const touch = () => setTouched((v) => ({ ...v, [step]: true }));

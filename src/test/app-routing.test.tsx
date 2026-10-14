@@ -14,4 +14,10 @@ describe("App routing", () => {
 
     expect(matches.at(-1)?.routeId).not.toBe(rootRouteId);
   });
+  it("renders product details without a shop listing parent", () => {
+    const router = createRouter({ routeTree, context: { queryClient: new QueryClient() } });
+    const matches = router.matchRoutes("/shop/paper-woods");
+    expect(matches.at(-1)?.routeId).toBe("/shop/$id");
+    expect(matches.map((m) => m.routeId)).not.toContain("/shop");
+  });
 });
