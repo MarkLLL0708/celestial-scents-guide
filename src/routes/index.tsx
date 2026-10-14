@@ -3,7 +3,11 @@ import { validatePreview, metadata } from "@/features/shared";
 import { Landing } from "@/features/store-pages";
 export const Route = createFileRoute("/")({
   validateSearch: validatePreview,
-  head: () => metadata("fragrance and your stars", "Your birth date already picked a perfume."),
+  head: () =>
+    metadata(
+      "your sky, read properly",
+      "Readings for your whole birth chart, a daily note and small rituals. Free.",
+    ),
   component: Page,
 });
 function Page() {

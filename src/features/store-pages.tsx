@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { useSuspenseQuery, useQueryClient } from "@tanstack/react-query";
+import { useSuspenseQuery, useQueryClient, useQuery } from "@tanstack/react-query";
+import { StarField, Orb } from "@/components/scent/cosmos";
 import {
   ArrowRight,
   ChevronDown,
@@ -24,14 +25,15 @@ import { ScentDialog } from "@/components/scent/dialog";
 import { StateMessage, ProductSkeletons } from "./shared";
 import type { Perfume } from "@/data/types";
 export function Landing({ state = "" }: { state?: string }) {
-  const { t } = useLanguage();
-  const { data } = useSuspenseQuery(perfumeQuery());
-  const [forced, setForced] = useState(state);
+  const { t, lang } = useLanguage();
+  const ritual = useQuery({
+    queryKey: ["ritual", "morning-line", lang],
+    queryFn: () => api.getRitual("morning-line", lang),
+  });
   return (
-    <div className="wide">
-      <section className="hero">
-        <div className="stack">
-          <p className="label hero-eyebrow">{t.eyebrow}</p>
+    <>
+      <div className="wide landing-hero">
+        <section className="landing-intro">
           <h1 className="xl">{t.hero}</h1>
           <p className="subline muted">{t.subline}</p>
           <Button asChild>
@@ -40,52 +42,54 @@ export function Landing({ state = "" }: { state?: string }) {
               <ArrowRight size={16} />
             </Link>
           </Button>
-        </div>
-        <div className="hero-art">
-          <ChartWheel />
-          <p className="label muted">{t.birthEdition}</p>
-        </div>
-      </section>
-      <div className="hero-bottom">
-        <p className="label muted">{t.brand} / 01</p>
-        <p className="label muted">{t.scroll} ↓</p>
+        </section>
+        <figure className="sample-card" aria-label={t.sampleCaption}>
+          <p className="label">{t.sampleToday}</p>
+          <p className="question">{t.sampleLine}</p>
+          <ul>
+            <li className="label muted">{t.sampleRow1}</li>
+            <li className="label muted">{t.sampleRow2}</li>
+            <li className="label muted">{t.sampleRow3}</li>
+          </ul>
+          <figcaption className="small muted">{t.sampleCaption}</figcaption>
+        </figure>
       </div>
-      <section className="how-layout">
-        <h2 className="question">{t.how}</h2>
-        <div className="how-rows">
-          {[t.how1, t.how2, t.how3].map((text, i) => (
-            <div key={text} className="how-row">
-              <span className="label how-number">0{i + 1}</span>
-              <p>{text}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-      <section>
-        <div className="collection-title">
-          <h2 className="question">{t.selection}</h2>
-          <Button asChild variant="text">
-            <Link to="/shop">
-              {t.browse}
-              <ArrowRight size={14} />
-            </Link>
-          </Button>
-        </div>
-        {forced === "loading" ? (
-          <ProductSkeletons />
-        ) : forced === "error" ? (
-          <StateMessage message={t.shopError} retry={() => setForced("")} />
-        ) : forced === "empty" ? (
-          <StateMessage message={t.shopEmpty} />
-        ) : (
-          <div className="products landing-products">
-            {data.slice(0, 3).map((p) => (
-              <ProductCard perfume={p} key={p.id} compact />
-            ))}
+
+      <section className="landing-dark" data-theme="dark">
+        <StarField />
+        <div className="wide landing-how">
+          <div>
+            <h2 className="question">{t.how}</h2>
+            <ol className="how-list">
+              {[t.how1, t.how2, t.how3].map((text, i) => (
+                <li key={text}>
+                  <span className="label muted">0{i + 1}</span>
+                  <p>{text}</p>
+                </li>
+              ))}
+            </ol>
           </div>
-        )}
+          <Orb variant="moon" size="lg" />
+        </div>
       </section>
-    </div>
+
+      <section className="narrow ritual-teaser">
+        <p className="label muted">{t.ritualTeaserLabel}</p>
+        {state === "loading" || ritual.isPending ? (
+          <Skeleton />
+        ) : state === "error" || ritual.isError || !ritual.data ? (
+          <StateMessage message={t.ritualsError} retry={() => void ritual.refetch()} />
+        ) : (
+          <>
+            <h2 className="question">{ritual.data.title}</h2>
+            <p className="muted">{ritual.data.intention}</p>
+          </>
+        )}
+        <Link to="/rituals" className="quiet-link">
+          {t.seeRituals} →
+        </Link>
+      </section>
+    </>
   );
 }
 export function Shop({ state = "" }: { state?: string }) {

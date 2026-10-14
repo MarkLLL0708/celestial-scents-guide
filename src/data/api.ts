@@ -10,8 +10,15 @@ import type {
   ChartResult,
   CartItem,
   Evidence,
-  AskAnswer,
+  AstroAnswer,
+  ChartRecord,
+  Reading,
+  Ritual,
+  Theme,
+  Today,
+  Topic,
 } from "./types";
+import { answerFor, readingFor, ritualFor, ritualIds, todayFor, topics } from "./astro-mock";
 export * from "./types";
 const wait = <T>(value: T): Promise<T> =>
   new Promise((resolve) => setTimeout(() => resolve(structuredClone(value)), 600));
@@ -75,22 +82,6 @@ export async function getRecommendations(chart: Chart, prefs: Prefs): Promise<Re
     evidence: evidence[i],
   }));
   return wait({ signature: matches[0], others: matches.slice(1, 5), shadow: matches[5] });
-}
-export async function getReading(
-  chart: Chart,
-  recs: Recs,
-  lang: "en" | "vi",
-): Promise<{ profileText: string; reasons: Record<string, string> }> {
-  const t = lang === "vi" ? vi : en;
-  return wait({
-    profileText: t.reading,
-    reasons: Object.fromEntries(
-      [recs.signature, ...recs.others, recs.shadow].map((m, i) => [
-        m.perfume.id,
-        [t.reason1, t.reason2, t.reason3, t.reason4, t.reason5, t.reason6][i],
-      ]),
-    ),
-  });
 }
 export async function saveChart(result: ChartResult): Promise<{ id: string }> {
   saved = [result, ...saved.filter((r) => r.id !== result.id)];
@@ -200,14 +191,39 @@ export async function updatePerfume(p: Perfume): Promise<Perfume> {
   return wait(p);
 }
 
-// Mock answer. evidence/answer are translation keys here; a real service returns finished text, which the UI shows as-is.
-export async function askNotes(question: string, chart: Chart): Promise<AskAnswer> {
+export async function getChartById(id: string): Promise<ChartRecord> {
+  if (id !== "demo" && !saved.some((r) => r.id === id)) throw new Error("NOT_FOUND");
+  const r = saved.find((x) => x.id === id);
+  return wait({ id, name: r?.profile.name || "An", chart: r?.chart ?? demoChart });
+}
+export async function getReading(
+  chartId: string,
+  topic: Topic,
+  lang: "en" | "vi",
+): Promise<Reading> {
+  void chartId;
+  if (!topics.includes(topic)) throw new Error("NOT_FOUND");
+  return wait(readingFor(topic, lang));
+}
+export async function getToday(chartId: string, date: string, lang: "en" | "vi"): Promise<Today> {
+  void chartId;
+  return wait(todayFor(date, lang));
+}
+export async function askNotes(
+  question: string,
+  category: Theme,
+  chartId: string,
+  lang: "en" | "vi",
+): Promise<AstroAnswer> {
+  void chartId;
   if (!question.trim()) throw new Error("EMPTY_QUESTION");
-  void chart;
-  const pick = inventory.filter((p) => !p.sold_out);
-  return wait({
-    evidence: "askEvidence",
-    answer: "askAnswer",
-    perfumeId: pick[question.length % pick.length].id,
-  });
+  return wait(answerFor(question, category, lang));
+}
+export async function listRituals(lang: "en" | "vi"): Promise<Ritual[]> {
+  return wait(ritualIds.map((id) => ritualFor(id, lang)).filter((r): r is Ritual => r !== null));
+}
+export async function getRitual(id: string, lang: "en" | "vi"): Promise<Ritual> {
+  const r = ritualFor(id, lang);
+  if (!r) throw new Error("NOT_FOUND");
+  return wait(r);
 }

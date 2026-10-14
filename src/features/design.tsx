@@ -28,7 +28,7 @@ import {
   noteNames,
 } from "@/components/scent/cosmos";
 import { CrescentSpinner } from "./chart-loading";
-import { FeedbackRow, EvidenceCell, GrainDisc } from "./chart-result";
+import { FeedbackRow, AspectGlyph } from "./chart-result";
 import { demoChart, perfumes } from "@/data/seed";
 import type { BirthProfile } from "@/data/types";
 
@@ -182,9 +182,13 @@ function Library() {
         <FeedbackRow />
       </Row>
 
-      <SectionHeader>evidence</SectionHeader>
+      <SectionHeader>aspect glyphs</SectionHeader>
       <Row label={t.default}>
-        <EvidenceCell evidence={{ planet: "moon", sign: "Cancer", why: "why2" }} />
+        <div className="design-icons">
+          {(["conjunct", "sextile", "square", "trine", "opposite"] as const).map((a) => (
+            <AspectGlyph key={a} aspect={a} />
+          ))}
+        </div>
       </Row>
 
       <SectionHeader>{t.header}</SectionHeader>
@@ -237,10 +241,10 @@ function Library() {
             <p className="label">{t.youAsked}</p>
           </Cell>
           <Cell>
-            <p>{t.askEvidence}</p>
+            <p className="label">{t.sampleRow2}</p>
           </Cell>
           <Cell wide>
-            <p>{t.askAnswer}</p>
+            <p>{t.sampleLine}</p>
           </Cell>
         </CellGrid>
       </Row>

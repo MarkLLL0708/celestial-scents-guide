@@ -31,6 +31,9 @@ export interface Chart {
   venus: string;
   mars: string;
   mercury: string;
+  jupiter: string;
+  saturn: string;
+  degrees: Partial<Record<Planet, number>>;
   elements: { fire: number; earth: number; air: number; water: number };
 }
 export interface Prefs {
@@ -70,4 +73,54 @@ export interface ChartResult {
 export interface CartItem {
   perfume: Perfume;
   quantity: number;
+}
+export type Planet =
+  "sun" | "moon" | "rising" | "venus" | "mars" | "mercury" | "jupiter" | "saturn";
+export type Aspect = "conjunct" | "sextile" | "square" | "trine" | "opposite";
+export type Theme = "self" | "love" | "work" | "luck";
+export type Topic = "you" | "love" | "work" | "luck";
+export interface Transit {
+  transiting: Planet;
+  aspect: Aspect;
+  natal: Planet;
+  orb: number;
+  theme: Theme;
+  strength: 1 | 2 | 3 | 4 | 5;
+}
+export interface Block {
+  transit: Transit;
+  text: string;
+}
+export interface Today {
+  date: string;
+  summary: string;
+  tone: Record<Theme, number>;
+  working: Block;
+  pushing: Block;
+  protect: Block;
+  ritualId: string;
+}
+export interface Reading {
+  topic: Topic;
+  title: string;
+  sections: { title: string; body: string }[];
+}
+export interface AstroAnswer {
+  transit: Transit;
+  answer: string;
+  ritualId: string;
+}
+export interface Ritual {
+  id: string;
+  theme: Theme;
+  title: string;
+  intention: string;
+  timing: string;
+  minutes: number;
+  steps: string[];
+}
+export interface ChartRecord {
+  id: string;
+  name: string;
+  chart: Chart;
 }
