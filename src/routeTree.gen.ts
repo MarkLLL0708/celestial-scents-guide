@@ -10,33 +10,127 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CartRouteImport } from './routes/cart'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as SavedRouteImport } from './routes/saved'
+import { Route as ShopRouteImport } from './routes/shop'
+import { Route as ChartNewRouteImport } from './routes/chart.new'
+import { Route as ShopIdRouteImport } from './routes/shop.$id'
+import { Route as ChartResultIdRouteImport } from './routes/chart.result.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CartRoute = CartRouteImport.update({
+  id: '/cart',
+  path: '/cart',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SavedRoute = SavedRouteImport.update({
+  id: '/saved',
+  path: '/saved',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ShopRoute = ShopRouteImport.update({
+  id: '/shop',
+  path: '/shop',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChartNewRoute = ChartNewRouteImport.update({
+  id: '/chart/new',
+  path: '/chart/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ShopIdRoute = ShopIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => ShopRoute,
+} as any)
+const ChartResultIdRoute = ChartResultIdRouteImport.update({
+  id: '/chart/result/$id',
+  path: '/chart/result/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/cart': typeof CartRoute
+  '/login': typeof LoginRoute
+  '/saved': typeof SavedRoute
+  '/shop': typeof ShopRouteWithChildren
+  '/chart/new': typeof ChartNewRoute
+  '/shop/$id': typeof ShopIdRoute
+  '/chart/result/$id': typeof ChartResultIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/cart': typeof CartRoute
+  '/login': typeof LoginRoute
+  '/saved': typeof SavedRoute
+  '/shop': typeof ShopRouteWithChildren
+  '/chart/new': typeof ChartNewRoute
+  '/shop/$id': typeof ShopIdRoute
+  '/chart/result/$id': typeof ChartResultIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/cart': typeof CartRoute
+  '/login': typeof LoginRoute
+  '/saved': typeof SavedRoute
+  '/shop': typeof ShopRouteWithChildren
+  '/chart/new': typeof ChartNewRoute
+  '/shop/$id': typeof ShopIdRoute
+  '/chart/result/$id': typeof ChartResultIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/cart'
+    | '/login'
+    | '/saved'
+    | '/shop'
+    | '/chart/new'
+    | '/shop/$id'
+    | '/chart/result/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/cart'
+    | '/login'
+    | '/saved'
+    | '/shop'
+    | '/chart/new'
+    | '/shop/$id'
+    | '/chart/result/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/cart'
+    | '/login'
+    | '/saved'
+    | '/shop'
+    | '/chart/new'
+    | '/shop/$id'
+    | '/chart/result/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CartRoute: typeof CartRoute
+  LoginRoute: typeof LoginRoute
+  SavedRoute: typeof SavedRoute
+  ShopRoute: typeof ShopRouteWithChildren
+  ChartNewRoute: typeof ChartNewRoute
+  ChartResultIdRoute: typeof ChartResultIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +142,76 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/cart': {
+      id: '/cart'
+      path: '/cart'
+      fullPath: '/cart'
+      preLoaderRoute: typeof CartRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/saved': {
+      id: '/saved'
+      path: '/saved'
+      fullPath: '/saved'
+      preLoaderRoute: typeof SavedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/shop': {
+      id: '/shop'
+      path: '/shop'
+      fullPath: '/shop'
+      preLoaderRoute: typeof ShopRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/chart/new': {
+      id: '/chart/new'
+      path: '/chart/new'
+      fullPath: '/chart/new'
+      preLoaderRoute: typeof ChartNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/shop/$id': {
+      id: '/shop/$id'
+      path: '/$id'
+      fullPath: '/shop/$id'
+      preLoaderRoute: typeof ShopIdRouteImport
+      parentRoute: typeof ShopRoute
+    }
+    '/chart/result/$id': {
+      id: '/chart/result/$id'
+      path: '/chart/result/$id'
+      fullPath: '/chart/result/$id'
+      preLoaderRoute: typeof ChartResultIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
+interface ShopRouteChildren {
+  ShopIdRoute: typeof ShopIdRoute
+}
+
+const ShopRouteChildren: ShopRouteChildren = {
+  ShopIdRoute: ShopIdRoute,
+}
+
+const ShopRouteWithChildren = ShopRoute._addFileChildren(ShopRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CartRoute: CartRoute,
+  LoginRoute: LoginRoute,
+  SavedRoute: SavedRoute,
+  ShopRoute: ShopRouteWithChildren,
+  ChartNewRoute: ChartNewRoute,
+  ChartResultIdRoute: ChartResultIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
