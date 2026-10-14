@@ -15,3 +15,5 @@
 - Keep bilingual UI strings in the typed English/Vietnamese dictionaries and consume them through the language provider.
 - Define all visual values in the global token/style system and use shared scent controls; original SVG artwork is the only product imagery.
 - Keep the only main element in the root shell and use Radix primitives for keyboard-managed dialogs and city search.
+- Chart questions live in one ChartFlow driven by the optional ?step search param, with answers held in the store provider so moving back never loses input.
+- Phones use a fixed bottom tab bar instead of a menu overlay; /saved permanently redirects to /you.

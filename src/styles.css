@@ -14,3 +14,4 @@
 @keyframes step-fade{from{opacity:0}to{opacity:1}}@keyframes spin-slow{to{transform:rotate(360deg)}}
 @media(prefers-reduced-motion:reduce){.chart-step-body,.crescent-spinner{animation:none}}
 @media(max-width:767px){.chart-step,.chart-loading{min-height:calc(100dvh - 56px - var(--control-height))}}
+.chart-step-body .review-row .label.muted{text-align:left}
