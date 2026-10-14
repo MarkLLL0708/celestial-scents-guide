@@ -24,5 +24,6 @@ describe("route theme", () => {
     "/you",
     "/admin/perfumes",
     "/design",
-  ])("%s is light", (p) => expect(themeFor(p)).toBe("light"));
+    "/unknown-page",
+  ])("%s stays dark", (p) => expect(themeFor(p)).toBe("dark"));
 });

@@ -1,7 +1,5 @@
-# Natal Notes
-- [ ] Design tokens, translated copy and accessible reusable controls
-- [ ] Mock API and twelve perfumes
-- [ ] Landing, six-step chart (steps A1–A3 done; reveal and results still placeholders), results, saved charts and sharing
-- [ ] Shop, product, cart, login and perfume admin
-- [ ] Component showcase and all preview states
-- [ ] Tests, desktop/mobile flow verification and route/state inventory
+# Natal Notes consistency review
+- [ ] Black backgrounds and one navigation-matched font throughout
+- [ ] Remove page-transition flashes and avoid layout jumps
+- [ ] Audit and repair page buttons and navigation
+- [ ] Verify every page and key flows on desktop and mobile
