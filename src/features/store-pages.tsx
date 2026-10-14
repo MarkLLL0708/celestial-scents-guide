@@ -463,6 +463,33 @@ export function SavedList({ state = "" }: { state?: string }) {
     </div>
   );
 }
+function SavedRituals() {
+  const { t, lang } = useLanguage();
+  const q = useQuery({
+    queryKey: ["saved-rituals", lang],
+    queryFn: () => api.listSavedRituals(lang),
+  });
+  if (q.isPending) return <Skeleton />;
+  if (q.isError) return <StateMessage message={t.ritualsError} retry={() => void q.refetch()} />;
+  if (!q.data.length)
+    return (
+      <StateMessage message={t.noSavedRituals}>
+        <Link to="/rituals" className="quiet-link">
+          {t.seeRituals} →
+        </Link>
+      </StateMessage>
+    );
+  return (
+    <div>
+      {q.data.map((r) => (
+        <Link key={r.id} to="/rituals/$id" params={{ id: r.id }} className="plain-row">
+          <span>{r.title}</span>
+          <span className="label muted">{t.minutes.replace("{n}", String(r.durationMin))}</span>
+        </Link>
+      ))}
+    </div>
+  );
+}
 export function YouPage({ state = "" }: { state?: string }) {
   const { t } = useLanguage();
   const { user, setUser } = useStore();
@@ -472,6 +499,10 @@ export function YouPage({ state = "" }: { state?: string }) {
       <section className="section">
         <SectionHeader>{t.myCharts}</SectionHeader>
         <SavedList state={state} />
+      </section>
+      <section className="section">
+        <SectionHeader>{t.savedRituals}</SectionHeader>
+        <SavedRituals />
       </section>
       <section className="section">
         <SectionHeader>{t.language}</SectionHeader>

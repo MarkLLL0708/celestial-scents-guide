@@ -1,5 +1,14 @@
 // Mock astrology content. A real engine replaces this file; the UI only sees api.ts.
-import type { AstroAnswer, Reading, Ritual, Theme, Today, Topic, Transit } from "./types";
+import type {
+  AstroAnswer,
+  Reading,
+  Ritual,
+  RitualTheme,
+  Theme,
+  Today,
+  Topic,
+  Transit,
+} from "./types";
 
 type Lang = "en" | "vi";
 type Section = [string, string];
@@ -321,7 +330,7 @@ const answerTransits: Record<Theme, Transit[]> = {
 };
 
 export const ritualForTheme: Record<Theme, string> = {
-  self: "morning-line",
+  self: "slow-breath",
   love: "letter-unsent",
   work: "desk-reset",
   luck: "open-door",
@@ -342,126 +351,251 @@ export function answerFor(question: string, theme: Theme, lang: Lang): AstroAnsw
   };
 }
 
-type RitualText = Omit<Ritual, "id" | "theme" | "minutes">;
+type RitualText = Pick<
+  Ritual,
+  "title" | "intention" | "timing" | "needs" | "steps" | "why" | "reason"
+>;
 const ritualText: Record<Lang, Record<string, RitualText>> = {
   en: {
-    "morning-line": {
-      title: "one line before the phone",
-      intention: "start the day with your own thought, not someone else's.",
-      timing: "on waking",
+    "slow-breath": {
+      title: "four slow breaths",
+      intention: "come back to the room before you answer anyone.",
+      timing: "when the day gets loud",
+      needs: ["a window", "any scent you own"],
       steps: [
-        "Before you check anything, sit up and put one drop of a scent you own on your wrist.",
-        "Write one line about what today is for.",
-        "Read it once, close the notebook, then pick up the phone.",
+        "Stand by a window and put one drop of scent on the inside of your wrist.",
+        "Breathe in for four counts with the wrist near you. Out for six.",
+        "Do it four times. Count out loud if your head is busy.",
+        "Name one thing you can see outside. Then go back to the day.",
       ],
+      why: "a familiar smell is a short way back to your own attention.",
+      reason: "lavender settles, vetiver holds it there.",
     },
     "letter-unsent": {
       title: "the letter you do not send",
       intention: "name a feeling clearly before you decide what to do with it.",
       timing: "a friday evening",
+      needs: ["paper", "a pen", "twenty quiet minutes"],
       steps: [
-        "Choose a scent you already wear for this person, or none.",
+        "Choose a scent you already wear around this person, or none.",
         "Write them a short letter you will not send. Use plain sentences.",
-        "Underline the one sentence you would actually say. Keep only that.",
+        "Underline the one sentence you would actually say.",
+        "Fold the letter away. Keep only the underlined sentence.",
       ],
+      why: "venus in pisces says too much or nothing. writing it first finds the middle.",
+      reason: "pear and bergamot open, musk stays close.",
     },
     "desk-reset": {
       title: "a reset for the desk",
       intention: "finish the week with a clear surface and a short list.",
       timing: "friday, last half hour",
+      needs: ["a card", "a pen", "a cloth"],
       steps: [
-        "Clear the desk completely, then put back only three things.",
-        "Write next week's two tasks on one card.",
-        "Apply a fresh scent you own, so monday starts with something familiar.",
+        "Clear the desk completely. Wipe it.",
+        "Put back only three things.",
+        "Write next week's two tasks on one card and leave it face up.",
+        "Apply a scent you own, so monday starts with something familiar.",
       ],
+      why: "mercury in capricorn works better from a short list than a long one.",
+      reason: "bergamot opens, vetiver steadies.",
     },
     "open-door": {
       title: "leave a door open",
       intention: "notice one small chance you would usually walk past.",
       timing: "any morning this week",
+      needs: ["the scent you save for occasions"],
       steps: [
         "Wear the scent you save for occasions on an ordinary day.",
+        "Take a slightly different route somewhere.",
         "Say yes to the first small, slightly unfamiliar offer.",
         "At night, write down who you met because of it.",
       ],
+      why: "jupiter in sagittarius rewards the unfamiliar room. this just makes you notice it.",
+      reason: "salt and lemon keep it light enough for a weekday.",
+    },
+    "morning-line": {
+      title: "one line before the phone",
+      intention: "start the day with your own thought, not someone else's.",
+      timing: "on waking",
+      needs: ["a notebook", "a pen"],
+      steps: [
+        "Before you check anything, sit up.",
+        "Put one drop of a scent you own on your wrist.",
+        "Write one line about what today is for.",
+        "Read it once, close the notebook, then pick up the phone.",
+      ],
+      why: "the aquarius sun thinks best before other people's ideas arrive.",
+      reason: "bergamot wakes it up, cedar keeps it short.",
     },
     "evening-close": {
       title: "close the evening",
       intention: "end the day on purpose instead of letting it run out.",
       timing: "after six",
+      needs: ["a tissue", "any scent you own"],
       steps: [
         "Turn off one light and one screen.",
-        "Put a drop of any scent you own on a tissue near you.",
-        "Write the three things you did today. Stop there.",
+        "Put a drop of scent on a tissue near you.",
+        "Write the three things you did today.",
+        "Stop there. Nothing else gets added tonight.",
       ],
+      why: "the cancer moon rests when the day has a clear edge.",
+      reason: "orange fades, vanilla and tonka stay warm.",
     },
   },
   vi: {
-    "morning-line": {
-      title: "một dòng trước điện thoại",
-      intention: "bắt đầu ngày bằng suy nghĩ của mình, không phải của người khác.",
-      timing: "khi thức dậy",
+    "slow-breath": {
+      title: "bốn hơi thở chậm",
+      intention: "quay về căn phòng trước khi trả lời bất kỳ ai.",
+      timing: "khi ngày trở nên ồn ào",
+      needs: ["một ô cửa sổ", "mùi hương bất kỳ bạn có"],
       steps: [
-        "Trước khi xem bất cứ thứ gì, ngồi dậy và chấm một giọt mùi hương bạn có lên cổ tay.",
-        "Viết một dòng về hôm nay để làm gì.",
-        "Đọc một lần, gấp sổ lại, rồi mới cầm điện thoại.",
+        "Đứng cạnh cửa sổ và chấm một giọt hương lên mặt trong cổ tay.",
+        "Hít vào bốn nhịp với cổ tay gần mình. Thở ra sáu nhịp.",
+        "Làm bốn lần. Đếm thành tiếng nếu đầu óc đang bận.",
+        "Gọi tên một thứ bạn thấy bên ngoài. Rồi quay lại với ngày.",
       ],
+      why: "một mùi quen là đường ngắn để quay về sự chú ý của chính mình.",
+      reason: "oải hương lắng xuống, cỏ hương bài giữ nó lại.",
     },
     "letter-unsent": {
       title: "lá thư không gửi",
       intention: "gọi tên một cảm xúc rõ ràng trước khi quyết định làm gì với nó.",
       timing: "một tối thứ sáu",
+      needs: ["giấy", "một cây bút", "hai mươi phút yên tĩnh"],
       steps: [
         "Chọn mùi hương bạn vẫn dùng khi gặp người này, hoặc không dùng gì.",
         "Viết cho họ một lá thư ngắn bạn sẽ không gửi. Dùng câu đơn giản.",
-        "Gạch dưới câu bạn thật sự sẽ nói. Chỉ giữ câu đó.",
+        "Gạch dưới câu bạn thật sự sẽ nói.",
+        "Gấp lá thư cất đi. Chỉ giữ câu đã gạch dưới.",
       ],
+      why: "kim tinh song ngư nói quá nhiều hoặc không nói gì. viết ra trước giúp tìm điểm giữa.",
+      reason: "lê và bergamot mở đầu, xạ hương ở gần.",
     },
     "desk-reset": {
       title: "dọn lại bàn làm việc",
       intention: "kết thúc tuần với mặt bàn trống và một danh sách ngắn.",
       timing: "thứ sáu, nửa tiếng cuối",
+      needs: ["một tấm thẻ", "một cây bút", "một chiếc khăn"],
       steps: [
-        "Dọn sạch bàn, rồi chỉ đặt lại ba món.",
-        "Viết hai việc của tuần sau lên một tấm thẻ.",
-        "Xịt lại một mùi hương bạn có, để thứ hai bắt đầu bằng điều quen thuộc.",
+        "Dọn sạch bàn. Lau nó.",
+        "Chỉ đặt lại ba món.",
+        "Viết hai việc của tuần sau lên một tấm thẻ và để ngửa.",
+        "Xịt một mùi hương bạn có, để thứ hai bắt đầu bằng điều quen thuộc.",
       ],
+      why: "thủy tinh ma kết làm việc tốt hơn với danh sách ngắn.",
+      reason: "bergamot mở đầu, cỏ hương bài giữ vững.",
     },
     "open-door": {
       title: "để ngỏ một cánh cửa",
       intention: "để ý một cơ hội nhỏ mà bạn thường bước qua.",
       timing: "một buổi sáng tuần này",
+      needs: ["mùi hương bạn để dành cho dịp đặc biệt"],
       steps: [
-        "Dùng mùi hương bạn để dành cho dịp đặc biệt vào một ngày bình thường.",
+        "Dùng mùi hương để dành cho dịp đặc biệt vào một ngày bình thường.",
+        "Đi một con đường hơi khác đến đâu đó.",
         "Đồng ý với lời đề nghị nhỏ, hơi lạ đầu tiên.",
         "Buổi tối, viết lại bạn đã gặp ai nhờ nó.",
       ],
+      why: "mộc tinh nhân mã ưu ái căn phòng lạ. nghi thức này chỉ giúp bạn để ý.",
+      reason: "muối và chanh giữ nó đủ nhẹ cho ngày thường.",
+    },
+    "morning-line": {
+      title: "một dòng trước điện thoại",
+      intention: "bắt đầu ngày bằng suy nghĩ của mình, không phải của người khác.",
+      timing: "khi thức dậy",
+      needs: ["một cuốn sổ", "một cây bút"],
+      steps: [
+        "Trước khi xem bất cứ thứ gì, ngồi dậy.",
+        "Chấm một giọt mùi hương bạn có lên cổ tay.",
+        "Viết một dòng về hôm nay để làm gì.",
+        "Đọc một lần, gấp sổ lại, rồi mới cầm điện thoại.",
+      ],
+      why: "mặt trời bảo bình nghĩ tốt nhất trước khi ý tưởng của người khác đến.",
+      reason: "bergamot đánh thức, tuyết tùng giữ nó ngắn gọn.",
     },
     "evening-close": {
       title: "khép lại buổi tối",
       intention: "kết thúc ngày một cách có chủ ý thay vì để nó tự cạn.",
       timing: "sau sáu giờ",
+      needs: ["một tờ khăn giấy", "mùi hương bất kỳ bạn có"],
       steps: [
         "Tắt một ngọn đèn và một màn hình.",
-        "Chấm một giọt mùi hương bất kỳ bạn có lên khăn giấy gần mình.",
-        "Viết ba việc bạn đã làm hôm nay. Dừng ở đó.",
+        "Chấm một giọt hương lên khăn giấy gần mình.",
+        "Viết ba việc bạn đã làm hôm nay.",
+        "Dừng ở đó. Tối nay không thêm gì nữa.",
       ],
+      why: "mặt trăng cự giải nghỉ ngơi khi ngày có một ranh giới rõ ràng.",
+      reason: "cam phai đi, vani và tonka còn ấm.",
     },
   },
 };
 
-const ritualMeta: Record<string, { theme: Theme; minutes: number }> = {
-  "morning-line": { theme: "self", minutes: 3 },
-  "letter-unsent": { theme: "love", minutes: 15 },
-  "desk-reset": { theme: "work", minutes: 20 },
-  "open-door": { theme: "luck", minutes: 5 },
-  "evening-close": { theme: "self", minutes: 10 },
+const ritualMeta: Record<
+  string,
+  { theme: RitualTheme; durationMin: number; noteFamily: string; perfumeId: string }
+> = {
+  "slow-breath": {
+    theme: "calm",
+    durationMin: 3,
+    noteFamily: "Aromatic",
+    perfumeId: "herbarium-no-4",
+  },
+  "letter-unsent": {
+    theme: "love",
+    durationMin: 20,
+    noteFamily: "Floral",
+    perfumeId: "petal-theory",
+  },
+  "desk-reset": { theme: "work", durationMin: 30, noteFamily: "Woody", perfumeId: "paper-woods" },
+  "open-door": { theme: "luck", durationMin: 5, noteFamily: "Fresh", perfumeId: "salt-index" },
+  "morning-line": { theme: "self", durationMin: 3, noteFamily: "Citrus", perfumeId: "open-orbit" },
+  "evening-close": {
+    theme: "evening",
+    durationMin: 10,
+    noteFamily: "Gourmand",
+    perfumeId: "after-hours",
+  },
 };
 
 export const ritualIds = Object.keys(ritualMeta);
+export const ritualThemes: RitualTheme[] = ["calm", "love", "work", "luck", "self", "evening"];
 
 export function ritualFor(id: string, lang: Lang): Ritual | null {
   const meta = ritualMeta[id];
   if (!meta) return null;
   return { id, ...meta, ...ritualText[lang][id] };
 }
+
+const shelfText: Record<Lang, { chart: string; week: string; shadow: string }> = {
+  en: {
+    chart: "for the cancer moon: soft, close, the same every day.",
+    week: "for transiting venus trine your moon: light enough to wear to the thing you nearly cancelled.",
+    shadow: "for mars in gemini, the side that talks fast and wants something sharper.",
+  },
+  vi: {
+    chart: "cho mặt trăng cự giải: mềm, gần, ngày nào cũng như nhau.",
+    week: "cho kim tinh quá cảnh tam hợp mặt trăng: đủ nhẹ để dùng cho cuộc hẹn bạn suýt hủy.",
+    shadow: "cho hỏa tinh song tử, phía nói nhanh và muốn điều gì sắc hơn.",
+  },
+};
+export const shelfPlan = {
+  forChart: {
+    perfumeId: "white-margin",
+    ritualId: "evening-close",
+    planet: "moon" as const,
+    sign: "Cancer",
+  },
+  forWeek: {
+    perfumeId: "salt-index",
+    ritualId: "open-door",
+    planet: "venus" as const,
+    sign: "Pisces",
+  },
+  forShadow: {
+    perfumeId: "velvet-error",
+    ritualId: "letter-unsent",
+    planet: "mars" as const,
+    sign: "Gemini",
+  },
+};
+export const shelfReason = (lang: Lang) => shelfText[lang];

@@ -9,8 +9,21 @@ import type { Dictionary } from "@/i18n/en";
 import { useStore } from "@/data/context";
 import * as api from "@/data/api";
 import { demoChart } from "@/data/seed";
-import { ritualForTheme, themeForTopic, topics } from "@/data/astro-mock";
-import type { Aspect, Chart, Planet, Theme, Topic, Transit } from "@/data/types";
+import { ritualForTheme, ritualThemes, themeForTopic, topics } from "@/data/astro-mock";
+import type {
+  Aspect,
+  Chart,
+  Perfume,
+  Planet,
+  RitualTheme,
+  ShelfEntry,
+  Theme,
+  Topic,
+  Transit,
+} from "@/data/types";
+import { Bottle } from "@/components/scent/artwork";
+import { Notes, AddButton } from "@/components/scent/product";
+import { ScentDialog } from "@/components/scent/dialog";
 import { PlacementBadge, PlacementRow, ElementBar, Skeleton } from "@/components/scent/controls";
 import {
   Orb,
@@ -20,6 +33,7 @@ import {
   Cell,
   type NoteName,
 } from "@/components/scent/cosmos";
+import { StarField } from "@/components/scent/cosmos";
 import { StateMessage } from "./shared";
 
 export const glyphs: Record<Planet, string> = {
@@ -148,7 +162,9 @@ export function RevealPage({ state = "" }: { state?: string }) {
 /* ---------- your sky ---------- */
 export function ResultPage({ id, state = "" }: { id: string; state?: string }) {
   const { t, word } = useLanguage();
-  const { profile } = useStore();
+  const { profile, journey, markJourney } = useStore();
+  const [shareOpen, setShareOpen] = useState(false);
+  useEffect(() => markJourney("chartSeen"), [markJourney]);
   const q = useQuery({ queryKey: ["chart", id], queryFn: () => api.getChartById(id) });
   const [forced, setForced] = useState(state);
   useEffect(() => setForced(state), [state]);
@@ -254,6 +270,17 @@ export function ResultPage({ id, state = "" }: { id: string; state?: string }) {
         <span className="label">{t.movingToday}</span>
         <ArrowRight size={18} aria-hidden="true" />
       </Link>
+      {(journey.readingOpened || journey.ritualOpened) && (
+        <Link to="/chart/result/$id/shelf" params={{ id }} className="quiet-link">
+          {t.shelfStrip} →
+        </Link>
+      )}
+      <div className="mt-10">
+        <Button variant="secondary" onClick={() => setShareOpen(true)}>
+          {t.share}
+        </Button>
+      </div>
+      <ShareDialog open={shareOpen} onOpenChange={setShareOpen} name={record.name} chart={chart} />
     </div>
   );
 }
@@ -269,6 +296,8 @@ export function ReadingPage({
   state?: string;
 }) {
   const { t, lang } = useLanguage();
+  const { markJourney } = useStore();
+  useEffect(() => markJourney("readingOpened"), [markJourney]);
   const q = useQuery({
     queryKey: ["reading", id, topic, lang],
     queryFn: () => api.getReading(id, topic, lang),
@@ -441,7 +470,7 @@ export function TodayPage({ state = "" }: { state?: string }) {
           <span className="ritual-intention">{data.ritual.intention}</span>
           <span className="ritual-meta">
             <span className="label muted">
-              {data.ritual.timing} / {t.minutes.replace("{n}", String(data.ritual.minutes))}
+              {data.ritual.timing} / {t.minutes.replace("{n}", String(data.ritual.durationMin))}
             </span>
             <ArrowRight size={18} aria-hidden="true" />
           </span>
@@ -649,23 +678,42 @@ export function AskPage({ state = "" }: { state?: string }) {
   );
 }
 
-/* ---------- rituals (library; perfume pairing arrives in part 3) ---------- */
+/* ---------- rituals ---------- */
+const themeLabel = (t: Dictionary, th: RitualTheme) => t[`theme${cap(th)}` as keyof Dictionary];
+
 export function RitualsPage({ state = "" }: { state?: string }) {
   const { t, lang } = useLanguage();
-  const q = useQuery({ queryKey: ["rituals", lang], queryFn: () => api.listRituals(lang) });
+  const [theme, setTheme] = useState<RitualTheme | undefined>(undefined);
+  const q = useQuery({
+    queryKey: ["rituals", lang, theme],
+    queryFn: () => api.listRituals(lang, theme),
+  });
   const loading = state === "loading" || (!state && q.isPending);
   const failed = state === "error" || (!state && q.isError);
   return (
     <div className="narrow">
       <h1 className="xl">{t.ritualsTitle}</h1>
       <p className="muted mt-4">{t.ritualsIntro}</p>
-      <div className="mt-10">
+      <div className="chips mt-8" role="group" aria-label={t.ritualThemes}>
+        {ritualThemes.map((th) => (
+          <Button
+            key={th}
+            variant="secondary"
+            className="chip label"
+            aria-pressed={theme === th}
+            onClick={() => setTheme(theme === th ? undefined : th)}
+          >
+            {themeLabel(t, th)}
+          </Button>
+        ))}
+      </div>
+      <div className="mt-8">
         {loading ? (
           <Skeleton />
         ) : failed ? (
           <StateMessage message={t.ritualsError} retry={() => void q.refetch()} />
         ) : state === "empty" || !q.data?.length ? (
-          <StateMessage message={t.askEmpty} />
+          <StateMessage message={t.ritualsEmpty} />
         ) : (
           <ul className="read-more">
             {q.data.map((r) => (
@@ -673,7 +721,10 @@ export function RitualsPage({ state = "" }: { state?: string }) {
                 <Link to="/rituals/$id" params={{ id: r.id }} className="read-more-row">
                   <span>
                     <span className="question">{r.title}</span>
-                    <span className="read-more-teaser muted">{r.intention}</span>
+                    <span className="label muted">
+                      {themeLabel(t, r.theme)} / {t.minutes.replace("{n}", String(r.durationMin))} /{" "}
+                      {r.timing}
+                    </span>
                   </span>
                   <ArrowRight size={20} aria-hidden="true" />
                 </Link>
@@ -686,13 +737,83 @@ export function RitualsPage({ state = "" }: { state?: string }) {
   );
 }
 
+function ScentThatFits({ perfume, reason }: { perfume: Perfume; reason: string }) {
+  const { t, word } = useLanguage();
+  const { add, notify } = useStore();
+  const [busy, setBusy] = useState(false);
+  return (
+    <section className="scent-fit">
+      <h2 className="label section-heading">{t.scentThatFits}</h2>
+      <article className="fit-card">
+        <div className="product-image">
+          <Bottle family={perfume.scent_family} name={perfume.name} />
+        </div>
+        <div className="fit-body">
+          <p className="label muted">{word(perfume.scent_family)}</p>
+          <h3 className="question">{perfume.name}</h3>
+          <p className="label muted">{perfume.brand}</p>
+          <p>
+            ${perfume.price} · {perfume.size_ml} ml
+          </p>
+          <p className="fit-reason">{reason}</p>
+          <Notes perfume={perfume} />
+          <div className="fit-actions">
+            <Link to="/shop/$id" params={{ id: perfume.id }} className="quiet-link">
+              {t.seeScent} →
+            </Link>
+            <Button
+              variant="secondary"
+              disabled={perfume.sold_out}
+              loading={busy}
+              onClick={async () => {
+                setBusy(true);
+                await add(perfume.id);
+                notify(t.added);
+                setBusy(false);
+              }}
+            >
+              {perfume.sold_out ? t.soldOut : t.add}
+            </Button>
+          </div>
+        </div>
+      </article>
+      <p className="small muted mt-4">{t.noPerfume}</p>
+    </section>
+  );
+}
+
 export function RitualPage({ id, state = "" }: { id: string; state?: string }) {
   const { t, lang } = useLanguage();
-  const q = useQuery({ queryKey: ["ritual", id, lang], queryFn: () => api.getRitual(id, lang) });
+  const store = useStore();
+  const [saved, setSaved] = useState(false);
+  const q = useQuery({
+    queryKey: ["ritual-full", id, lang],
+    queryFn: async () => {
+      const ritual = await api.getRitual(id, lang);
+      const perfume = await api.getPerfume(ritual.perfumeId);
+      return { ritual, perfume };
+    },
+    retry: false,
+  });
+  const { markJourney } = store;
+  useEffect(() => markJourney("ritualOpened"), [markJourney]);
+
   if (state === "loading" || (!state && q.isPending))
     return (
-      <div className="narrow">
+      <div className="narrow stack">
+        <Orb variant="moon" size="md" />
         <Skeleton />
+      </div>
+    );
+  const notFoundErr = q.error instanceof Error && q.error.message === "NOT_FOUND";
+  if (state === "not-found" || (!state && notFoundErr))
+    return (
+      <div className="narrow">
+        <StateMessage message={t.ritualNotFound}>
+          <Link to="/rituals" className="quiet-link">
+            {t.allRituals}
+          </Link>
+        </StateMessage>
       </div>
     );
   if (state === "error" || (!state && q.isError) || !q.data)
@@ -701,36 +822,252 @@ export function RitualPage({ id, state = "" }: { id: string; state?: string }) {
         <StateMessage message={t.ritualsError} retry={() => void q.refetch()} />
       </div>
     );
-  const r = q.data;
+  const r = q.data.ritual;
+  const basePerfume = state === "perfume-missing" ? null : q.data.perfume;
+  const perfume =
+    basePerfume && state === "sold-out" ? { ...basePerfume, sold_out: true } : basePerfume;
+
   return (
     <div className="narrow ritual-page">
       <Link to="/rituals" className="label muted">
         ← {t.allRituals}
       </Link>
-      <Orb variant="moon" size="md" />
-      <h1 className="xl">{r.title}</h1>
-      <p className="ritual-intention">{r.intention}</p>
-      <CellGrid columns={2}>
-        <Cell>
-          <p className="label muted">{t.timingLabel}</p>
-          <p>{r.timing}</p>
-        </Cell>
-        <Cell>
-          <p className="label muted">{t.minutes.replace("{n}", "").trim()}</p>
-          <p>{r.minutes}</p>
-        </Cell>
-      </CellGrid>
-      <h2 className="label section-heading mt-10">{t.stepsLabel}</h2>
+      <div className="ritual-hero">
+        <Orb variant="moon" size="lg" />
+        <h1 className="xl">{r.title}</h1>
+        <p className="question ritual-intention-lg">{r.intention}</p>
+      </div>
+      <dl className="ritual-meta-row">
+        <div>
+          <dt className="label muted">{t.timingLabel}</dt>
+          <dd className="label">{r.timing}</dd>
+        </div>
+        <div>
+          <dt className="label muted">{t.durationLabel}</dt>
+          <dd className="label">{t.minutes.replace("{n}", String(r.durationMin))}</dd>
+        </div>
+        <div>
+          <dt className="label muted">{t.needsLabel}</dt>
+          <dd className="label">{r.needs.join(", ")}</dd>
+        </div>
+      </dl>
       <ol className="ritual-steps">
         {r.steps.map((s, i) => (
           <li key={s}>
-            <span className="label muted">0{i + 1}</span>
+            <span className="label">0{i + 1}</span>
             <p>{s}</p>
           </li>
         ))}
       </ol>
-      <p className="small muted mt-8">{t.anyPerfume}</p>
-      <p className="small muted italic mt-2">{t.ritualClaim}</p>
+      <p className="muted italic">{r.why}</p>
+      <p className="small muted">{t.anyPerfume}</p>
+
+      {perfume && <ScentThatFits perfume={perfume} reason={r.reason} />}
+
+      <div className="stack">
+        <Button
+          disabled={saved}
+          onClick={async () => {
+            await api.saveRitual(r.id);
+            setSaved(true);
+            store.notify(t.ritualSaved);
+          }}
+        >
+          {t.saveRitual}
+        </Button>
+        {!store.user && (
+          <Link to="/login" className="small muted underline">
+            {t.ritualGuest}
+          </Link>
+        )}
+      </div>
+      <p className="small muted italic">{t.ritualClaim}</p>
+      {store.journey.readingOpened && (
+        <Link to="/chart/result/$id/shelf" params={{ id: "demo" }} className="today-strip">
+          <span className="label">{t.shelfStrip}</span>
+          <ArrowRight size={18} aria-hidden="true" />
+        </Link>
+      )}
     </div>
+  );
+}
+
+/* ---------- shelf ---------- */
+export function ShelfPage({ id, state = "" }: { id: string; state?: string }) {
+  const { t, lang, word } = useLanguage();
+  const q = useQuery({ queryKey: ["shelf", id, lang], queryFn: () => api.getShelf(id, lang) });
+  const loading = state === "loading" || (!state && q.isPending);
+  const failed = state === "error" || (!state && q.isError);
+  const entries: { key: string; label: string; note: NoteName; e: ShelfEntry | null }[] = q.data
+    ? [
+        { key: "chart", label: t.shelfChart, note: "musk", e: q.data.forChart },
+        { key: "week", label: t.shelfWeek, note: "bergamot", e: q.data.forWeek },
+        {
+          key: "shadow",
+          label: t.shelfShadow,
+          note: "amber",
+          e: state === "two" ? null : q.data.forShadow,
+        },
+      ]
+    : [];
+  return (
+    <div className="narrow shelf-page">
+      <Link to="/chart/result/$id" params={{ id }} className="label muted">
+        ← {t.back}
+      </Link>
+      <h1 className="xl">{t.shelfTitle}</h1>
+      <p className="muted">{t.shelfLine}</p>
+      {loading ? (
+        <div className="stack">
+          <Skeleton product />
+          <Skeleton product />
+        </div>
+      ) : failed ? (
+        <StateMessage message={t.shelfError} retry={() => void q.refetch()} />
+      ) : (
+        entries
+          .filter((x) => x.e)
+          .map(({ key, label, note, e }) =>
+            e ? (
+              <article key={key} className="shelf-entry">
+                <div className="shelf-entry-head">
+                  <NoteIcon name={note} label="" />
+                  <p className="label">{label}</p>
+                </div>
+                <div className="evidence-cell">
+                  <span className="label">
+                    {glyphs[e.evidence?.planet ?? "sun"]}{" "}
+                    {t[planetKey(e.evidence?.planet ?? "sun")]}{" "}
+                    {word(e.evidence?.sign ?? "").toUpperCase()}
+                  </span>
+                  <span className="small">{e.reason}</span>
+                </div>
+                <div className="shelf-body">
+                  <div className="product-image">
+                    <Bottle family={e.perfume.scent_family} name={e.perfume.name} />
+                  </div>
+                  <div className="stack">
+                    <Link to="/shop/$id" params={{ id: e.perfume.id }} className="question">
+                      {e.perfume.name}
+                    </Link>
+                    <p className="label muted">
+                      {t.pairsWith}:{" "}
+                      <Link to="/rituals/$id" params={{ id: e.ritualId }} className="underline">
+                        {e.ritualTitle}
+                      </Link>
+                    </p>
+                    <Notes perfume={e.perfume} />
+                    <p>
+                      ${e.perfume.price} · {e.perfume.size_ml} ml
+                    </p>
+                    <AddButton perfume={e.perfume} />
+                  </div>
+                </div>
+              </article>
+            ) : null,
+          )
+      )}
+      <Link to="/shop" className="quiet-link">
+        {t.browseEverything} →
+      </Link>
+    </div>
+  );
+}
+
+/* ---------- share card ---------- */
+export function ShareDialog({
+  open,
+  onOpenChange,
+  name,
+  chart,
+}: {
+  open: boolean;
+  onOpenChange: (v: boolean) => void;
+  name: string;
+  chart: Chart;
+}) {
+  const { t, lang } = useLanguage();
+  const { notify } = useStore();
+  const [busy, setBusy] = useState(false);
+  const q = useQuery({
+    queryKey: ["today", lang],
+    enabled: open,
+    queryFn: async () => {
+      const date = new Date().toISOString().slice(0, 10);
+      const today = await api.getToday("demo", date, lang);
+      const ritual = await api.getRitual(today.ritualId, lang);
+      return { today, ritual };
+    },
+  });
+  const download = async () => {
+    const node = document.getElementById("share-card");
+    if (!node) return;
+    setBusy(true);
+    try {
+      const { toPng } = await import("html-to-image");
+      const url = await toPng(node, {
+        width: 1080,
+        height: 1920,
+        style: { transform: "none" },
+      });
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "natal-notes.png";
+      a.click();
+    } catch {
+      notify(t.shareFailed, "error");
+    }
+    setBusy(false);
+  };
+  return (
+    <ScentDialog
+      open={open}
+      onOpenChange={onOpenChange}
+      title={t.shareTitle}
+      description={t.shareDescription}
+    >
+      <div className="share-frame">
+        <div id="share-card" className="share-card" data-theme="dark">
+          <div className="share-stars">
+            <StarField />
+          </div>
+          <div className="share-inner">
+            <p className="label">{t.brand}</p>
+            <div className="share-mid">
+              <Orb variant="sun" size="lg" />
+              <h3 className="share-name">{name}</h3>
+              <HandleLine chart={chart} />
+              {q.data && (
+                <>
+                  <p className="label muted">{t.shareSummaryLabel}</p>
+                  <p className="share-line">{q.data.today.summary}</p>
+                  <p className="label muted">{t.shareRitualLabel}</p>
+                  <p className="share-line">{q.data.ritual.title}</p>
+                </>
+              )}
+            </div>
+            <p className="label muted">{t.chartUrl}</p>
+          </div>
+        </div>
+      </div>
+      <div className="stack mt-6">
+        <Button onClick={download} loading={busy}>
+          {busy ? t.generating : t.download}
+        </Button>
+        <Button
+          variant="secondary"
+          onClick={async () => {
+            try {
+              await navigator.clipboard.writeText(window.location.href);
+              notify(t.copied);
+            } catch {
+              notify(t.copyError, "error");
+            }
+          }}
+        >
+          {t.copyLink}
+        </Button>
+      </div>
+    </ScentDialog>
   );
 }

@@ -27,6 +27,13 @@ interface Store {
   notify: (text: string, kind?: "info" | "error") => void;
   notice: { text: string; kind: "info" | "error" } | null;
   dismiss: () => void;
+  journey: Journey;
+  markJourney: (k: keyof Journey) => void;
+}
+export interface Journey {
+  chartSeen: boolean;
+  readingOpened: boolean;
+  ritualOpened: boolean;
 }
 const Context = createContext<Store | null>(null);
 export function StoreProvider({ children }: { children: ReactNode }) {
@@ -36,6 +43,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState(false);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [notice, setNotice] = useState<Store["notice"]>(null);
+  const [journey, setJourney] = useState<Journey>({
+    chartSeen: false,
+    readingOpened: false,
+    ritualOpened: false,
+  });
+  const markJourney = (k: keyof Journey) => setJourney((j) => (j[k] ? j : { ...j, [k]: true }));
   const add = async (id: string) => setCartItems(await api.addToCart(id));
   return (
     <Context.Provider
@@ -54,6 +67,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         notify: (text, kind = "info") => setNotice({ text, kind }),
         notice,
         dismiss: () => setNotice(null),
+        journey,
+        markJourney,
       }}
     >
       {children}

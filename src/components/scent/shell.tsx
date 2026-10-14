@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { ShoppingBag, X } from "lucide-react";
+import { ShoppingBag, User, X } from "lucide-react";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/i18n/provider";
@@ -32,16 +32,26 @@ export function LanguageToggle() {
   );
 }
 const tabs = [
-  { to: "/", key: "tabHome" },
-  { to: "/chart/new", key: "tabChart" },
-  { to: "/shop", key: "tabShop" },
-  { to: "/cart", key: "tabCart" },
-  { to: "/you", key: "tabYou" },
+  { to: "/today", key: "tabToday", nav: "navToday", match: "/today" },
+  { to: "/chart/new", key: "tabChart", nav: "navChart", match: "/chart" },
+  { to: "/ask", key: "tabAsk", nav: "navAsk", match: "/ask" },
+  { to: "/rituals", key: "tabRituals", nav: "navRituals", match: "/rituals" },
+  { to: "/shop", key: "tabShop", nav: "navShop", match: "/shop" },
 ] as const;
+function useNav() {
+  const { journey } = useStore();
+  const path = useRouterState({ select: (s) => s.location.pathname });
+  return tabs.map((tab) => ({
+    ...tab,
+    href: tab.to === "/chart/new" && journey.chartSeen ? "/chart/result/demo" : tab.to,
+    active: path.startsWith(tab.match),
+  }));
+}
 export function Header() {
   const { t } = useLanguage();
   const { cartItems } = useStore();
   const count = cartItems.reduce((n, p) => n + p.quantity, 0);
+  const nav = useNav();
   return (
     <header className="site-header">
       <Link to="/" className="wordmark">
@@ -52,12 +62,17 @@ export function Header() {
         {t.brand}
       </Link>
       <nav className="header-nav" aria-label={t.tabsLabel}>
-        <Link to="/shop">{t.navShop}</Link>
-        <Link to="/you">{t.navYou}</Link>
-        <Link to="/login">{t.navLogin}</Link>
+        {nav.map((n) => (
+          <Link key={n.to} to={n.href} aria-current={n.active ? "page" : undefined}>
+            {t[n.nav]}
+          </Link>
+        ))}
       </nav>
       <div className="header-tools">
         <LanguageToggle />
+        <Link to="/you" className="cart-link" aria-label={t.navYou}>
+          <User size={19} />
+        </Link>
         <Link to="/cart" className="cart-link" aria-label={`${t.navCart} (${count})`}>
           <ShoppingBag size={19} />
           <span className="label">{String(count).padStart(2, "0")}</span>
@@ -68,28 +83,19 @@ export function Header() {
 }
 export function TabBar() {
   const { t } = useLanguage();
-  const { cartItems } = useStore();
-  const count = cartItems.reduce((n, p) => n + p.quantity, 0);
-  const path = useRouterState({ select: (s) => s.location.pathname });
+  const nav = useNav();
   return (
     <nav className="tab-bar" aria-label={t.tabsLabel}>
-      {tabs.map((tab) => {
-        const active =
-          tab.to === "/"
-            ? path === "/"
-            : path.startsWith(tab.to === "/chart/new" ? "/chart" : tab.to);
-        return (
-          <Link
-            key={tab.to}
-            to={tab.to}
-            className={`label tab ${active ? "tab-active" : ""}`}
-            aria-current={active ? "page" : undefined}
-          >
-            {t[tab.key]}
-            {tab.key === "tabCart" && count > 0 && <span className="tab-count"> {count}</span>}
-          </Link>
-        );
-      })}
+      {nav.map((n) => (
+        <Link
+          key={n.to}
+          to={n.href}
+          className={`label tab ${n.active ? "tab-active" : ""}`}
+          aria-current={n.active ? "page" : undefined}
+        >
+          {t[n.key]}
+        </Link>
+      ))}
     </nav>
   );
 }

@@ -110,14 +110,29 @@ export interface AstroAnswer {
   answer: string;
   ritualId: string;
 }
+export type RitualTheme = "calm" | "love" | "work" | "luck" | "self" | "evening";
 export interface Ritual {
   id: string;
-  theme: Theme;
   title: string;
+  theme: RitualTheme;
   intention: string;
   timing: string;
-  minutes: number;
+  durationMin: number;
+  needs: string[];
   steps: string[];
+  why: string;
+  noteFamily: string;
+  perfumeId: string;
+  reason: string;
+}
+export interface ShelfEntry extends Match {
+  ritualId: string;
+  ritualTitle: string;
+}
+export interface Shelf {
+  forChart: ShelfEntry | null;
+  forWeek: ShelfEntry | null;
+  forShadow: ShelfEntry | null;
 }
 export interface ChartRecord {
   id: string;
