@@ -48,8 +48,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     readingOpened: false,
     ritualOpened: false,
   });
-  const markJourney = (k: keyof Journey) =>
-    setJourney((j) => (j[k] ? j : { ...j, [k]: true }));
+  const markJourney = (k: keyof Journey) => setJourney((j) => (j[k] ? j : { ...j, [k]: true }));
   const add = async (id: string) => setCartItems(await api.addToCart(id));
   return (
     <Context.Provider

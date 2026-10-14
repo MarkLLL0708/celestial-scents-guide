@@ -936,7 +936,8 @@ export function ShelfPage({ id, state = "" }: { id: string; state?: string }) {
                 </div>
                 <div className="evidence-cell">
                   <span className="label">
-                    {glyphs[e.evidence?.planet ?? "sun"]} {t[planetKey(e.evidence?.planet ?? "sun")]}{" "}
+                    {glyphs[e.evidence?.planet ?? "sun"]}{" "}
+                    {t[planetKey(e.evidence?.planet ?? "sun")]}{" "}
                     {word(e.evidence?.sign ?? "").toUpperCase()}
                   </span>
                   <span className="small">{e.reason}</span>
@@ -951,11 +952,7 @@ export function ShelfPage({ id, state = "" }: { id: string; state?: string }) {
                     </Link>
                     <p className="label muted">
                       {t.pairsWith}:{" "}
-                      <Link
-                        to="/rituals/$id"
-                        params={{ id: e.ritualId }}
-                        className="underline"
-                      >
+                      <Link to="/rituals/$id" params={{ id: e.ritualId }} className="underline">
                         {e.ritualTitle}
                       </Link>
                     </p>
@@ -1023,7 +1020,12 @@ export function ShareDialog({
     setBusy(false);
   };
   return (
-    <ScentDialog open={open} onOpenChange={onOpenChange} title={t.shareTitle} description={t.shareDescription}>
+    <ScentDialog
+      open={open}
+      onOpenChange={onOpenChange}
+      title={t.shareTitle}
+      description={t.shareDescription}
+    >
       <div className="share-frame">
         <div id="share-card" className="share-card" data-theme="dark">
           <div className="share-stars">

@@ -465,7 +465,10 @@ export function SavedList({ state = "" }: { state?: string }) {
 }
 function SavedRituals() {
   const { t, lang } = useLanguage();
-  const q = useQuery({ queryKey: ["saved-rituals", lang], queryFn: () => api.listSavedRituals(lang) });
+  const q = useQuery({
+    queryKey: ["saved-rituals", lang],
+    queryFn: () => api.listSavedRituals(lang),
+  });
   if (q.isPending) return <Skeleton />;
   if (q.isError) return <StateMessage message={t.ritualsError} retry={() => void q.refetch()} />;
   if (!q.data.length)

@@ -173,3 +173,47 @@ html{background:var(--bg);color:var(--text)}
 .reveal-traits p{font-size:24px;line-height:32px}
 .tone-strip{gap:10px}
 }
+/* ---- redo part 3: rituals, shelf, share ---- */
+.header-nav a[aria-current=page]{text-decoration:underline;text-underline-offset:6px}
+.ritual-hero{display:flex;flex-direction:column;align-items:center;gap:20px;text-align:center;padding:16px 0}
+.ritual-intention-lg{font-size:28px;line-height:34px}
+.ritual-meta-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin:0;border-top:var(--rule) solid var(--border);border-bottom:var(--rule) solid var(--border)}
+.ritual-meta-row>div{padding:16px 12px 16px 0;display:flex;flex-direction:column;gap:6px;min-width:0}
+.ritual-meta-row>div+div{border-left:var(--rule) solid var(--border);padding-left:12px}
+.ritual-meta-row dd{margin:0;overflow-wrap:anywhere}
+.ritual-steps li{grid-template-columns:48px 1fr;padding:22px 0}
+.ritual-steps li p{font-family:var(--font-mono);font-size:15px;line-height:24px}
+.scent-fit{margin-top:24px}
+.fit-card{display:grid;grid-template-columns:180px 1fr;gap:24px;border:var(--rule) solid var(--border);padding:20px}
+.fit-card .product-image{margin:0}
+.fit-body{display:flex;flex-direction:column;gap:8px;min-width:0}
+.fit-reason{font-style:italic;margin:8px 0}
+.fit-actions{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:12px}
+.fit-actions .quiet-link{margin:0}
+.fit-actions .nn-button{width:auto}
+.shelf-page{display:flex;flex-direction:column;gap:24px}
+.shelf-entry{border-top:var(--rule) solid var(--border);padding-top:24px;display:flex;flex-direction:column;gap:16px}
+.shelf-entry-head{display:flex;align-items:center;gap:12px}
+.evidence-cell{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);border:var(--rule) solid var(--border)}
+.evidence-cell>*{padding:12px;min-width:0}
+.evidence-cell>*+*{border-left:var(--rule) solid var(--border)}
+.shelf-body{display:grid;grid-template-columns:200px 1fr;gap:24px}
+.shelf-body .product-image{margin:0}
+.share-frame{width:270px;height:480px;overflow:hidden;margin:16px auto 0;border:var(--rule) solid var(--border)}
+.share-card{width:1080px;height:1920px;transform:scale(.25);transform-origin:0 0;position:relative;overflow:hidden;background:var(--bg);color:var(--text)}
+.share-stars{position:absolute;inset:0}
+.share-stars .star-field{position:absolute;z-index:0;transform:scale(1)}
+.share-inner{position:relative;height:100%;display:flex;flex-direction:column;justify-content:space-between;align-items:center;padding:120px 80px;text-align:center}
+.share-inner .label{font-size:28px;line-height:40px}
+.share-mid{display:flex;flex-direction:column;align-items:center;gap:40px}
+.share-mid .orb-lg{width:420px;height:420px}
+.share-name{font-family:var(--font-serif);font-size:120px;line-height:120px}
+.share-card .share-line{font-family:var(--font-serif);font-size:64px;line-height:76px}
+@media (max-width:767px){
+.fit-card,.shelf-body{grid-template-columns:1fr}
+.fit-card .product-image,.shelf-body .product-image{max-width:220px}
+.ritual-meta-row{grid-template-columns:1fr}
+.ritual-meta-row>div+div{border-left:0;border-top:var(--rule) solid var(--border);padding-left:0}
+.evidence-cell{grid-template-columns:1fr}
+.evidence-cell>*+*{border-left:0;border-top:var(--rule) solid var(--border)}
+}

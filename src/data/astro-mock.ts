@@ -1,5 +1,14 @@
 // Mock astrology content. A real engine replaces this file; the UI only sees api.ts.
-import type { AstroAnswer, Reading, Ritual, RitualTheme, Theme, Today, Topic, Transit } from "./types";
+import type {
+  AstroAnswer,
+  Reading,
+  Ritual,
+  RitualTheme,
+  Theme,
+  Today,
+  Topic,
+  Transit,
+} from "./types";
 
 type Lang = "en" | "vi";
 type Section = [string, string];
@@ -342,7 +351,10 @@ export function answerFor(question: string, theme: Theme, lang: Lang): AstroAnsw
   };
 }
 
-type RitualText = Pick<Ritual, "title" | "intention" | "timing" | "needs" | "steps" | "why" | "reason">;
+type RitualText = Pick<
+  Ritual,
+  "title" | "intention" | "timing" | "needs" | "steps" | "why" | "reason"
+>;
 const ritualText: Record<Lang, Record<string, RitualText>> = {
   en: {
     "slow-breath": {
@@ -522,12 +534,27 @@ const ritualMeta: Record<
   string,
   { theme: RitualTheme; durationMin: number; noteFamily: string; perfumeId: string }
 > = {
-  "slow-breath": { theme: "calm", durationMin: 3, noteFamily: "Aromatic", perfumeId: "herbarium-no-4" },
-  "letter-unsent": { theme: "love", durationMin: 20, noteFamily: "Floral", perfumeId: "petal-theory" },
+  "slow-breath": {
+    theme: "calm",
+    durationMin: 3,
+    noteFamily: "Aromatic",
+    perfumeId: "herbarium-no-4",
+  },
+  "letter-unsent": {
+    theme: "love",
+    durationMin: 20,
+    noteFamily: "Floral",
+    perfumeId: "petal-theory",
+  },
   "desk-reset": { theme: "work", durationMin: 30, noteFamily: "Woody", perfumeId: "paper-woods" },
   "open-door": { theme: "luck", durationMin: 5, noteFamily: "Fresh", perfumeId: "salt-index" },
   "morning-line": { theme: "self", durationMin: 3, noteFamily: "Citrus", perfumeId: "open-orbit" },
-  "evening-close": { theme: "evening", durationMin: 10, noteFamily: "Gourmand", perfumeId: "after-hours" },
+  "evening-close": {
+    theme: "evening",
+    durationMin: 10,
+    noteFamily: "Gourmand",
+    perfumeId: "after-hours",
+  },
 };
 
 export const ritualIds = Object.keys(ritualMeta);
@@ -552,8 +579,23 @@ const shelfText: Record<Lang, { chart: string; week: string; shadow: string }> =
   },
 };
 export const shelfPlan = {
-  forChart: { perfumeId: "white-margin", ritualId: "evening-close", planet: "moon" as const, sign: "Cancer" },
-  forWeek: { perfumeId: "salt-index", ritualId: "open-door", planet: "venus" as const, sign: "Pisces" },
-  forShadow: { perfumeId: "velvet-error", ritualId: "letter-unsent", planet: "mars" as const, sign: "Gemini" },
+  forChart: {
+    perfumeId: "white-margin",
+    ritualId: "evening-close",
+    planet: "moon" as const,
+    sign: "Cancer",
+  },
+  forWeek: {
+    perfumeId: "salt-index",
+    ritualId: "open-door",
+    planet: "venus" as const,
+    sign: "Pisces",
+  },
+  forShadow: {
+    perfumeId: "velvet-error",
+    ritualId: "letter-unsent",
+    planet: "mars" as const,
+    sign: "Gemini",
+  },
 };
 export const shelfReason = (lang: Lang) => shelfText[lang];
