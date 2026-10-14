@@ -94,26 +94,6 @@ export function EvidenceCell({ evidence }: { evidence: Evidence }) {
   );
 }
 
-function MatchCard({
-  match,
-  variant = "grid",
-}: {
-  match: Match;
-  variant?: "grid" | "signature" | "shadow";
-}) {
-  return (
-    <div className="match-card">
-      <ProductCard
-        perfume={match.perfume}
-        variant={variant}
-        score={match.score}
-        reason={match.reason}
-      />
-      {match.evidence && <EvidenceCell evidence={match.evidence} />}
-    </div>
-  );
-}
-
 export function RevealPage({ state = "" }: { state?: string }) {
   const { t, word } = useLanguage();
   const { profile } = useStore();
@@ -167,325 +147,30 @@ export function RevealPage({ state = "" }: { state?: string }) {
   );
 }
 
-function buildDemoResult(): ChartResult {
-  return {
-    id: "demo",
-    profile: {
-      name: "Demo",
-      day: 1,
-      month: 2,
-      year: 1995,
-      hour: 12,
-      minute: 0,
-      city: "Hanoi",
-      country: "Vietnam",
-    },
-    chart: demoChart,
-    prefs: { avoid: [], style: "any", budget: "any" },
-    recs: {
-      signature: {
-        perfume: perfumes[0],
-        score: 94,
-        reason: "",
-        evidence: { planet: "sun", sign: demoChart.sun, why: "why1" },
-      },
-      others: perfumes.slice(1, 5).map((p, i) => ({
-        perfume: p,
-        score: [88, 84, 79, 73][i],
-        reason: "",
-        evidence: {
-          planet: (["moon", "rising", "venus", "mars"] as const)[i],
-          sign: [
-            demoChart.moon,
-            demoChart.rising ?? demoChart.sun,
-            demoChart.venus,
-            demoChart.mars,
-          ][i],
-          why: `why${i + 2}`,
-        },
-      })),
-      shadow: {
-        perfume: perfumes[5],
-        score: 61,
-        reason: "",
-        evidence: { planet: "mercury", sign: demoChart.mercury, why: "why6" },
-      },
-    },
-    date: "2026-10-14",
-  };
-}
-
-function ShareDialog({
-  open,
-  onOpenChange,
-  result,
-  reasons,
-}: {
-  open: boolean;
-  onOpenChange: (v: boolean) => void;
-  result: ChartResult;
-  reasons: Record<string, string>;
-}) {
-  const { t, word, lang } = useLanguage();
-  const { notify } = useStore();
-  const [phase, setPhase] = useState<"generating" | "ready" | "failed">("generating");
-  useEffect(() => {
-    if (!open) return;
-    setPhase("generating");
-    const timer = setTimeout(() => setPhase("ready"), 1200);
-    return () => clearTimeout(timer);
-  }, [open]);
-  const download = async () => {
-    try {
-      const { toPng } = await import("html-to-image");
-      const node = document.querySelector<HTMLElement>(".share-card");
-      if (!node) throw new Error("missing");
-      const url = await toPng(node, { width: 1080, height: 1920 });
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "natal-notes-chart.png";
-      a.click();
-    } catch {
-      setPhase("failed");
-    }
-  };
-  const copy = async () => {
-    try {
-      await navigator.clipboard.writeText(window.location.href);
-      notify(t.copied);
-    } catch {
-      notify(t.copyError, "error");
-    }
-  };
-  return (
-    <ScentDialog
-      open={open}
-      onOpenChange={onOpenChange}
-      title={t.shareTitle}
-      description={t.shareDescription}
-    >
-      {phase === "generating" ? (
-        <div className="stack" aria-busy="true">
-          <p className="label muted">{t.generating}</p>
-          <Skeleton />
-        </div>
-      ) : phase === "failed" ? (
-        <StateMessage message={t.shareFailed} retry={() => setPhase("generating")} />
-      ) : (
-        <>
-          <div className="share-preview">
-            <div className="share-scaled">
-              <div className="share-card">
-                <div>
-                  <p className="label">{result.profile.name.toUpperCase()}</p>
-                  <p className="share-sign">
-                    {word(result.chart.sun)} / {word(result.chart.moon)} /{" "}
-                    {result.chart.rising ? word(result.chart.rising) : "—"}
-                  </p>
-                </div>
-                <div>
-                  <p className="share-perfume">{result.recs.signature.perfume.name}</p>
-                  <p>{reasons[result.recs.signature.perfume.id] ?? t.acc1Text}</p>
-                </div>
-                <p className="label">
-                  {t.brand.toUpperCase()} — {t.chartUrl}
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="stack">
-            <Button onClick={download}>{t.download}</Button>
-            <Button variant="secondary" onClick={copy}>
-              {t.copyLink}
-            </Button>
-          </div>
-        </>
-      )}
-    </ScentDialog>
-  );
-}
 
 export function ResultPage({ id, state = "" }: { id: string; state?: string }) {
-  const { t, word, lang } = useLanguage();
+  const { t } = useLanguage();
   const store = useStore();
-  const [forced, setForced] = useState(state);
-  const [shareOpen, setShareOpen] = useState(false);
-  const [savedOnce, setSavedOnce] = useState(false);
-  useEffect(() => setForced(state), [state]);
-
-  const result = store.result && store.result.id === id ? store.result : buildDemoResult();
-  const readingQuery = useQuery({
-    queryKey: ["reading", lang, id],
-    queryFn: () => api.getReading(result.chart, result.recs, lang),
-  });
-
-  if (forced === "loading")
+  const name = store.result && store.result.id === id ? store.result.profile?.name : undefined;
+  if (state === "loading")
     return (
       <div className="narrow stack">
         <Skeleton />
-        <Skeleton />
       </div>
     );
-  if (forced === "no-matches")
+  if (state === "error")
     return (
       <div className="narrow">
-        <StateMessage message={t.noMatches}>
-          <Button asChild>
-            <Link to="/chart/new" search={{ step: 5, state: "" }}>
-              {t.edit}
-            </Link>
-          </Button>
-        </StateMessage>
+        <StateMessage message={t.revealError} retry={() => window.location.reload()} />
       </div>
     );
-
-  const { chart, recs } = result;
-  const unknownTime = result.profile.hour === null || forced === "unknown-time";
-  const reading = readingQuery.data;
-  const readingError = forced === "error" || readingQuery.isError;
-  const reasons = reading?.reasons ?? {};
-  const reason = (m: Match) => reasons[m.perfume.id] ?? m.reason;
-
-  const sections = [
-    { key: "acc1", text: "acc1Text" },
-    { key: "acc2", text: "acc2Text" },
-    { key: "acc3", text: "acc3Text" },
-    { key: "acc4", text: "acc4Text" },
-    { key: "acc5", text: "acc5Text" },
-  ] as const;
-
   return (
-    <div className="narrow">
-      <section className="result-section">
-        <p className="label">{result.profile.name}</p>
-        <div className="placement-grid">
-          <PlacementBadge label={t.sun} sign={chart.sun} index={0} />
-          <PlacementBadge label={t.moon} sign={chart.moon} index={1} />
-          <PlacementBadge label={t.rising} sign={unknownTime ? null : chart.rising} index={2} />
-        </div>
-        {unknownTime && <p className="small muted">{t.noRising}</p>}
-      </section>
-
-      <section className="result-section">
-        <SectionHeader>{t.chart}</SectionHeader>
-        <PlacementRow label={t.venus} value={word(chart.venus)} explanation={t.venusReading} />
-        <PlacementRow label={t.mars} value={word(chart.mars)} explanation={t.marsReading} />
-        <PlacementRow
-          label={t.mercury}
-          value={word(chart.mercury)}
-          explanation={t.mercuryReading}
-        />
-      </section>
-
-      <section className="result-section">
-        <SectionHeader>{t.nose}</SectionHeader>
-        <ElementBar label={t.fire} value={chart.elements.fire} />
-        <ElementBar label={t.earth} value={chart.elements.earth} />
-        <ElementBar label={t.air} value={chart.elements.air} />
-        <ElementBar label={t.water} value={chart.elements.water} />
-        <p className="label muted mt-8">{t.dominant}</p>
-        <p className="question">{word(recs.signature.perfume.scent_family)}</p>
-        <div className="chips mt-6">
-          {t.keywords.split(", ").map((k) => (
-            <span className="label" key={k}>
-              {k}
-            </span>
-          ))}
-        </div>
-      </section>
-
-      <section className="result-section">
-        {readingQuery.isPending ? (
-          <Skeleton />
-        ) : readingError ? (
-          <StateMessage message={t.readingError} retry={() => readingQuery.refetch()} />
-        ) : (
-          <Accordion.Root
-            type="single"
-            defaultValue="acc1"
-            collapsible
-            className="reading-accordion"
-          >
-            {sections.map((s) => (
-              <Accordion.Item value={s.key} key={s.key} className="reading-item">
-                <Accordion.Header>
-                  <Accordion.Trigger className="reading-trigger">
-                    <span>{t[s.key]}</span>
-                    <ChevronDown size={18} aria-hidden="true" />
-                  </Accordion.Trigger>
-                </Accordion.Header>
-                <Accordion.Content className="reading-content">
-                  <p>{t[s.text]}</p>
-                </Accordion.Content>
-              </Accordion.Item>
-            ))}
-          </Accordion.Root>
-        )}
-        <FeedbackRow />
-      </section>
-
-      <section className="result-section">
-        <SectionHeader>{t.signature}</SectionHeader>
-        <MatchCard
-          match={{ ...recs.signature, reason: reason(recs.signature) }}
-          variant="signature"
-        />
-        <p className="small muted mt-4">{t.signatureSub}</p>
-        <FeedbackRow />
-        <p className="small muted italic mt-6">{t.tendencies}</p>
-        <Link to="/ask" className="ask-banner">
-          <span className="label">{t.askBanner}</span>
-        </Link>
-      </section>
-
-      <section className="result-section">
-        <SectionHeader>{t.also}</SectionHeader>
-        <div className="products result-products">
-          {recs.others.map((m) => (
-            <MatchCard key={m.perfume.id + m.score} match={{ ...m, reason: reason(m) }} />
-          ))}
-        </div>
-      </section>
-
-      <section className="result-section">
-        <SectionHeader>{t.shadow}</SectionHeader>
-        <p className="small muted mb-6">{t.shadowSub}</p>
-        <MatchCard match={{ ...recs.shadow, reason: reason(recs.shadow) }} variant="shadow" />
-      </section>
-
-      <section className="result-section stack">
-        {store.user ? (
-          <Button
-            variant="secondary"
-            disabled={savedOnce}
-            onClick={async () => {
-              await api.saveChart(result);
-              setSavedOnce(true);
-              store.notify(t.saved);
-            }}
-          >
-            {t.save}
-          </Button>
-        ) : (
-          <p className="small muted">
-            {t.guest}{" "}
-            <Link to="/login" className="underline">
-              {t.navLogin}
-            </Link>
-          </p>
-        )}
-        <Button variant="secondary" onClick={() => setShareOpen(true)}>
-          {t.share}
-        </Button>
-        <Button asChild variant="text">
-          <Link to="/chart/new" search={{ step: 1, state: "" }}>
-            {t.again}
-          </Link>
-        </Button>
-        <p className="small muted">{t.disclaimer}</p>
-      </section>
-
-      <ShareDialog open={shareOpen} onOpenChange={setShareOpen} result={result} reasons={reasons} />
+    <div className="narrow result-simple">
+      {name && <p className="label muted">{name}</p>}
+      <h1 className="question">{t.resultTitle}</h1>
+      <Link to="/today" className="nn-button nn-primary">
+        {t.continue}
+      </Link>
     </div>
   );
 }
