@@ -123,7 +123,7 @@ export function SolarSystem({ size = "lg" }: { size?: "md" | "lg" }) {
       <circle cx="110" cy="110" r="26" fill={`url(#sg${id})`} className="solar-glow" />
       <circle cx="110" cy="110" r="9" fill="#fff" />
       {planets.map((p, i) => (
-        <g key={i} className="solar-orbit" style={{ animationDuration: `${p.dur}s`, animationDelay: `${-p.start / 3.6}s` }}>
+        <g key={i} className="solar-orbit" style={{ animationDuration: `${p.dur}s`, animationDelay: `${(-p.start / 360) * p.dur}s` }}>
           <g transform={`translate(${110 + p.r} 110)`}>
             <circle r={p.size} fill="currentColor" opacity={p.bright} />
             <circle r={p.size} fill="none" stroke="var(--bg)" strokeWidth="1" opacity="0.35" strokeDasharray={`${p.size} ${p.size * 2}`} />
