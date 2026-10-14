@@ -10,7 +10,9 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AskRouteImport } from './routes/ask'
 import { Route as CartRouteImport } from './routes/cart'
+import { Route as DesignRouteImport } from './routes/design'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as SavedRouteImport } from './routes/saved'
 import { Route as ShopRouteImport } from './routes/shop'
@@ -26,9 +28,19 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AskRoute = AskRouteImport.update({
+  id: '/ask',
+  path: '/ask',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CartRoute = CartRouteImport.update({
   id: '/cart',
   path: '/cart',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DesignRoute = DesignRouteImport.update({
+  id: '/design',
+  path: '/design',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -79,7 +91,9 @@ const ChartResultIdRoute = ChartResultIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/ask': typeof AskRoute
   '/cart': typeof CartRoute
+  '/design': typeof DesignRoute
   '/login': typeof LoginRoute
   '/saved': typeof SavedRoute
   '/shop': typeof ShopRouteWithChildren
@@ -92,7 +106,9 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/ask': typeof AskRoute
   '/cart': typeof CartRoute
+  '/design': typeof DesignRoute
   '/login': typeof LoginRoute
   '/saved': typeof SavedRoute
   '/shop': typeof ShopRouteWithChildren
@@ -106,7 +122,9 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/ask': typeof AskRoute
   '/cart': typeof CartRoute
+  '/design': typeof DesignRoute
   '/login': typeof LoginRoute
   '/saved': typeof SavedRoute
   '/shop': typeof ShopRouteWithChildren
@@ -121,7 +139,9 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/ask'
     | '/cart'
+    | '/design'
     | '/login'
     | '/saved'
     | '/shop'
@@ -134,7 +154,9 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/ask'
     | '/cart'
+    | '/design'
     | '/login'
     | '/saved'
     | '/shop'
@@ -147,7 +169,9 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/ask'
     | '/cart'
+    | '/design'
     | '/login'
     | '/saved'
     | '/shop'
@@ -161,7 +185,9 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AskRoute: typeof AskRoute
   CartRoute: typeof CartRoute
+  DesignRoute: typeof DesignRoute
   LoginRoute: typeof LoginRoute
   SavedRoute: typeof SavedRoute
   ShopRoute: typeof ShopRouteWithChildren
@@ -181,11 +207,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/ask': {
+      id: '/ask'
+      path: '/ask'
+      fullPath: '/ask'
+      preLoaderRoute: typeof AskRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/cart': {
       id: '/cart'
       path: '/cart'
       fullPath: '/cart'
       preLoaderRoute: typeof CartRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/design': {
+      id: '/design'
+      path: '/design'
+      fullPath: '/design'
+      preLoaderRoute: typeof DesignRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -266,7 +306,9 @@ const ShopRouteWithChildren = ShopRoute._addFileChildren(ShopRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AskRoute: AskRoute,
   CartRoute: CartRoute,
+  DesignRoute: DesignRoute,
   LoginRoute: LoginRoute,
   SavedRoute: SavedRoute,
   ShopRoute: ShopRouteWithChildren,
