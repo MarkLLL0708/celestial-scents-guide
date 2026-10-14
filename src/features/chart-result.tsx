@@ -33,6 +33,7 @@ import {
   Cell,
   type NoteName,
 } from "@/components/scent/cosmos";
+import { StarField } from "@/components/scent/cosmos";
 import { StateMessage } from "./shared";
 
 export const glyphs: Record<Planet, string> = {

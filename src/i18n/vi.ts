@@ -521,7 +521,6 @@ export const vi: Dictionary = {
   tabAsk: "HỎI",
   tabRituals: "NGHI THỨC",
   navToday: "hôm nay",
-  navChart: "bản đồ",
   navRituals: "nghi thức",
   savedRituals: "NGHI THỨC ĐÃ LƯU",
   noSavedRituals: "chưa có nghi thức nào được lưu.",

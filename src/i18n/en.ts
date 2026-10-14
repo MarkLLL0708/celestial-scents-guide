@@ -521,7 +521,6 @@ export const en = {
   tabAsk: "ASK",
   tabRituals: "RITUALS",
   navToday: "today",
-  navChart: "chart",
   navRituals: "rituals",
   savedRituals: "SAVED RITUALS",
   noSavedRituals: "no saved rituals yet.",
