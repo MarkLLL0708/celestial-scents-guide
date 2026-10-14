@@ -178,6 +178,7 @@ export const en = {
   Cancer: "cancer",
   Libra: "libra",
   Pisces: "pisces",
+  Sagittarius: "sagittarius",
   Gemini: "gemini",
   Capricorn: "capricorn",
   Citrus: "citrus",

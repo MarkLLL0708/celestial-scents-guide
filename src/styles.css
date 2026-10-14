@@ -77,7 +77,7 @@ html{background:var(--bg);color:var(--text)}
 .skeleton-image{border-color:var(--text-muted)}
 .ink .muted,[data-theme=dark] .muted{color:var(--text-muted)}
 [data-theme=dark] .site-header,[data-theme=dark] .tab-bar,[data-theme=dark] .site-footer{background:var(--bg);color:var(--text);border-color:var(--border)}
-[data-theme=dark] :where(p,li,dd){font-family:var(--font-mono);font-size:15px;line-height:24px}
+:where([data-theme=dark]) :where(p,li,dd){font-family:var(--font-mono);font-size:15px;line-height:24px}
 .star-field{position:fixed;inset:0;pointer-events:none;z-index:-1;overflow:hidden}
 .star{position:absolute;border-radius:50%!important;background:var(--star)}
 .star-bright{box-shadow:0 0 6px 1px color-mix(in oklab,var(--star) 60%,transparent)!important}

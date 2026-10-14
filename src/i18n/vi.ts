@@ -179,6 +179,7 @@ export const vi: Dictionary = {
   Cancer: "cự giải",
   Libra: "thiên bình",
   Pisces: "song ngư",
+  Sagittarius: "nhân mã",
   Gemini: "song tử",
   Capricorn: "ma kết",
   Citrus: "cam chanh",

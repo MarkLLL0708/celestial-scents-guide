@@ -44,13 +44,10 @@ export function transitText(t: Dictionary, x: Transit) {
     .replace("{b}", t[planetKey(x.natal)]);
 }
 
-function HandleLine({ chart }: { chart: Chart }) {
+function HandleLine({ chart, heading = false }: { chart: Chart; heading?: boolean }) {
   const { word } = useLanguage();
-  return (
-    <p className="label">
-      ☉ {word(chart.sun)} ☽ {word(chart.moon)} ↑ {chart.rising ? word(chart.rising) : "—"}
-    </p>
-  );
+  const text = `☉ ${word(chart.sun)} ☽ ${word(chart.moon)} ↑ ${chart.rising ? word(chart.rising) : "—"}`;
+  return heading ? <h1 className="label">{text}</h1> : <p className="label">{text}</p>;
 }
 
 export function FeedbackRow({ thanks }: { thanks?: string }) {
@@ -123,7 +120,7 @@ export function RevealPage({ state = "" }: { state?: string }) {
     <div className="reveal-screen">
       <div className="reveal-top">
         <Orb variant="sun" size="lg" />
-        <HandleLine chart={chart} />
+        <HandleLine chart={chart} heading />
         <div className="reveal-traits">
           <p>{t.trait1}</p>
           <p>{t.trait2}</p>
@@ -202,7 +199,7 @@ export function ResultPage({ id, state = "" }: { id: string; state?: string }) {
 
   return (
     <div className="narrow sky-page">
-      <p className="label muted">{record.name}</p>
+      <h1 className="label muted">{record.name}</h1>
       <div className="placement-grid">
         <PlacementBadge label={t.sun} sign={chart.sun} index={0} />
         <PlacementBadge label={t.moon} sign={chart.moon} index={1} />
