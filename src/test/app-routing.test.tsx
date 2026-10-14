@@ -16,8 +16,9 @@ describe("App routing", () => {
   });
   it("renders product details without a shop listing parent", () => {
     const router = createRouter({ routeTree, context: { queryClient: new QueryClient() } });
-    const matches = router.matchRoutes("/shop/paper-woods");
-    expect(matches.at(-1)?.routeId).toBe("/shop/$id");
-    expect(matches.map((m) => m.routeId)).not.toContain("/shop");
+    const product = router.routesById["/shop/$id"];
+    expect(product?.fullPath).toBe("/shop/$id");
+    expect(product?.parentRoute.id).toBe(rootRouteId);
+    expect(router.routesById["/shop/"]?.parentRoute.id).toBe(rootRouteId);
   });
 });

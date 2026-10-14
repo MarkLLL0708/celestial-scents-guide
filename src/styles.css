@@ -65,7 +65,7 @@ body.bare{padding-bottom:0}
 /* ---- redo part 1: art direction ---- */
 html{background:var(--bg);color:var(--text)}
 .theme-shell{min-height:100vh;position:relative;isolation:isolate}
-.theme-shell>*:not(.star-field){position:relative}
+.theme-shell>header,.theme-shell>main,.theme-shell>footer{position:relative}
 .nn-primary,.ink .nn-primary{background:var(--text);color:var(--bg);border-color:var(--text)}
 .nn-primary:hover,.nn-primary[data-demo=hover],.ink .nn-primary:hover{background:var(--bg);color:var(--text);border-color:var(--text)}
 .nn-secondary{background:transparent;color:var(--text);border-color:var(--border)}
@@ -237,8 +237,8 @@ h1,h2,h3{font-family:var(--font-mono)}
 .detail-layout h1{font-size:36px;line-height:44px}
 .display{font-size:64px;line-height:72px}
 .reveal-traits p{font-size:24px;line-height:34px}
-.nn-primary,.ink .nn-primary{background:var(--surface);color:var(--text);border-color:var(--text)}
-.nn-primary:hover,.nn-primary[data-demo=hover],.ink .nn-primary:hover{background:var(--surface);color:var(--accent);border-color:var(--accent)}
+.theme-shell .nn-primary,.ink .nn-primary{background:var(--surface);color:var(--text);border-color:var(--text)}
+.theme-shell .nn-primary:hover,.theme-shell .nn-primary[data-demo=hover],.ink .nn-primary:hover{background:var(--surface);color:var(--accent);border-color:var(--accent)}
 .nn-secondary:hover,.nn-secondary[data-demo=hover],.chip[aria-pressed=true]{background:var(--surface);color:var(--accent);border-color:var(--accent)}
 .nn-button:active,.nn-button[data-demo=active]{transform:none}
 .step-fade,.chart-step-body{animation:none}
