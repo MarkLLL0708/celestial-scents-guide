@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import * as Accordion from "@radix-ui/react-accordion";
 import { ChevronDown, ThumbsUp, ThumbsDown, X } from "lucide-react";
