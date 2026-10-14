@@ -94,7 +94,13 @@ export function EvidenceCell({ evidence }: { evidence: Evidence }) {
   );
 }
 
-function MatchCard({ match, variant = "grid" }: { match: Match; variant?: "grid" | "signature" | "shadow" }) {
+function MatchCard({
+  match,
+  variant = "grid",
+}: {
+  match: Match;
+  variant?: "grid" | "signature" | "shadow";
+}) {
   return (
     <div className="match-card">
       <ProductCard
@@ -164,18 +170,46 @@ export function RevealPage({ state = "" }: { state?: string }) {
 function buildDemoResult(): ChartResult {
   return {
     id: "demo",
-    profile: { name: "Demo", day: 1, month: 2, year: 1995, hour: 12, minute: 0, city: "Hanoi", country: "Vietnam" },
+    profile: {
+      name: "Demo",
+      day: 1,
+      month: 2,
+      year: 1995,
+      hour: 12,
+      minute: 0,
+      city: "Hanoi",
+      country: "Vietnam",
+    },
     chart: demoChart,
     prefs: { avoid: [], style: "any", budget: "any" },
     recs: {
-      signature: { perfume: perfumes[0], score: 94, reason: "", evidence: { planet: "sun", sign: demoChart.sun, why: "why1" } },
+      signature: {
+        perfume: perfumes[0],
+        score: 94,
+        reason: "",
+        evidence: { planet: "sun", sign: demoChart.sun, why: "why1" },
+      },
       others: perfumes.slice(1, 5).map((p, i) => ({
         perfume: p,
         score: [88, 84, 79, 73][i],
         reason: "",
-        evidence: { planet: (["moon", "rising", "venus", "mars"] as const)[i], sign: [demoChart.moon, demoChart.rising ?? demoChart.sun, demoChart.venus, demoChart.mars][i], why: `why${i + 2}` },
+        evidence: {
+          planet: (["moon", "rising", "venus", "mars"] as const)[i],
+          sign: [
+            demoChart.moon,
+            demoChart.rising ?? demoChart.sun,
+            demoChart.venus,
+            demoChart.mars,
+          ][i],
+          why: `why${i + 2}`,
+        },
       })),
-      shadow: { perfume: perfumes[5], score: 61, reason: "", evidence: { planet: "mercury", sign: demoChart.mercury, why: "why6" } },
+      shadow: {
+        perfume: perfumes[5],
+        score: 61,
+        reason: "",
+        evidence: { planet: "mercury", sign: demoChart.mercury, why: "why6" },
+      },
     },
     date: "2026-10-14",
   };
@@ -224,7 +258,12 @@ function ShareDialog({
     }
   };
   return (
-    <ScentDialog open={open} onOpenChange={onOpenChange} title={t.shareTitle} description={t.shareDescription}>
+    <ScentDialog
+      open={open}
+      onOpenChange={onOpenChange}
+      title={t.shareTitle}
+      description={t.shareDescription}
+    >
       {phase === "generating" ? (
         <div className="stack" aria-busy="true">
           <p className="label muted">{t.generating}</p>
@@ -248,7 +287,9 @@ function ShareDialog({
                   <p className="share-perfume">{result.recs.signature.perfume.name}</p>
                   <p>{reasons[result.recs.signature.perfume.id] ?? t.acc1Text}</p>
                 </div>
-                <p className="label">{t.brand.toUpperCase()} — {t.chartUrl}</p>
+                <p className="label">
+                  {t.brand.toUpperCase()} — {t.chartUrl}
+                </p>
               </div>
             </div>
           </div>
@@ -329,7 +370,11 @@ export function ResultPage({ id, state = "" }: { id: string; state?: string }) {
         <SectionHeader>{t.chart}</SectionHeader>
         <PlacementRow label={t.venus} value={word(chart.venus)} explanation={t.venusReading} />
         <PlacementRow label={t.mars} value={word(chart.mars)} explanation={t.marsReading} />
-        <PlacementRow label={t.mercury} value={word(chart.mercury)} explanation={t.mercuryReading} />
+        <PlacementRow
+          label={t.mercury}
+          value={word(chart.mercury)}
+          explanation={t.mercuryReading}
+        />
       </section>
 
       <section className="result-section">
@@ -355,7 +400,12 @@ export function ResultPage({ id, state = "" }: { id: string; state?: string }) {
         ) : readingError ? (
           <StateMessage message={t.readingError} retry={() => readingQuery.refetch()} />
         ) : (
-          <Accordion.Root type="single" defaultValue="acc1" collapsible className="reading-accordion">
+          <Accordion.Root
+            type="single"
+            defaultValue="acc1"
+            collapsible
+            className="reading-accordion"
+          >
             {sections.map((s) => (
               <Accordion.Item value={s.key} key={s.key} className="reading-item">
                 <Accordion.Header>
@@ -376,7 +426,10 @@ export function ResultPage({ id, state = "" }: { id: string; state?: string }) {
 
       <section className="result-section">
         <SectionHeader>{t.signature}</SectionHeader>
-        <MatchCard match={{ ...recs.signature, reason: reason(recs.signature) }} variant="signature" />
+        <MatchCard
+          match={{ ...recs.signature, reason: reason(recs.signature) }}
+          variant="signature"
+        />
         <p className="small muted mt-4">{t.signatureSub}</p>
         <FeedbackRow />
         <p className="small muted italic mt-6">{t.tendencies}</p>
@@ -439,10 +492,28 @@ export function ResultPage({ id, state = "" }: { id: string; state?: string }) {
 
 const categories = ["catDaily", "catDate", "catWork", "catEvening"] as const;
 const questionKeys: Record<(typeof categories)[number], string[]> = {
-  catDaily: ["qDaily1", "qDaily2", "qDaily3", "qDaily4", "qDaily5", "qDaily6", "qDaily7", "qDaily8"],
+  catDaily: [
+    "qDaily1",
+    "qDaily2",
+    "qDaily3",
+    "qDaily4",
+    "qDaily5",
+    "qDaily6",
+    "qDaily7",
+    "qDaily8",
+  ],
   catDate: ["qDate1", "qDate2", "qDate3", "qDate4", "qDate5", "qDate6", "qDate7", "qDate8"],
   catWork: ["qWork1", "qWork2", "qWork3", "qWork4", "qWork5", "qWork6", "qWork7", "qWork8"],
-  catEvening: ["qEvening1", "qEvening2", "qEvening3", "qEvening4", "qEvening5", "qEvening6", "qEvening7", "qEvening8"],
+  catEvening: [
+    "qEvening1",
+    "qEvening2",
+    "qEvening3",
+    "qEvening4",
+    "qEvening5",
+    "qEvening6",
+    "qEvening7",
+    "qEvening8",
+  ],
 };
 
 export function AskPage({ state = "" }: { state?: string }) {
@@ -452,7 +523,13 @@ export function AskPage({ state = "" }: { state?: string }) {
   const [category, setCategory] = useState<(typeof categories)[number]>("catDaily");
   const [question, setQuestion] = useState("");
   const [phase, setPhase] = useState<"idle" | "loading" | "answered" | "error">(
-    state === "loading" ? "loading" : state === "answered" ? "answered" : state === "error" ? "error" : "idle",
+    state === "loading"
+      ? "loading"
+      : state === "answered"
+        ? "answered"
+        : state === "error"
+          ? "error"
+          : "idle",
   );
   const [answer, setAnswer] = useState<api.AskAnswer | null>(null);
   const [asked, setAsked] = useState("");
@@ -554,7 +631,10 @@ export function AskPage({ state = "" }: { state?: string }) {
               <ul>
                 {questions.map((k) => (
                   <li key={k}>
-                    <button className="label ask-question" onClick={() => setQuestion(t[k as keyof typeof t])}>
+                    <button
+                      className="label ask-question"
+                      onClick={() => setQuestion(t[k as keyof typeof t])}
+                    >
                       {t[k as keyof typeof t]}
                     </button>
                   </li>

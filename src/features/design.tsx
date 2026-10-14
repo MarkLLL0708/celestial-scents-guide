@@ -97,7 +97,11 @@ export function DesignPage() {
         <DatePicker profile={{ ...profile, day: 0, month: 0, year: 0 }} onChange={setProfile} />
       </Row>
       <Row label={t.error}>
-        <DatePicker profile={{ ...profile, day: 31, month: 2, year: 1995 }} onChange={setProfile} showError />
+        <DatePicker
+          profile={{ ...profile, day: 31, month: 2, year: 1995 }}
+          onChange={setProfile}
+          showError
+        />
       </Row>
 
       <SectionHeader>{t.timePicker}</SectionHeader>
