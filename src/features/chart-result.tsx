@@ -700,7 +700,7 @@ export function RitualPage({ id, state = "" }: { id: string; state?: string }) {
           <p>{r.timing}</p>
         </Cell>
         <Cell>
-          <p className="label muted">{t.minutes.replace("{n}", "")}</p>
+          <p className="label muted">{t.minutes.replace("{n}", "").trim()}</p>
           <p>{r.minutes}</p>
         </Cell>
       </CellGrid>

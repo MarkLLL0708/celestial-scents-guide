@@ -92,10 +92,10 @@ export function Orb({
   );
 }
 
-export function OrbitDiagram() {
+export function OrbitDiagram({ size = "md" }: { size?: "sm" | "md" }) {
   const orbits = [40, 60, 80, 100, 120, 140, 160];
   return (
-    <svg className="orbit" viewBox="0 0 360 200" fill="none" aria-hidden="true">
+    <svg className={`orbit orbit-${size}`} viewBox="0 0 360 200" fill="none" aria-hidden="true">
       <g className="orbit-spin">
         {orbits.map((rx, i) => {
           const ry = rx * 0.38;

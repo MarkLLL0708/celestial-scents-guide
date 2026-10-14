@@ -28,7 +28,7 @@ import {
   noteNames,
 } from "@/components/scent/cosmos";
 import { CrescentSpinner } from "./chart-loading";
-import { FeedbackRow, EvidenceCell, GrainDisc } from "./chart-result";
+import { FeedbackRow, AspectGlyph } from "./chart-result";
 import { demoChart, perfumes } from "@/data/seed";
 import type { BirthProfile } from "@/data/types";
 
