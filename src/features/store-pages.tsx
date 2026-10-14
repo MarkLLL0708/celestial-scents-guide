@@ -69,7 +69,7 @@ export function Landing({ state = "" }: { state?: string }) {
               ))}
             </ol>
           </div>
-          <Orb variant="moon" size="lg" />
+          <SolarSystem />
         </div>
       </section>
 
