@@ -23,6 +23,24 @@ export interface BirthProfile {
   minute: number | null;
   city: string;
   country: string;
+  region?: string;
+  lat?: number;
+  lon?: number;
+  timezone?: string;
+}
+export interface CityHit {
+  city: string;
+  region: string;
+  country: string;
+  lat: number;
+  lon: number;
+  timezone: string;
+}
+export type Body = "sun" | "moon" | "mercury" | "venus" | "mars" | "jupiter" | "saturn";
+export interface PlacementDetail {
+  sign: string;
+  degree: number;
+  longitude: number;
 }
 export interface Chart {
   sun: string;
@@ -35,6 +53,13 @@ export interface Chart {
   saturn: string;
   degrees: Partial<Record<Planet, number>>;
   elements: { fire: number; earth: number; air: number; water: number };
+  modalities: { cardinal: number; fixed: number; mutable: number };
+  details: Record<Body, PlacementDetail> & { rising: PlacementDetail | null };
+  moonAlternatives?: [string, string];
+  birthTimeKnown: boolean;
+  lat: number;
+  lon: number;
+  timezone: string;
 }
 export interface Prefs {
   avoid: string[];
@@ -86,6 +111,7 @@ export interface Transit {
   orb: number;
   theme: Theme;
   strength: 1 | 2 | 3 | 4 | 5;
+  kind?: "easy" | "hard" | "intense";
 }
 export interface Block {
   transit: Transit;
@@ -95,15 +121,22 @@ export interface Today {
   date: string;
   summary: string;
   tone: Record<Theme, number>;
-  working: Block;
-  pushing: Block;
-  protect: Block;
+  working: Block | null;
+  pushing: Block | null;
+  protect: Block | null;
+  quiet?: string;
   ritualId: string;
 }
 export interface Reading {
   topic: Topic;
   title: string;
   sections: { title: string; body: string }[];
+  placements?: { body: Planet; sign: string; degree: number }[];
+  week?: { transit: Transit; date: string } | null;
+}
+export interface WeekEntry {
+  date: string;
+  transit: Transit | null;
 }
 export interface AstroAnswer {
   transit: Transit;
