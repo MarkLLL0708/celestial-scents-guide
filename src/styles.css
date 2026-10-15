@@ -2717,3 +2717,91 @@ h3 {
 .narrow.dev-chart{max-width:960px}
 .dev-table th,.dev-table td{overflow-wrap:normal;white-space:nowrap}
 .dev-table tbody th[scope=row]{white-space:normal}
+
+/* mobile fix: tabs with icons, touch targets, sticky primary, calm stars */
+.shop-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 0 8px;
+  font-size: 15px;
+  color: var(--text-muted);
+}
+.shop-link[aria-current="page"] {
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 6px;
+}
+.today-tip {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px;
+  margin-bottom: 24px;
+  border: var(--rule) solid color-mix(in oklab, var(--border) 28%, transparent);
+}
+@media (max-width: 767px) {
+  .tab-bar {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .tab {
+    flex-direction: column;
+    gap: 4px;
+    height: 64px;
+    font-size: 12px;
+    border-top: 2px solid transparent;
+  }
+  .tab-active {
+    border-top-color: var(--text);
+  }
+  body {
+    padding-bottom: calc(64px + env(safe-area-inset-bottom));
+  }
+  .toast-stack {
+    bottom: calc(80px + env(safe-area-inset-bottom));
+  }
+  .site-header {
+    padding-top: env(safe-area-inset-top);
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .site-header .header-tools .language {
+    display: none;
+  }
+  .cart-link,
+  .lang-button,
+  .header-tools a {
+    min-height: 48px;
+    min-width: 44px;
+  }
+  .plain-row,
+  .note-row,
+  .review-row {
+    min-height: 56px;
+  }
+  .answer-input,
+  .answer-city input {
+    min-height: 56px;
+  }
+  .chart-step {
+    min-height: calc(100dvh - 56px - 64px);
+  }
+  .chart-step-bottom {
+    position: sticky;
+    bottom: calc(64px + env(safe-area-inset-bottom));
+    background: var(--bg);
+    padding: 12px 0;
+    z-index: 5;
+  }
+  .chart-step-bottom > button:first-of-type {
+    width: 100%;
+    min-height: 56px;
+  }
+  .star-field .star:nth-child(n + 61) {
+    display: none;
+  }
+}
+.language-inline {
+  justify-content: flex-end;
+}
