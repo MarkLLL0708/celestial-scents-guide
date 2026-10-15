@@ -261,11 +261,13 @@ export function ScentCapsule({
   chartId,
   ritualId,
   withPrice = false,
+  compact = false,
   cta = "both",
 }: {
   chartId: string;
   ritualId?: string;
   withPrice?: boolean;
+  compact?: boolean;
   cta?: "both" | "ask" | "none";
 }) {
   const { t, lang, word } = useLanguage();
@@ -281,7 +283,9 @@ export function ScentCapsule({
       <h2 id="capsule-title" className="label section-heading">
         {t.capsuleTitle}
       </h2>
-      <p className="small muted">{t.capsuleLead}</p>
+      <p className="small muted">
+        {t.capsuleLead.replace("{n}", String(q.data?.length ?? 5))}
+      </p>
       {q.isPending ? (
         <div className="stack">
           <Skeleton />
@@ -292,7 +296,7 @@ export function ScentCapsule({
       ) : (
         <ol className="capsule-list">
           {q.data.map((e, i) => (
-            <li key={e.perfume.id} className="capsule-card">
+            <li key={e.perfume.id} className={`capsule-card${compact ? " capsule-compact" : ""}`}>
               <div className="capsule-art">
                 <Bottle family={e.perfume.scent_family} name={e.perfume.name} />
               </div>
@@ -303,7 +307,7 @@ export function ScentCapsule({
                 <h3 className="question">{e.perfume.name}</h3>
                 <p className="label muted">{e.perfume.brand}</p>
                 <p className="small">{e.reason}</p>
-                <Notes perfume={e.perfume} />
+                {!compact && <Notes perfume={e.perfume} />}
                 {withPrice && (
                   <p className="label">
                     ${e.perfume.price} · {e.perfume.size_ml} ml
@@ -469,7 +473,7 @@ export function ResultPage({ id, state = "" }: { id: string; state?: string }) {
         </ul>
       </section>
 
-      <ScentCapsule chartId={id} />
+      <ScentCapsule chartId={id} compact />
 
       <Link to="/today" className="today-strip">
         <span className="label">{t.movingToday}</span>
@@ -599,7 +603,7 @@ export function ReadingPage({
           </Accordion.Root>
           <FeedbackRow thanks={t.readingThanks} />
           <Disclaimer />
-          <ScentCapsule chartId={id} ritualId={ritualForTheme[themeForTopic[topic]]} />
+          <ScentCapsule chartId={id} ritualId={ritualForTheme[themeForTopic[topic]]} compact />
         </>
       )}
     </div>
@@ -1004,9 +1008,12 @@ export function AskPage({ state = "" }: { state?: string }) {
               </Cell>
             </CellGrid>
             <div className="ask-after">
-              <Link to="/rituals/$id" params={{ id: answer.ritualId }} className="quiet-link">
-                {t.askRitual} →
-              </Link>
+              <Button asChild>
+                <Link to="/rituals/$id" params={{ id: answer.ritualId }}>
+                  {t.askRitual}
+                  <ArrowRight size={16} aria-hidden="true" />
+                </Link>
+              </Button>
               <Button
                 variant="text"
                 onClick={() => {
@@ -1254,9 +1261,6 @@ export function RitualPage({ id, state = "" }: { id: string; state?: string }) {
 
   return (
     <div className="narrow ritual-page">
-      <Link to="/rituals" className="label muted">
-        ← {t.allRituals}
-      </Link>
       <div className="ritual-hero">
         <SolarSystem />
         <h1 className="xl">{r.title}</h1>

@@ -454,7 +454,7 @@ export const vi: Dictionary = {
   durationLabel: "THỜI LƯỢNG",
   needsLabel: "BẠN CẦN",
   capsuleTitle: "mùi hương của bạn",
-  capsuleLead: "năm mùi chọn theo lá số của bạn. mùi nào cũng hợp với nghi thức.",
+  capsuleLead: "{n} mùi chọn theo lá số của bạn. mùi nào cũng hợp với nghi thức.",
   capsuleRitual: "nghi thức với mùi này",
   capsuleArchive: "xem toàn bộ bộ sưu tập",
   capsuleError: "chưa tải được mùi hương.",
