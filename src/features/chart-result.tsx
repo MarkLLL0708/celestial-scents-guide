@@ -667,6 +667,9 @@ export function AskPage({ state = "" }: { state?: string }) {
 
   return (
     <div className="ask-screen">
+      <div className="ask-stars" aria-hidden="true">
+        <StarField />
+      </div>
       <header className="ask-header">
         <Button asChild variant="text" size="icon" className="ask-close">
           <Link to="/today" aria-label={t.close}>
@@ -699,7 +702,7 @@ export function AskPage({ state = "" }: { state?: string }) {
 
         {phase === "loading" ? (
           <div className="ask-loading" aria-live="polite">
-            <OrbitDiagram />
+            <SolarSystem size="md" />
             <p className="label muted">{t.askLoading}</p>
           </div>
         ) : phase === "error" ? (
