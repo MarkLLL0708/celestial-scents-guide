@@ -45,9 +45,40 @@ export function StarField({ parallax = false }: { parallax?: boolean }) {
       if (!frame) frame = requestAnimationFrame(apply);
     };
 
+    // Gentle tilt on touch devices: eases the stars a few pixels as the phone tips.
+    const touch = window.matchMedia("(pointer: coarse)").matches;
+    const onTilt = (event: DeviceOrientationEvent) => {
+      if (event.gamma == null || event.beta == null) return;
+      const gx = Math.max(-1, Math.min(1, event.gamma / 30));
+      const gy = Math.max(-1, Math.min(1, (event.beta - 45) / 30));
+      x += (gx * -10 - x) * 0.15;
+      y += (gy * -8 - y) * 0.15;
+      if (!frame) frame = requestAnimationFrame(apply);
+    };
+    type PermissionedDOE = { requestPermission?: () => Promise<string> };
+    const needsPermission =
+      typeof DeviceOrientationEvent !== "undefined" &&
+      typeof (DeviceOrientationEvent as unknown as PermissionedDOE).requestPermission === "function";
+    const askOnce = () => {
+      window.removeEventListener("touchend", askOnce);
+      (DeviceOrientationEvent as unknown as PermissionedDOE)
+        .requestPermission?.()
+        .then((state) => {
+          if (state === "granted") window.addEventListener("deviceorientation", onTilt);
+        })
+        .catch(() => {});
+    };
+    if (touch && typeof DeviceOrientationEvent !== "undefined") {
+      // Only iOS needs a permission; ask on the visitor's first tap, never on load.
+      if (needsPermission) window.addEventListener("touchend", askOnce, { once: true });
+      else window.addEventListener("deviceorientation", onTilt);
+    }
+
     window.addEventListener("pointermove", onMove, { passive: true });
     return () => {
       window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("deviceorientation", onTilt);
+      window.removeEventListener("touchend", askOnce);
       if (frame) cancelAnimationFrame(frame);
     };
   }, [parallax]);
