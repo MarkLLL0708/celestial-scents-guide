@@ -1,4 +1,4 @@
-import { useId, useState, type ReactNode } from "react";
+import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 
 function seeded(seed: number) {
   let s = seed;
@@ -21,9 +21,39 @@ const stars = (() => {
   }));
 })();
 
-export function StarField() {
+export function StarField({ parallax = false }: { parallax?: boolean }) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!parallax) return;
+    const el = ref.current;
+    if (!el) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    let frame = 0;
+    let x = 0;
+    let y = 0;
+
+    const apply = () => {
+      frame = 0;
+      el.style.setProperty("--px", `${x}px`);
+      el.style.setProperty("--py", `${y}px`);
+    };
+    const onMove = (event: PointerEvent) => {
+      x = (event.clientX / window.innerWidth - 0.5) * -18;
+      y = (event.clientY / window.innerHeight - 0.5) * -12;
+      if (!frame) frame = requestAnimationFrame(apply);
+    };
+
+    window.addEventListener("pointermove", onMove, { passive: true });
+    return () => {
+      window.removeEventListener("pointermove", onMove);
+      if (frame) cancelAnimationFrame(frame);
+    };
+  }, [parallax]);
+
   return (
-    <div className="star-field" aria-hidden="true">
+    <div ref={ref} className="star-field" aria-hidden="true">
       {stars.map((s, i) => (
         <span
           key={i}
@@ -39,6 +69,16 @@ export function StarField() {
         />
       ))}
     </div>
+  );
+}
+
+// Rare meteor streak across a dark section. Pure line art, no gradients.
+export function ShootingStar({ className = "" }: { className?: string }) {
+  return (
+    <svg className={`shooting-star ${className}`.trim()} viewBox="0 0 120 12" aria-hidden="true">
+      <line x1="0" y1="6" x2="98" y2="6" stroke="currentColor" strokeWidth="1" strokeOpacity="0.45" />
+      <circle cx="105" cy="6" r="1.6" fill="currentColor" />
+    </svg>
   );
 }
 

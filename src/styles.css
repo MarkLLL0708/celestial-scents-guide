@@ -2916,3 +2916,75 @@ h3 {
     animation: none;
   }
 }
+
+/* Pointer parallax on the hero field: composes with the drift above, since
+   `translate` is a separate property from `transform`. */
+.star-field {
+  translate: var(--px, 0px) var(--py, 0px);
+  transition: translate 900ms cubic-bezier(0.2, 0.6, 0.2, 1);
+}
+@keyframes star-drift {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-4%, 2.5%, 0);
+  }
+}
+.landing-hero-wrap > .star-field {
+  animation: star-drift 64s linear infinite alternate;
+}
+.landing-dark > .star-field {
+  animation: star-drift 96s linear infinite alternate-reverse;
+}
+
+/* Rare meteor. Mostly idle, then one short pass. */
+.shooting-star {
+  position: absolute;
+  width: 120px;
+  height: 12px;
+  color: var(--star);
+  pointer-events: none;
+  opacity: 0;
+  animation: shoot 16s ease-in infinite;
+}
+.shooting-star-1 {
+  top: 14%;
+  left: -14%;
+}
+.shooting-star-2 {
+  top: 52%;
+  left: -26%;
+  animation-duration: 23s;
+  animation-delay: 8s;
+}
+.shooting-star-3 {
+  top: 22%;
+  left: -20%;
+  animation-duration: 27s;
+  animation-delay: 14s;
+}
+@keyframes shoot {
+  0%,
+  86% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) rotate(16deg);
+  }
+  88% {
+    opacity: 0.85;
+  }
+  96%,
+  100% {
+    opacity: 0;
+    transform: translate3d(78vw, 26vh, 0) rotate(16deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .star-field {
+    translate: none;
+    transition: none;
+  }
+  .shooting-star {
+    display: none;
+  }
+}

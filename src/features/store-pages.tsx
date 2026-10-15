@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import * as cloud from "@/data/cloud.functions";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useSuspenseQuery, useQueryClient, useQuery } from "@tanstack/react-query";
-import { StarField, SolarSystem } from "@/components/scent/cosmos";
+import { StarField, SolarSystem, ShootingStar } from "@/components/scent/cosmos";
 import {
   ArrowRight,
   ChevronDown,
@@ -33,7 +33,9 @@ export function Landing({ state = "" }: { state?: string }) {
   return (
     <>
       <div className="landing-hero-wrap">
-      <StarField />
+      <StarField parallax />
+      <ShootingStar className="shooting-star-1" />
+      <ShootingStar className="shooting-star-2" />
       <div className="wide landing-hero">
         <div className="landing-lang">
           <LanguageToggle />
@@ -53,6 +55,7 @@ export function Landing({ state = "" }: { state?: string }) {
 
       <section className="landing-dark" data-theme="dark">
         <StarField />
+        <ShootingStar className="shooting-star-3" />
         <div className="wide landing-how">
           <div>
             <h2 className="question">{t.how}</h2>
