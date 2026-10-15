@@ -3,7 +3,7 @@ import type { Perfume, Prefs } from "@/data/types";
 import { en } from "@/i18n/en";
 import { scorePerfume, type MatchChart } from "@/lib/match/score";
 import { applyFilters, priceTertiles } from "@/lib/match/filters";
-import { buildShelf, type MatchRitual } from "@/lib/match/shelf";
+import { buildShelf, buildCapsule, CAPSULE_MIN, CAPSULE_MAX, type MatchRitual } from "@/lib/match/shelf";
 import { describePick } from "@/lib/match/text";
 import { parseCatalogue } from "@/lib/match/catalogue";
 
@@ -208,5 +208,16 @@ describe("catalogue import", () => {
       "name,price,style,scent_family,intensity,size_ml,sold_out\na,100,unisex,Woody,3,50,maybe",
     );
     expect(result.errors).toContainEqual({ row: 2, field: "sold_out", value: "maybe" });
+  });
+});
+
+describe("capsule after a reading", () => {
+  it("picks between three and five distinct perfumes, shelf picks first", () => {
+    const cap = buildCapsule(catalogue, chartA, noPrefs, calm);
+    expect(cap.length).toBeGreaterThanOrEqual(Math.min(CAPSULE_MIN, catalogue.length));
+    expect(cap.length).toBeLessThanOrEqual(CAPSULE_MAX);
+    expect(new Set(cap.map((p) => p.perfume.id)).size).toBe(cap.length);
+    const shelf = buildShelf(catalogue, chartA, noPrefs, calm);
+    expect(cap[0].perfume.id).toBe(shelf.forChart?.perfume.id);
   });
 });
