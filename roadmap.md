@@ -1,5 +1,6 @@
-# Natal Notes consistency review
-- [x] Black backgrounds and one navigation-matched font throughout
-- [x] Remove page-transition flashes and avoid layout jumps
-- [x] Audit and repair page buttons and navigation
-- [x] Verify every page and key flows on desktop and mobile
+# Roadmap
+
+- [x] Real astrology engine (placements, rising, aspects, today, week, ask) in the browser
+- [x] Live city search with fallback list
+- [x] Reference tests for charts A/B/C, transits, aspects, today
+- [x] Hidden /dev/chart check page

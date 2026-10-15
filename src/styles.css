@@ -2709,3 +2709,6 @@ h3 {
 .placement-line {
   margin-top: 8px;
 }
+.narrow.dev-chart{max-width:960px}
+.dev-table th,.dev-table td{overflow-wrap:normal;white-space:nowrap}
+.dev-table tbody th[scope=row]{white-space:normal}

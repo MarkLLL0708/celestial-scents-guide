@@ -18,6 +18,8 @@
 - Chart questions live in one ChartFlow driven by the optional ?step search param, with answers held in the store provider so moving back never loses input.
 - Phones use a fixed bottom tab bar instead of a menu overlay; /saved permanently redirects to /you.
 - All routes use the same theme from themeFor(), applied to the document and shell during SSR; global font aliases share the navigation family so navigation cannot introduce theme or typography flashes.
-- Mock astrology copy (readings, today, ask answers, rituals) lives in src/data/astro-mock.ts and reaches screens only through api.ts, so a real engine can replace one file.
+- Astrology maths lives in src/lib/astro (placements, aspects, chart, today; tested against fixed reference numbers) and runs only in the browser so birth details never leave the device; screens reach it only through api.ts.
+- The current chart is the only thing kept in sessionStorage (one record with its id); the demo id resolves to a real chart computed from a fixed birth.
+- Reading paragraphs, ritual copy and the today/ask text bank are placeholder text (astro-mock.ts, lib/astro/text-bank.ts) chosen by real aspect themes, so AI-written text can replace them later.
 - Soft-sell limits live in src/lib/sellRules.ts (tested); ProductCard hides itself on no-sell screens, so new screens inherit the rule.
 - Shop uses an Outlet-only parent with separate index listing and product leaves, so details render correctly; keep filtered results visible with React transitions while replacement data loads.
