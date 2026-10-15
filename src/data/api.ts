@@ -1,4 +1,7 @@
 import { en } from "@/i18n/en";
+import { supabase } from "@/integrations/supabase/client";
+import * as cloud from "./cloud.functions";
+import { chartFromStorage, recordForStorage } from "./chart-privacy";
 import { vi } from "@/i18n/vi";
 import {
   buildShelf,
@@ -8,7 +11,7 @@ import {
   type Pick,
 } from "@/lib/match/shelf";
 import { describePick } from "@/lib/match/text";
-import { parseCatalogue, type ImportError } from "@/lib/match/catalogue";
+import { type ImportError } from "@/lib/match/catalogue";
 import { applyFilters } from "@/lib/match/filters";
 import { scorePerfume, shadowChart } from "@/lib/match/score";
 import { fallbackRitualId } from "@/config/scentMap";
@@ -42,24 +45,29 @@ import { firstRitualOfTheme, readingFor, ritualFor, ritualIds, topics } from "./
 export * from "./types";
 const wait = <T>(value: T): Promise<T> =>
   new Promise((resolve) => setTimeout(() => resolve(structuredClone(value)), 600));
-let inventory = structuredClone(perfumes);
+let inventory: Perfume[] = [];
 let items: CartItem[] = [];
 export async function getPerfumes(filters?: {
   family?: string;
   style?: string;
   maxPrice?: number;
 }): Promise<Perfume[]> {
-  return wait(
-    inventory.filter(
-      (p) =>
-        (!filters?.family || p.scent_family === filters.family) &&
-        (!filters?.style || p.style === filters.style) &&
-        (!filters?.maxPrice || p.price <= filters.maxPrice),
-    ),
+  const rows = await cloud.publicPerfumes();
+  inventory = rows.map(({ image_url, sample_price, ...p }) => ({
+    ...p,
+    style: p.style as Perfume["style"],
+    image_url: image_url ?? undefined,
+    sample_price: sample_price ?? undefined,
+  }));
+  return inventory.filter(
+    (p) =>
+      (!filters?.family || p.scent_family === filters.family) &&
+      (!filters?.style || p.style === filters.style) &&
+      (!filters?.maxPrice || p.price <= filters.maxPrice),
   );
 }
 export async function getPerfume(id: string): Promise<Perfume | null> {
-  return wait(inventory.find((p) => p.id === id) ?? null);
+  return (await getPerfumes()).find((p) => p.id === id) ?? null;
 }
 // ---------- real astrology engine (runs in the browser; birth details never leave it) ----------
 const CHART_KEY = "natal-notes:chart";
@@ -161,16 +169,28 @@ const seedOf = (c: Chart, date: string) =>
   Math.floor(c.details.sun.longitude * 7 + c.details.moon.longitude * 3) +
   (Number(date.replaceAll("-", "")) % 97);
 const ritualForTheme = (theme: RitualTheme) => firstRitualOfTheme(theme);
-export async function listSavedCharts(): Promise<
-  { id: string; profile: BirthProfile; chart: Chart; date: string }[]
-> {
-  return wait([]);
+export async function listSavedCharts() {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return [];
+  return (await cloud.savedCharts()).map((r) => ({
+    id: r.id,
+    name: r.nickname,
+    chart: chartFromStorage(r.chart),
+    prefs: r.prefs,
+    date: r.created_at.slice(0, 10),
+  }));
+}
+export async function saveChart(id: string) {
+  const record = await getChartById(id);
+  return cloud.saveChartRecord({ data: recordForStorage(record) });
 }
 export async function getCart(): Promise<CartItem[]> {
   return wait(items);
 }
 export async function addToCart(id: string): Promise<CartItem[]> {
-  const p = inventory.find((p) => p.id === id);
+  const p = await getPerfume(id);
   if (p && !p.sold_out) {
     const item = items.find((i) => i.perfume.id === id);
     if (item) item.quantity++;
@@ -190,23 +210,38 @@ export async function removeFromCart(id: string): Promise<CartItem[]> {
 }
 export const cart = { getCart, addToCart, updateQty, removeFromCart };
 export async function login(email: string): Promise<{ ok: boolean }> {
-  return wait({ ok: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) });
+  const { error } = await supabase.auth.signInWithOtp({
+    email,
+    options: { emailRedirectTo: `${window.location.origin}/login` },
+  });
+  return { ok: !error };
 }
 /** Admin CSV import: validates against the controlled vocabularies, errors carry row numbers. */
 export async function importPerfumesCsv(
   file: File,
 ): Promise<{ imported: number; errors: ImportError[] }> {
-  const { perfumes: rows, errors } = parseCatalogue(await file.text());
-  inventory = [...inventory.filter((p) => !rows.some((r) => r.id === p.id)), ...rows];
-  return wait({ imported: rows.length, errors });
+  return cloud.importCatalogue({ data: { csv: await file.text() } });
 }
 export async function updatePerfume(p: Perfume): Promise<Perfume> {
-  inventory = inventory.map((v) => (v.id === p.id ? p : v));
-  return wait(p);
+  const { error } = await supabase.from("perfumes").update(p).eq("id", p.id);
+  if (error) throw new Error(error.message);
+  return p;
 }
 
 export async function getChartById(id: string): Promise<ChartRecord> {
-  return wait(loadChart(id));
+  try {
+    return loadChart(id);
+  } catch {
+    const rows = await cloud.savedCharts();
+    const row = rows.find((r) => r.id === id);
+    if (!row) throw new Error("NOT_FOUND");
+    return {
+      id: row.id,
+      name: row.nickname,
+      chart: chartFromStorage(row.chart),
+      prefs: JSON.parse(JSON.stringify(row.prefs)),
+    };
+  }
 }
 
 export async function getReading(
@@ -215,7 +250,7 @@ export async function getReading(
   lang: "en" | "vi",
 ): Promise<Reading> {
   if (!topics.includes(topic)) throw new Error("NOT_FOUND");
-  const { chart } = loadChart(chartId);
+  const { chart } = await getChartById(chartId);
   const d = chart.details;
   const pick = (body: Body | "rising") => {
     const p = body === "rising" ? d.rising : d[body];
@@ -244,12 +279,12 @@ function getWeekSync(chart: Chart): WeekEntry[] {
   }));
 }
 export async function getWeek(chartId: string): Promise<WeekEntry[]> {
-  return wait(getWeekSync(loadChart(chartId).chart));
+  return wait(getWeekSync((await getChartById(chartId)).chart));
 }
 
 /** date is the visitor's local calendar day (YYYY-MM-DD); the instant used is local noon. */
 export async function getToday(chartId: string, date: string, lang: "en" | "vi"): Promise<Today> {
-  const { chart } = loadChart(chartId);
+  const { chart } = await getChartById(chartId);
   const plan = dayFor(natalLongitudes(chart), localNoon(date), skipFor(chart));
   const seed = seedOf(chart, date);
   const block = (slot: BlockSlot, a: typeof plan.working): Block | null =>
@@ -275,7 +310,7 @@ export async function askNotes(
   lang: "en" | "vi",
 ): Promise<AstroAnswer> {
   if (!question.trim()) throw new Error("EMPTY_QUESTION");
-  const { chart } = loadChart(chartId);
+  const { chart } = await getChartById(chartId);
   const date = todayDate();
   const plan = dayFor(natalLongitudes(chart), localNoon(date), skipFor(chart));
   const hit = plan.aspects.find((a) => a.theme === category) ?? plan.aspects[0];
@@ -337,7 +372,8 @@ export async function getShelf(
   lang: "en" | "vi",
   ritualId?: string,
 ): Promise<Shelf> {
-  const { chart, prefs } = loadChart(chartId);
+  const { chart, prefs } = await getChartById(chartId);
+  await getPerfumes();
   const ritual =
     matchRitual(ritualId ?? todayRitualId(chart), lang) ?? matchRitual(fallbackRitualId, lang);
   if (!ritual) throw new Error("NO_RITUAL");
@@ -354,21 +390,23 @@ export async function getPerfumeForRitual(ritualId: string, lang: "en" | "vi", c
   if (!ritual) throw new Error("NOT_FOUND");
   const record =
     chartId && chartId !== DEMO_ID
-      ? (() => {
+      ? await (async () => {
           try {
-            return loadChart(chartId);
+            return await getChartById(chartId);
           } catch {
             return null;
           }
         })()
       : null;
+  await getPerfumes();
   return wait(
     toEntry(perfumeForRitual(inventory, ritual, record?.chart ?? null, record?.prefs), lang),
   );
 }
 /** Everything the /dev/match page shows. */
-export function getMatchDebug(chartId: string, ritualId: string, lang: "en" | "vi") {
-  const { chart, prefs } = loadChart(chartId);
+export async function getMatchDebug(chartId: string, ritualId: string, lang: "en" | "vi") {
+  const { chart, prefs } = await getChartById(chartId);
+  await getPerfumes();
   const ritual = matchRitual(ritualId, lang) ?? matchRitual(fallbackRitualId, lang);
   if (!ritual) throw new Error("NO_RITUAL");
   const { excluded } = applyFilters(inventory, prefs);
@@ -392,11 +430,28 @@ export function getMatchDebug(chartId: string, ritualId: string, lang: "en" | "v
     },
   };
 }
-let savedRituals: string[] = [];
 export async function saveRitual(id: string): Promise<string[]> {
-  if (!savedRituals.includes(id)) savedRituals = [...savedRituals, id];
-  return wait(savedRituals);
+  await cloud.saveRitualRecord({ data: { id } });
+  return cloud.savedRitualIds();
 }
 export async function listSavedRituals(lang: "en" | "vi"): Promise<Ritual[]> {
-  return wait(savedRituals.map((id) => ritualFor(id, lang)).filter((r): r is Ritual => r !== null));
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return [];
+  const ids = await cloud.savedRitualIds();
+  return ids.map((id) => ritualFor(id, lang)).filter((r): r is Ritual => r !== null);
+}
+export async function loadSamplePerfumes() {
+  const { error } = await supabase.from("perfumes").upsert(perfumes);
+  if (error) throw new Error(error.message);
+}
+export async function submitFeedback(
+  kind: "reading" | "today" | "ask" | "match",
+  ref: string,
+  rating: -1 | 1,
+  lang: "en" | "vi",
+) {
+  const { error } = await supabase.from("feedback").insert({ kind, ref, rating, lang });
+  if (error) throw new Error(error.message);
 }

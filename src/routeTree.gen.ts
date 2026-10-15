@@ -18,6 +18,7 @@ import { Route as SavedRouteImport } from './routes/saved'
 import { Route as ShopRouteImport } from './routes/shop'
 import { Route as TodayRouteImport } from './routes/today'
 import { Route as YouRouteImport } from './routes/you'
+import { Route as AdminPerfumesRouteImport } from './routes/admin.perfumes'
 import { Route as ChartLoadingRouteImport } from './routes/chart.loading'
 import { Route as ChartNewRouteImport } from './routes/chart.new'
 import { Route as ChartRevealRouteImport } from './routes/chart.reveal'
@@ -74,6 +75,11 @@ const TodayRoute = TodayRouteImport.update({
 const YouRoute = YouRouteImport.update({
   id: '/you',
   path: '/you',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminPerfumesRoute = AdminPerfumesRouteImport.update({
+  id: '/admin/perfumes',
+  path: '/admin/perfumes',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ChartLoadingRoute = ChartLoadingRouteImport.update({
@@ -147,6 +153,7 @@ export interface FileRoutesByFullPath {
   '/shop': typeof ShopRouteWithChildren
   '/today': typeof TodayRoute
   '/you': typeof YouRoute
+  '/admin/perfumes': typeof AdminPerfumesRoute
   '/chart/loading': typeof ChartLoadingRoute
   '/chart/new': typeof ChartNewRoute
   '/chart/reveal': typeof ChartRevealRoute
@@ -169,6 +176,7 @@ export interface FileRoutesByTo {
   '/saved': typeof SavedRoute
   '/today': typeof TodayRoute
   '/you': typeof YouRoute
+  '/admin/perfumes': typeof AdminPerfumesRoute
   '/chart/loading': typeof ChartLoadingRoute
   '/chart/new': typeof ChartNewRoute
   '/chart/reveal': typeof ChartRevealRoute
@@ -193,6 +201,7 @@ export interface FileRoutesById {
   '/shop': typeof ShopRouteWithChildren
   '/today': typeof TodayRoute
   '/you': typeof YouRoute
+  '/admin/perfumes': typeof AdminPerfumesRoute
   '/chart/loading': typeof ChartLoadingRoute
   '/chart/new': typeof ChartNewRoute
   '/chart/reveal': typeof ChartRevealRoute
@@ -218,6 +227,7 @@ export interface FileRouteTypes {
     | '/shop'
     | '/today'
     | '/you'
+    | '/admin/perfumes'
     | '/chart/loading'
     | '/chart/new'
     | '/chart/reveal'
@@ -240,6 +250,7 @@ export interface FileRouteTypes {
     | '/saved'
     | '/today'
     | '/you'
+    | '/admin/perfumes'
     | '/chart/loading'
     | '/chart/new'
     | '/chart/reveal'
@@ -263,6 +274,7 @@ export interface FileRouteTypes {
     | '/shop'
     | '/today'
     | '/you'
+    | '/admin/perfumes'
     | '/chart/loading'
     | '/chart/new'
     | '/chart/reveal'
@@ -287,6 +299,7 @@ export interface RootRouteChildren {
   ShopRoute: typeof ShopRouteWithChildren
   TodayRoute: typeof TodayRoute
   YouRoute: typeof YouRoute
+  AdminPerfumesRoute: typeof AdminPerfumesRoute
   ChartLoadingRoute: typeof ChartLoadingRoute
   ChartNewRoute: typeof ChartNewRoute
   ChartRevealRoute: typeof ChartRevealRoute
@@ -362,6 +375,13 @@ declare module '@tanstack/react-router' {
       path: '/you'
       fullPath: '/you'
       preLoaderRoute: typeof YouRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/perfumes': {
+      id: '/admin/perfumes'
+      path: '/admin/perfumes'
+      fullPath: '/admin/perfumes'
+      preLoaderRoute: typeof AdminPerfumesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/chart/loading': {
@@ -473,6 +493,7 @@ const rootRouteChildren: RootRouteChildren = {
   ShopRoute: ShopRouteWithChildren,
   TodayRoute: TodayRoute,
   YouRoute: YouRoute,
+  AdminPerfumesRoute: AdminPerfumesRoute,
   ChartLoadingRoute: ChartLoadingRoute,
   ChartNewRoute: ChartNewRoute,
   ChartRevealRoute: ChartRevealRoute,

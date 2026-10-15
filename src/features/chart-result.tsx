@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { keepPreviousData, useQuery, useQueryClient } from "@tanstack/react-query";
 import * as Accordion from "@radix-ui/react-accordion";
 import { ArrowRight, ChevronDown, ChevronLeft, ThumbsUp, ThumbsDown, X } from "lucide-react";
@@ -97,12 +97,26 @@ function PlacementLine({ items }: { items: { body: Planet; sign: string; degree:
 }
 
 export function FeedbackRow({ thanks }: { thanks?: string }) {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
+  const path = useRouterState({ select: (s) => s.location.pathname });
   const { notify } = useStore();
   const [choice, setChoice] = useState<"up" | "down" | null>(null);
-  const pick = (v: "up" | "down") => {
-    setChoice(v);
-    notify(thanks ?? t.feedbackThanks);
+  const pick = async (v: "up" | "down") => {
+    try {
+      const kind =
+        path === "/ask"
+          ? "ask"
+          : path === "/today"
+            ? "today"
+            : path.endsWith("/shelf")
+              ? "match"
+              : "reading";
+      await api.submitFeedback(kind, path, v === "up" ? 1 : -1, lang);
+      setChoice(v);
+      notify(thanks ?? t.feedbackThanks);
+    } catch {
+      notify(t.accountError, "error");
+    }
   };
   return (
     <div className="feedback-row">
@@ -207,8 +221,9 @@ export function RevealPage({ state = "" }: { state?: string }) {
 /* ---------- your sky ---------- */
 export function ResultPage({ id, state = "" }: { id: string; state?: string }) {
   const { t, word } = useLanguage();
-  const { journey, markJourney } = useStore();
+  const { journey, markJourney, user, notify } = useStore();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [shareOpen, setShareOpen] = useState(false);
   useEffect(() => markJourney("chartSeen"), [markJourney]);
   const q = useQuery({ queryKey: ["chart", id], queryFn: () => api.getChartById(id) });
@@ -322,7 +337,26 @@ export function ResultPage({ id, state = "" }: { id: string; state?: string }) {
           {t.shelfStrip} →
         </Link>
       )}
-      <div className="mt-10">
+      <div className="mt-10 flex flex-wrap gap-3">
+        <Button
+          variant="secondary"
+          onClick={async () => {
+            if (!user) {
+              sessionStorage.setItem("natal-notes:save-after-login", "true");
+              await navigate({ to: "/login" });
+              return;
+            }
+            try {
+              await api.saveChart(id);
+              await queryClient.invalidateQueries({ queryKey: ["saved"] });
+              notify(t.saved);
+            } catch {
+              notify(t.accountError, "error");
+            }
+          }}
+        >
+          {t.save}
+        </Button>
         <Button variant="secondary" onClick={() => setShareOpen(true)}>
           {t.share}
         </Button>
@@ -603,10 +637,62 @@ const categories: { theme: Theme; key: keyof Dictionary; note: NoteName }[] = [
   { theme: "luck", key: "catLuck", note: "amber" },
 ];
 const questionKeys: Record<Theme, (keyof Dictionary)[]> = {
-  self: ["qSelf1", "qSelf2", "qSelf3", "qSelf4", "qSelf5", "qSelf6", "qSelf7", "qSelf8", "qSelf9", "qSelf10", "qSelf11", "qSelf12"],
-  love: ["qLove1", "qLove2", "qLove3", "qLove4", "qLove5", "qLove6", "qLove7", "qLove8", "qLove9", "qLove10", "qLove11", "qLove12"],
-  work: ["qWork1b", "qWork2b", "qWork3b", "qWork4b", "qWork5", "qWork6", "qWork7", "qWork8", "qWork9", "qWork10", "qWork11", "qWork12"],
-  luck: ["qLuck1", "qLuck2", "qLuck3", "qLuck4", "qLuck5", "qLuck6", "qLuck7", "qLuck8", "qLuck9", "qLuck10", "qLuck11", "qLuck12"],
+  self: [
+    "qSelf1",
+    "qSelf2",
+    "qSelf3",
+    "qSelf4",
+    "qSelf5",
+    "qSelf6",
+    "qSelf7",
+    "qSelf8",
+    "qSelf9",
+    "qSelf10",
+    "qSelf11",
+    "qSelf12",
+  ],
+  love: [
+    "qLove1",
+    "qLove2",
+    "qLove3",
+    "qLove4",
+    "qLove5",
+    "qLove6",
+    "qLove7",
+    "qLove8",
+    "qLove9",
+    "qLove10",
+    "qLove11",
+    "qLove12",
+  ],
+  work: [
+    "qWork1b",
+    "qWork2b",
+    "qWork3b",
+    "qWork4b",
+    "qWork5",
+    "qWork6",
+    "qWork7",
+    "qWork8",
+    "qWork9",
+    "qWork10",
+    "qWork11",
+    "qWork12",
+  ],
+  luck: [
+    "qLuck1",
+    "qLuck2",
+    "qLuck3",
+    "qLuck4",
+    "qLuck5",
+    "qLuck6",
+    "qLuck7",
+    "qLuck8",
+    "qLuck9",
+    "qLuck10",
+    "qLuck11",
+    "qLuck12",
+  ],
 };
 
 export function AspectGlyph({ aspect }: { aspect: Aspect }) {
@@ -672,8 +758,8 @@ export function AskPage({ state = "" }: { state?: string }) {
       </div>
       <header className="ask-header">
         <Button asChild variant="text" size="icon" className="ask-close">
-          <Link to="/today" aria-label={t.close}>
-            <X size={20} />
+          <Link to="/today" aria-label={t.back} title={t.back}>
+            <ChevronLeft size={20} />
           </Link>
         </Button>
         <h1 className="label">{t.askTitle}</h1>
@@ -1006,10 +1092,19 @@ export function RitualPage({ id, state = "" }: { id: string; state?: string }) {
         <Button
           disabled={saved}
           onClick={async () => {
-            await api.saveRitual(r.id);
-            await queryClient.invalidateQueries({ queryKey: ["saved-rituals"] });
-            setSaved(true);
-            store.notify(t.ritualSaved);
+            if (!store.user) {
+              sessionStorage.setItem("natal-notes:ritual-after-login", r.id);
+              store.notify(t.ritualGuest);
+              return;
+            }
+            try {
+              await api.saveRitual(r.id);
+              await queryClient.invalidateQueries({ queryKey: ["saved-rituals"] });
+              setSaved(true);
+              store.notify(t.ritualSaved);
+            } catch {
+              store.notify(t.accountError, "error");
+            }
           }}
         >
           {t.saveRitual}

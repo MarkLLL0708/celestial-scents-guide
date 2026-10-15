@@ -1,4 +1,5 @@
-import { useEffect, useId, useMemo, useState } from "react";
+import { useEffect, useId, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useLanguage } from "@/i18n/provider";
 import * as api from "@/data/api";
 import { ritualIds } from "@/data/astro-mock";
@@ -14,13 +15,10 @@ export function DevMatchPage() {
   const [chartId, setChartId] = useState(api.DEMO_ID);
   const [ritualId, setRitualId] = useState(ritualIds[0]);
   useEffect(() => setChartId(api.currentChartId()), []);
-  const data = useMemo(() => {
-    try {
-      return api.getMatchDebug(chartId, ritualId, lang);
-    } catch {
-      return null;
-    }
-  }, [chartId, ritualId, lang]);
+  const { data } = useQuery({
+    queryKey: ["match-debug", chartId, ritualId, lang],
+    queryFn: () => api.getMatchDebug(chartId, ritualId, lang),
+  });
 
   const why = (x: Exclusion | null) =>
     !x

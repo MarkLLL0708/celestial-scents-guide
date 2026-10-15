@@ -1,0 +1,1 @@
+REVOKE EXECUTE ON FUNCTION public.has_role(uuid,text) FROM anon; REVOKE EXECUTE ON FUNCTION public.delete_my_natal_data() FROM anon; REVOKE EXECUTE ON FUNCTION public.create_natal_profile() FROM PUBLIC,anon,authenticated;

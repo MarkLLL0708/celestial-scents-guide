@@ -1,10 +1,31 @@
-import { Link, useRouterState } from "@tanstack/react-router";
-import { Flame, MessageCircle, Orbit, ShoppingBag, Sun, User, X } from "lucide-react";
+import { Link, useRouter, useRouterState } from "@tanstack/react-router";
+import { ArrowLeft, Flame, MessageCircle, Orbit, ShoppingBag, Sun, User, X } from "lucide-react";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/i18n/provider";
 import { useStore } from "@/data/context";
 import { Logo } from "./artwork";
+export function PageBack() {
+  const router = useRouter();
+  const { t } = useLanguage();
+  const path = useRouterState({ select: (s) => s.location.pathname });
+  if (path === "/" || path === "/chart/new" || path === "/ask" || path.includes("/read/")) return null;
+  return (
+    <div className="relative z-10 mx-auto w-full max-w-[1100px] px-6 py-3">
+      <Button
+        variant="text"
+        aria-label={t.back}
+        title={t.back}
+        onClick={() => {
+          if (router.history.canGoBack()) router.history.back();
+          else void router.navigate({ to: "/" });
+        }}
+      >
+        <ArrowLeft size={20} aria-hidden="true" /> {t.back}
+      </Button>
+    </div>
+  );
+}
 export function LanguageToggle() {
   const { lang, setLang, t } = useLanguage();
   return (

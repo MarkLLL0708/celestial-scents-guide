@@ -11,7 +11,7 @@
 
 ## Natal Notes architecture
 - Use TanStack file routes, including real leaf routes for every named screen, because the hosting bootstrap requires this router.
-- Keep all mock services in src/data/api.ts and browser-only state in its provider; screens must not implement persistence or real astrology.
+- Keep screen-facing services in src/data/api.ts, Cloud operations in authenticated server functions, and browser-only state in its provider; screens must not implement persistence or astrology calculations.
 - Keep bilingual UI strings in the typed English/Vietnamese dictionaries and consume them through the language provider.
 - Define all visual values in the global token/style system and use shared scent controls; original SVG artwork is the only product imagery.
 - Keep the only main element in the root shell and use Radix primitives for keyboard-managed dialogs and city search.
@@ -23,3 +23,5 @@
 - Reading paragraphs, ritual copy and the today/ask text bank are placeholder text (astro-mock.ts, lib/astro/text-bank.ts) chosen by real aspect themes, so AI-written text can replace them later.
 - Soft-sell limits live in src/lib/sellRules.ts (tested); ProductCard hides itself on no-sell screens, so new screens inherit the rule.
 - Shop uses an Outlet-only parent with separate index listing and product leaves, so details render correctly; keep filtered results visible with React transitions while replacement data loads.
+- Shared back navigation lives in the root shell, with questionnaire and Ask controls kept in their own headers so every content page has a way back.
+- Cloud stores only explicit privacy-safe chart projections; birth inputs and location context remain browser-only, and saved charts use UTC as a neutral display context when reopened.

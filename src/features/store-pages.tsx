@@ -1,4 +1,7 @@
 import { useEffect, useState, useTransition } from "react";
+import { useAccount } from "@/data/auth";
+import { supabase } from "@/integrations/supabase/client";
+import * as cloud from "@/data/cloud.functions";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useSuspenseQuery, useQueryClient, useQuery } from "@tanstack/react-query";
 import { StarField, SolarSystem } from "@/components/scent/cosmos";
@@ -391,6 +394,26 @@ export function LoginPage({ state = "" }: { state?: string }) {
   const [email, setEmail] = useState("");
   const [error, setError] = useState(state === "error");
   const [busy, setBusy] = useState(false);
+  const [sent, setSent] = useState(false);
+  useEffect(() => {
+    if (!store.user) return;
+    void (async () => {
+      try {
+        if (sessionStorage.getItem("natal-notes:save-after-login")) {
+          await api.saveChart(api.currentChartId());
+          sessionStorage.removeItem("natal-notes:save-after-login");
+        }
+        const ritual = sessionStorage.getItem("natal-notes:ritual-after-login");
+        if (ritual) {
+          await api.saveRitual(ritual);
+          sessionStorage.removeItem("natal-notes:ritual-after-login");
+        }
+        await navigate({ to: "/you", replace: true });
+      } catch {
+        setError(true);
+      }
+    })();
+  }, [store.user, navigate]);
   return (
     <div className="narrow flow">
       <h1 className="xl mb-12">{t.navLogin}</h1>
@@ -399,14 +422,18 @@ export function LoginPage({ state = "" }: { state?: string }) {
         onSubmit={async (e) => {
           e.preventDefault();
           setBusy(true);
-          const result = await api.login(email);
-          setBusy(false);
-          if (!result.ok) {
+          try {
+            const result = await api.login(email);
+            if (!result.ok) {
+              setError(true);
+              return;
+            }
+            setSent(true);
+          } catch {
             setError(true);
-            return;
+          } finally {
+            setBusy(false);
           }
-          store.setUser(true);
-          navigate({ to: "/you" });
         }}
       >
         <UnderlineInput
@@ -426,6 +453,11 @@ export function LoginPage({ state = "" }: { state?: string }) {
           {t.login}
         </Button>
       </form>
+      {sent && (
+        <p className="small muted" role="status">
+          {t.magicSent}
+        </p>
+      )}
     </div>
   );
 }
@@ -461,7 +493,7 @@ export function SavedList({ state = "" }: { state?: string }) {
           {data.map((r) => (
             <Link key={r.id} to="/chart/result/$id" params={{ id: r.id }} className="plain-row">
               <div>
-                <p>{r.profile.name}</p>
+                <p>{r.name}</p>
                 <p className="small muted">{r.date}</p>
                 <p className="small">
                   {[r.chart.sun, r.chart.moon, r.chart.rising]
@@ -505,11 +537,52 @@ function SavedRituals() {
   );
 }
 export function YouPage({ state = "" }: { state?: string }) {
-  const { t } = useLanguage();
-  const { user, setUser } = useStore();
+  const { t, lang } = useLanguage();
+  const { user, notify } = useStore();
+  const account = useAccount();
+  const client = useQueryClient();
+  const navigate = useNavigate();
+  const [confirm, setConfirm] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [displayName, setDisplayName] = useState("");
+  const info = useQuery({
+    queryKey: ["account", account.user?.id],
+    queryFn: () => cloud.accountInfo(),
+    enabled: user,
+  });
+  useEffect(() => {
+    if (info.data) setDisplayName(info.data.profile.display_name);
+  }, [info.data]);
   return (
     <div className="narrow">
       <h1 className="xl">{t.youTitle}</h1>
+      {user && (
+        <form
+          className="section stack"
+          onSubmit={async (e) => {
+            e.preventDefault();
+            setBusy(true);
+            try {
+              await cloud.saveProfile({ data: { display_name: displayName, language: lang } });
+              notify(t.saved);
+            } catch {
+              notify(t.accountError, "error");
+            } finally {
+              setBusy(false);
+            }
+          }}
+        >
+          <UnderlineInput
+            label={t.profileName}
+            value={displayName}
+            maxLength={60}
+            onChange={(e) => setDisplayName(e.target.value)}
+          />
+          <Button variant="secondary" loading={busy}>
+            {t.saveChanges}
+          </Button>
+        </form>
+      )}
       <section className="section">
         <SectionHeader>{t.myCharts}</SectionHeader>
         <SavedList state={state} />
@@ -525,7 +598,15 @@ export function YouPage({ state = "" }: { state?: string }) {
       <section className="section stack">
         <p className="small muted">{user ? t.signedIn : t.signedOut}</p>
         {user ? (
-          <Button variant="secondary" onClick={() => setUser(false)}>
+          <Button
+            variant="secondary"
+            onClick={async () => {
+              await client.cancelQueries();
+              client.clear();
+              await supabase.auth.signOut();
+              await navigate({ to: "/login", replace: true });
+            }}
+          >
             {t.logout}
           </Button>
         ) : (
@@ -534,6 +615,42 @@ export function YouPage({ state = "" }: { state?: string }) {
           </Button>
         )}
       </section>
+      {info.data?.admin && (
+        <Link to="/admin/perfumes" className="quiet-link">
+          {t.admin}
+        </Link>
+      )}
+      {user && (
+        <Button variant="text" onClick={() => setConfirm(true)}>
+          {t.deleteMyData}
+        </Button>
+      )}
+      <ScentDialog
+        open={confirm}
+        onOpenChange={setConfirm}
+        title={t.deleteMyData}
+        description={t.deleteDataConfirm}
+      >
+        <Button
+          loading={busy}
+          onClick={async () => {
+            setBusy(true);
+            try {
+              await cloud.deleteMyData();
+              api.clearChart();
+              await client.invalidateQueries();
+              setConfirm(false);
+              notify(t.dataDeleted);
+            } catch {
+              notify(t.accountError, "error");
+            } finally {
+              setBusy(false);
+            }
+          }}
+        >
+          {t.deleteMyData}
+        </Button>
+      </ScentDialog>
     </div>
   );
 }
@@ -557,16 +674,48 @@ export function AdminPage({ state = "" }: { state?: string }) {
       : [],
   );
   const [edit, setEdit] = useState<Perfume | null>(null);
+  const account = useAccount();
+  const access = useQuery({
+    queryKey: ["account", account.user?.id],
+    queryFn: () => cloud.accountInfo(),
+    enabled: !!account.user,
+  });
   const sorted = [...data].sort(
     (a, b) =>
       String(a[sort]).localeCompare(String(b[sort]), undefined, { numeric: true }) *
       (descending ? -1 : 1),
   );
   const reload = () => queryClient.invalidateQueries({ queryKey: ["perfumes"] });
+  if (!account.ready || (access.isPending && account.user)) return <Skeleton />;
+  if (!access.data?.admin)
+    return (
+      <StateMessage message={t.adminOnly}>
+        <Button asChild>
+          <Link to="/login">{t.login}</Link>
+        </Button>
+      </StateMessage>
+    );
   return (
     <div className="wide">
       <div className="admin-heading">
         <h1 className="xl">{t.admin}</h1>
+        <Button
+          variant="secondary"
+          loading={busy}
+          onClick={async () => {
+            setBusy(true);
+            try {
+              await api.loadSamplePerfumes();
+              await reload();
+            } catch {
+              store.notify(t.accountError, "error");
+            } finally {
+              setBusy(false);
+            }
+          }}
+        >
+          {t.loadSamples}
+        </Button>
         <Button variant="secondary" onClick={() => setUpload(true)}>
           {t.upload}
         </Button>
@@ -670,14 +819,19 @@ export function AdminPage({ state = "" }: { state?: string }) {
           onClick={async () => {
             if (!file) return;
             setBusy(true);
-            const result = await api.importPerfumesCsv(file);
-            setBusy(false);
-            setErrors(result.errors);
-            if (result.imported) {
-              store.notify(t.imported.replace("{count}", String(result.imported)));
-              setForced("");
-              await reload();
-              if (!result.errors.length) setUpload(false);
+            try {
+              const result = await api.importPerfumesCsv(file);
+              setErrors(result.errors);
+              if (result.imported) {
+                store.notify(t.imported.replace("{count}", String(result.imported)));
+                setForced("");
+                await reload();
+                setUpload(false);
+              }
+            } catch {
+              store.notify(t.accountError, "error");
+            } finally {
+              setBusy(false);
             }
           }}
         >
@@ -697,10 +851,15 @@ export function AdminPage({ state = "" }: { state?: string }) {
             onSubmit={async (e) => {
               e.preventDefault();
               setBusy(true);
-              await api.updatePerfume(edit);
-              await reload();
-              setBusy(false);
-              setEdit(null);
+              try {
+                await api.updatePerfume(edit);
+                await reload();
+                setEdit(null);
+              } catch {
+                store.notify(t.accountError, "error");
+              } finally {
+                setBusy(false);
+              }
             }}
           >
             <UnderlineInput

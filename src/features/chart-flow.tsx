@@ -241,8 +241,7 @@ export function ChartFlow({ step: rawStep }: { step?: number }) {
           variant="text"
           size="icon"
           aria-label={t.stepBack}
-          disabled={step === 1}
-          onClick={() => go(step - 1)}
+          onClick={() => (step === 1 ? void navigate({ to: "/" }) : go(step - 1))}
         >
           <ChevronLeft size={20} />
         </Button>

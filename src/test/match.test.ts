@@ -188,13 +188,25 @@ describe("filters", () => {
 describe("catalogue import", () => {
   it("rejects an unknown scent_family with its row number", () => {
     const csv = [
-      "id,name,brand,price,style,scent_family,intensity,top_notes,mood_tags",
-      'a,Good,B,100,unisex,Woody,3,"Cedar, Vetiver","calm, clean"',
-      'b,Bad,B,100,unisex,Smoky,3,"cedar","calm"',
+      "id,name,brand,price,style,scent_family,intensity,top_notes,mood_tags,size_ml,sold_out",
+      'a,Good,B,100,unisex,Woody,3,"Cedar, Vetiver","calm, clean",50,FALSE',
+      'b,Bad,B,100,unisex,Smoky,3,"cedar","calm",50,FALSE',
     ].join("\n");
     const { perfumes, errors } = parseCatalogue(csv);
     expect(perfumes.map((p) => p.id)).toEqual(["a"]);
     expect(perfumes[0].top_notes).toEqual(["cedar", "vetiver"]);
     expect(errors).toEqual([{ row: 3, field: "scent_family", value: "Smoky" }]);
+  });
+  it("rejects a nonnumeric bottle size", () => {
+    const result = parseCatalogue(
+      "name,price,style,scent_family,intensity,size_ml,sold_out\na,100,unisex,Woody,3,large,FALSE",
+    );
+    expect(result.errors).toContainEqual({ row: 2, field: "size_ml", value: "large" });
+  });
+  it("requires a TRUE or FALSE sold-out value", () => {
+    const result = parseCatalogue(
+      "name,price,style,scent_family,intensity,size_ml,sold_out\na,100,unisex,Woody,3,50,maybe",
+    );
+    expect(result.errors).toContainEqual({ row: 2, field: "sold_out", value: "maybe" });
   });
 });
