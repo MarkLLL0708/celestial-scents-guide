@@ -8,7 +8,7 @@ export const vi: Dictionary = {
   close: "đóng",
   language: "ngôn ngữ",
   hero: "Dữ Liệu Hành Tinh Chuẩn NASA. Chuyển Hóa Thành Mùi Hương Sinh Ra Dành Cho Bạn.",
-  subline: "Chỉ cần nhập chính xác giờ và nơi bạn chào đời. Chúng tôi tính vị trí thật của các hành tinh đến từng độ, rồi chọn ra ba chai nước hoa phản chiếu đúng con người bạn.",
+  subline: "Chỉ cần nhập chính xác giờ và nơi bạn chào đời. Chúng tôi tính vị trí thật của các hành tinh đến từng độ, rồi chọn ra ba đến năm chai nước hoa phản chiếu đúng con người bạn.",
   readChart: "XEM BẢN ĐỒ SAO",
   how: "cách hoạt động",
   how1: "cho chúng tôi ngày, giờ và nơi bạn sinh ra.",

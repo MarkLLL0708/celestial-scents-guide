@@ -7,7 +7,7 @@ export const en = {
   close: "close",
   language: "language",
   hero: "NASA-Grade Planetary Data. Translated Into The Scent You Were Born To Wear.",
-  subline: "Enter your exact birth time and place. We calculate your real planetary sky down to the degree, then match your placements to three bespoke perfumes that reflect who you actually are.",
+  subline: "Enter your exact birth time and place. We calculate your real planetary sky down to the degree, then match your placements to three to five bespoke perfumes that reflect who you actually are.",
   readChart: "READ MY CHART",
   how: "how it works",
   how1: "give us the date, time and place.",
