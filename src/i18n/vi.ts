@@ -371,7 +371,7 @@ export const vi: Dictionary = {
   readingLabel: "BÀI ĐỌC: {topic}",
   readingThanks: "cảm ơn bạn. chúng tôi dùng điều này để cải thiện các bài đọc.",
   ritualForThis: "một nghi thức nhỏ cho điều này",
-  askRitual: "một nghi thức cho điều này",
+  askRitual: "bắt đầu nghi thức cho điều này",
   toneSelf: "bản thân",
   toneLove: "tình yêu",
   toneWork: "công việc",
