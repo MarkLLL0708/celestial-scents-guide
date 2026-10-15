@@ -1,4 +1,6 @@
 import { en } from "@/i18n/en";
+import { resolveTexts } from '@/lib/library/resolve';
+import { sections as librarySections, aspectKind } from '@/lib/library/keys';
 import { supabase } from "@/integrations/supabase/client";
 import * as cloud from "./cloud.functions";
 import { chartFromStorage, recordForStorage } from "./chart-privacy";
@@ -263,6 +265,13 @@ export async function getReading(
     luck: ["jupiter"],
   };
   const reading: Reading = { ...readingFor(topic, lang), placements: by[topic].flatMap(pick) };
+  const sectionKeys = librarySections[topic].map(([section, planet]) => {
+    const body = planet === 'rising' && !chart.rising ? 'mercury' : planet;
+    const detail = body === 'rising' ? d.rising : d[body];
+    return { key: `${topic}.${section}.${body}.${detail?.sign}`, placement: detail ? { body, sign: detail.sign, degree: Math.floor(detail.degree) } : undefined };
+  });
+  const library = await resolveTexts('reading_section', sectionKeys.map(s => s.key), lang);
+  reading.sections = reading.sections.map((s,i) => ({ ...s, placement: sectionKeys[i].placement, body: library.get(sectionKeys[i].key) ?? s.body, fromLibrary: library.has(sectionKeys[i].key) }));
   if (topic === "luck") {
     const best = getWeekSync(chart)
       .filter((w): w is WeekEntry & { transit: Transit } => w.transit !== null)
@@ -287,12 +296,17 @@ export async function getToday(chartId: string, date: string, lang: "en" | "vi")
   const { chart } = await getChartById(chartId);
   const plan = dayFor(natalLongitudes(chart), localNoon(date), skipFor(chart));
   const seed = seedOf(chart, date);
+  const blockKey = (slot: BlockSlot, a: typeof plan.working) => a ? `${slot}.${a.transiting}.${a.aspect}.${a.natal}` : '';
+  const library = await resolveTexts('today_block', [blockKey('working',plan.working),blockKey('pushing',plan.pushing),blockKey('protect',plan.protect)].filter(Boolean),lang);
   const block = (slot: BlockSlot, a: typeof plan.working): Block | null =>
-    a ? { transit: toTransit(a), text: pickLine(lang, slot, a.theme, seed) } : null;
-  const lead = plan.working ?? plan.pushing ?? plan.protect;
+    a ? { transit: toTransit(a), text: library.get(blockKey(slot,a)) ?? pickLine(lang, slot, a.theme, seed), fromLibrary: library.has(blockKey(slot,a)) } : null;
+  const lead = plan.aspects[0];
+  const summaryKey = lead ? `${lead.theme}.${aspectKind(lead)}` : 'quiet';
+  const summaries = await resolveTexts('day_summary',[summaryKey],lang);
   return wait({
     date,
-    summary: lead ? summaryBank[lang][lead.theme] : quietBank[lang],
+    summary: summaries.get(summaryKey) ?? (lead ? summaryBank[lang][lead.theme] : quietBank[lang]),
+    summaryFromLibrary: summaries.has(summaryKey),
     tone: plan.tone,
     working: block("working", plan.working),
     pushing: block("pushing", plan.pushing),
@@ -302,6 +316,13 @@ export async function getToday(chartId: string, date: string, lang: "en" | "vi")
   });
 }
 export const todayDate = () => DateTime.local().toISODate() ?? "";
+
+export async function getRevealTraits(chart: Chart, lang: 'en' | 'vi') {
+  const keys = [`sun.${chart.sun}`, `moon.${chart.moon}`, chart.rising ? `rising.${chart.rising}` : `venus.${chart.venus}`];
+  const texts = await resolveTexts('trait_line', keys, lang);
+  const t = dict(lang);
+  return keys.map((key,i) => ({ text: texts.get(key) ?? [t.trait1,t.trait2,t.trait3][i], fromLibrary: texts.has(key) }));
+}
 
 export async function askNotes(
   question: string,
