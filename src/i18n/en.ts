@@ -374,6 +374,7 @@ export const en = {
   todayRitual: "TODAY'S SMALL RITUAL",
   minutes: "{n} MIN",
   todayError: "today didn't load. try again.",
+  todayTip: "this is your sky for today. come back tomorrow, it changes.",
   catSelf: "SELF",
   catLove: "LOVE",
   catLuck: "LUCK",

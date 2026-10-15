@@ -35,6 +35,9 @@ export function Landing({ state = "" }: { state?: string }) {
   return (
     <>
       <div className="wide landing-hero">
+        <div className="landing-lang">
+          <LanguageToggle />
+        </div>
         <section className="landing-intro">
           <h1 className="xl">{t.hero}</h1>
           <p className="subline muted">{t.subline}</p>

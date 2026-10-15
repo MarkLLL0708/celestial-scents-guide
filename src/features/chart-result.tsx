@@ -432,6 +432,43 @@ export function ReadingPage({
 }
 
 /* ---------- today ---------- */
+const TIP_KEY = "natal-notes:today-tip";
+function TodayTip() {
+  const { t } = useLanguage();
+  const [show, setShow] = useState(false);
+  useEffect(() => {
+    try {
+      setShow(
+        !!api.currentChartId() &&
+          api.currentChartId() !== api.DEMO_ID &&
+          !localStorage.getItem(TIP_KEY),
+      );
+    } catch {
+      /* storage blocked */
+    }
+  }, []);
+  if (!show) return null;
+  return (
+    <div className="today-tip" role="note">
+      <p>{t.todayTip}</p>
+      <Button
+        variant="text"
+        size="icon"
+        aria-label={t.close}
+        onClick={() => {
+          setShow(false);
+          try {
+            localStorage.setItem(TIP_KEY, "1");
+          } catch {
+            /* storage blocked */
+          }
+        }}
+      >
+        <X size={18} />
+      </Button>
+    </div>
+  );
+}
 export function TodayPage({ state = "" }: { state?: string }) {
   const { t, lang } = useLanguage();
   const q = useQuery({
@@ -476,6 +513,7 @@ export function TodayPage({ state = "" }: { state?: string }) {
 
   return (
     <div className="narrow today-page">
+      <TodayTip />
       <header className="today-head">
         <p className="label muted">
           {data

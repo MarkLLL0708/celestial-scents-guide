@@ -374,6 +374,7 @@ export const vi: Dictionary = {
   todayRitual: "NGHI THỨC NHỎ HÔM NAY",
   minutes: "{n} PHÚT",
   todayError: "hôm nay chưa tải được. thử lại.",
+  todayTip: "đây là bầu trời của bạn hôm nay. mai hãy quay lại, nó sẽ đổi.",
   catSelf: "BẢN THÂN",
   catLove: "TÌNH YÊU",
   catLuck: "MAY MẮN",
