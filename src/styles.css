@@ -2455,7 +2455,12 @@ html {
     gap: 8px;
   }
   .site-header .header-tools .language {
-    display: none;
+    display: flex;
+    gap: 2px;
+  }
+  .site-header .header-tools .lang-button {
+    min-width: 32px;
+    padding: 0 4px;
   }
   .evidence-cell .small {
     text-align: left;
