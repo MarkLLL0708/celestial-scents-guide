@@ -223,6 +223,7 @@ export function ResultPage({ id, state = "" }: { id: string; state?: string }) {
   const { t, word } = useLanguage();
   const { journey, markJourney, user, notify } = useStore();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [shareOpen, setShareOpen] = useState(false);
   useEffect(() => markJourney("chartSeen"), [markJourney]);
   const q = useQuery({ queryKey: ["chart", id], queryFn: () => api.getChartById(id) });
@@ -336,7 +337,7 @@ export function ResultPage({ id, state = "" }: { id: string; state?: string }) {
           {t.shelfStrip} →
         </Link>
       )}
-      <div className="mt-10">
+      <div className="mt-10 flex flex-wrap gap-3">
         <Button
           variant="secondary"
           onClick={async () => {
@@ -347,6 +348,7 @@ export function ResultPage({ id, state = "" }: { id: string; state?: string }) {
             }
             try {
               await api.saveChart(id);
+              await queryClient.invalidateQueries({ queryKey: ["saved"] });
               notify(t.saved);
             } catch {
               notify(t.accountError, "error");
