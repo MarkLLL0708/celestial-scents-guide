@@ -117,7 +117,12 @@ export interface Today {
 export interface Reading {
   topic: Topic;
   title: string;
-  sections: { title: string; body: string; fromLibrary?: boolean; placement?: { body: Planet; sign: string; degree: number } }[];
+  sections: {
+    title: string;
+    body: string;
+    fromLibrary?: boolean;
+    placement?: { body: Planet; sign: string; degree: number };
+  }[];
   placements?: { body: Planet; sign: string; degree: number }[];
   week?: { transit: Transit; date: string } | null;
 }

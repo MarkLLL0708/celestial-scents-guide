@@ -8,8 +8,8 @@ import { useLanguage } from "@/i18n/provider";
 import type { Dictionary } from "@/i18n/en";
 import { useStore } from "@/data/context";
 import * as api from "@/data/api";
-import { useAccount } from '@/data/auth';
-import * as cloud from '@/data/cloud.functions';
+import { useAccount } from "@/data/auth";
+import * as cloud from "@/data/cloud.functions";
 import { demoChart } from "@/data/seed";
 import { ritualForTheme, ritualThemes, themeForTopic, topics } from "@/data/astro-mock";
 import type {
@@ -152,17 +152,34 @@ function Disclaimer() {
   return <p className="small muted italic disclaimer-line">{t.tendencies}</p>;
 }
 
-function LibrarySource({fromLibrary}:{fromLibrary?:boolean}) {
-  const {t}=useLanguage(); const account=useAccount();
-  const q=useQuery({queryKey:['account',account.user?.id],queryFn:()=>cloud.accountInfo(),enabled:!!account.user});
-  const [show,setShow]=useState(false);
-  if(!q.data?.admin)return null;
-  return <span className="small muted"><Button variant="text" size="sm" aria-label={t.librarySources} aria-pressed={show} onClick={()=>setShow(!show)}>{show?(fromLibrary?'●':'○'):'◌'}</Button></span>;
+function LibrarySource({ fromLibrary }: { fromLibrary?: boolean }) {
+  const { t } = useLanguage();
+  const account = useAccount();
+  const q = useQuery({
+    queryKey: ["account", account.user?.id],
+    queryFn: () => cloud.accountInfo(),
+    enabled: !!account.user,
+  });
+  const [show, setShow] = useState(false);
+  if (!q.data?.admin) return null;
+  return (
+    <span className="small muted">
+      <Button
+        variant="text"
+        size="sm"
+        aria-label={t.librarySources}
+        aria-pressed={show}
+        onClick={() => setShow(!show)}
+      >
+        {show ? (fromLibrary ? "●" : "○") : "◌"}
+      </Button>
+    </span>
+  );
 }
 
 /* ---------- reveal ---------- */
 export function RevealPage({ state = "" }: { state?: string }) {
-  const { t,lang } = useLanguage();
+  const { t, lang } = useLanguage();
   const [forced, setForced] = useState(state);
   useEffect(() => setForced(state), [state]);
   const q = useQuery({
@@ -174,7 +191,11 @@ export function RevealPage({ state = "" }: { state?: string }) {
   const chart = record
     ? { ...record.chart, rising: unknownTime ? null : record.chart.rising }
     : demoChart;
-  const traits = useQuery({queryKey:['reveal-traits',record?.id,lang,unknownTime],queryFn:()=>api.getRevealTraits(chart,lang),enabled:!!record});
+  const traits = useQuery({
+    queryKey: ["reveal-traits", record?.id, lang, unknownTime],
+    queryFn: () => api.getRevealTraits(chart, lang),
+    enabled: !!record,
+  });
 
   if (forced === "loading" || (!forced && q.isPending))
     return (
@@ -205,7 +226,15 @@ export function RevealPage({ state = "" }: { state?: string }) {
         <SolarSystem />
         <HandleLine chart={chart} heading />
         <div className="reveal-traits">
-          {(traits.data ?? [t.trait1,t.trait2,t.trait3].map(text=>({text,fromLibrary:false}))).map((line,i)=><p key={i} data-text-source={line.fromLibrary?'library':'fallback'}>{line.text}<LibrarySource fromLibrary={line.fromLibrary}/></p>)}
+          {(
+            traits.data ??
+            [t.trait1, t.trait2, t.trait3].map((text) => ({ text, fromLibrary: false }))
+          ).map((line, i) => (
+            <p key={i} data-text-source={line.fromLibrary ? "library" : "fallback"}>
+              {line.text}
+              <LibrarySource fromLibrary={line.fromLibrary} />
+            </p>
+          ))}
         </div>
         {unknownTime && <p className="label muted">{t.noRising}</p>}
         <MoonNote chart={chart} />
@@ -454,8 +483,11 @@ export function ReadingPage({
                   </Accordion.Trigger>
                 </Accordion.Header>
                 <Accordion.Content className="reading-content">
-                  {s.placement&&<PlacementLine items={[s.placement]}/>}
-                  <p data-text-source={s.fromLibrary?'library':'fallback'}>{s.body}<LibrarySource fromLibrary={s.fromLibrary}/></p>
+                  {s.placement && <PlacementLine items={[s.placement]} />}
+                  <p data-text-source={s.fromLibrary ? "library" : "fallback"}>
+                    {s.body}
+                    <LibrarySource fromLibrary={s.fromLibrary} />
+                  </p>
                 </Accordion.Content>
               </Accordion.Item>
             ))}
@@ -569,7 +601,14 @@ export function TodayPage({ state = "" }: { state?: string }) {
             : t.sampleToday}
         </p>
         <OrbitDiagram size="sm" />
-        {data ? <h1 className="question">{data.today.summary}<LibrarySource fromLibrary={data.today.summaryFromLibrary}/></h1> : <Skeleton />}
+        {data ? (
+          <h1 className="question">
+            {data.today.summary}
+            <LibrarySource fromLibrary={data.today.summaryFromLibrary} />
+          </h1>
+        ) : (
+          <Skeleton />
+        )}
       </header>
 
       <section aria-label={t.toneCaption} className="tone-strip">
@@ -608,7 +647,10 @@ export function TodayPage({ state = "" }: { state?: string }) {
                 <Cell key={label}>
                   <p className="label">{label}</p>
                   <p className="label muted cell-evidence">{transitText(t, b.transit)}</p>
-                  <p>{b.text}<LibrarySource fromLibrary={b.fromLibrary}/></p>
+                  <p>
+                    {b.text}
+                    <LibrarySource fromLibrary={b.fromLibrary} />
+                  </p>
                 </Cell>
               ),
             )
@@ -660,7 +702,10 @@ const questionKeys: Record<Theme, (keyof Dictionary)[]> = {
     "qSelf10",
     "qSelf11",
     "qSelf12",
-    "qSelf13", "qSelf14", "qSelf15", "qSelf16",
+    "qSelf13",
+    "qSelf14",
+    "qSelf15",
+    "qSelf16",
   ],
   love: [
     "qLove1",
@@ -675,7 +720,10 @@ const questionKeys: Record<Theme, (keyof Dictionary)[]> = {
     "qLove10",
     "qLove11",
     "qLove12",
-    "qLove13", "qLove14", "qLove15", "qLove16",
+    "qLove13",
+    "qLove14",
+    "qLove15",
+    "qLove16",
   ],
   work: [
     "qWork1b",
@@ -690,7 +738,10 @@ const questionKeys: Record<Theme, (keyof Dictionary)[]> = {
     "qWork10",
     "qWork11",
     "qWork12",
-    "qWork13", "qWork14", "qWork15", "qWork16",
+    "qWork13",
+    "qWork14",
+    "qWork15",
+    "qWork16",
   ],
   luck: [
     "qLuck1",
@@ -705,7 +756,10 @@ const questionKeys: Record<Theme, (keyof Dictionary)[]> = {
     "qLuck10",
     "qLuck11",
     "qLuck12",
-    "qLuck13", "qLuck14", "qLuck15", "qLuck16",
+    "qLuck13",
+    "qLuck14",
+    "qLuck15",
+    "qLuck16",
   ],
 };
 
