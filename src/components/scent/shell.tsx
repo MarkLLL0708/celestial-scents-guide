@@ -9,7 +9,7 @@ export function PageBack() {
   const router = useRouter();
   const { t } = useLanguage();
   const path = useRouterState({ select: (s) => s.location.pathname });
-  if (path === "/" || path === "/chart/new" || path === "/ask") return null;
+  if (path === "/" || path === "/chart/new" || path === "/ask" || path.includes("/read/")) return null;
   return (
     <div className="relative z-10 mx-auto w-full max-w-[1100px] px-6 py-3">
       <Button
