@@ -67,6 +67,24 @@ export type Database = {
           },
         ]
       }
+      library_generation_state: {
+        Row: {
+          id: string
+          lease_until: string | null
+          pause_reason: string | null
+        }
+        Insert: {
+          id?: string
+          lease_until?: string | null
+          pause_reason?: string | null
+        }
+        Update: {
+          id?: string
+          lease_until?: string | null
+          pause_reason?: string | null
+        }
+        Relationships: []
+      }
       perfumes: {
         Row: {
           base_notes: string[]
@@ -206,6 +224,45 @@ export type Database = {
           },
         ]
       }
+      text_library: {
+        Row: {
+          body: string
+          created_at: string
+          flags: string[]
+          id: string
+          key: string
+          kind: string
+          lang: string
+          model: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          body?: string
+          created_at?: string
+          flags?: string[]
+          id?: string
+          key: string
+          kind: string
+          lang: string
+          model?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          flags?: string[]
+          id?: string
+          key?: string
+          kind?: string
+          lang?: string
+          model?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           role: string
@@ -226,6 +283,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      acquire_library_generation: { Args: never; Returns: boolean }
       delete_my_natal_data: { Args: never; Returns: undefined }
       has_role: { Args: { role: string; user_id: string }; Returns: boolean }
       no_private_birth_fields: { Args: { payload: Json }; Returns: boolean }

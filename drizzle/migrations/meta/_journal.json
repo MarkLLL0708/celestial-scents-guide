@@ -29,6 +29,13 @@
       "when": 1792068642859,
       "tag": "0003_safe_recursive_birth_privacy",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1792069083617,
+      "tag": "0004_text_library_and_verified_owner",
+      "breakpoints": true
     }
   ]
 }
