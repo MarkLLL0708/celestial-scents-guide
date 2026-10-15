@@ -135,7 +135,7 @@ describe("shelf with the calm ritual", () => {
       "VENUS IN CAPRICORN ↔ VETIVER, CEDAR, OAKMOSS",
     );
     expect(describePick(en, shelf.forChart!).reason).toBe(
-      "your venus in capricorn likes vetiver, cedar and oakmoss. this has all three.",
+      "Your venus in Capricorn likes vetiver, cedar and oakmoss. This has all three.",
     );
   });
   it("forWeek is Paper Rain at 77.4", () => {
