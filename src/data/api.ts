@@ -1,5 +1,11 @@
 import { en } from "@/i18n/en";
 import { vi } from "@/i18n/vi";
+import { buildShelf, perfumeForRitual, ritualForPerfume, type MatchRitual, type Pick } from "@/lib/match/shelf";
+import { describePick } from "@/lib/match/text";
+import { parseCatalogue, type ImportError } from "@/lib/match/catalogue";
+import { applyFilters } from "@/lib/match/filters";
+import { scorePerfume, shadowChart } from "@/lib/match/score";
+import { fallbackRitualId } from "@/config/scentMap";
 import { DateTime } from "luxon";
 import { perfumes, demoChart, cities } from "./seed";
 import { buildChart, natalLongitudes, toTransit } from "@/lib/astro/to-chart";
@@ -14,17 +20,13 @@ import type {
   Body,
   Block,
   WeekEntry,
-  Recs,
-  ChartResult,
   CartItem,
-  Evidence,
   AstroAnswer,
   ChartRecord,
   Reading,
   Ritual,
   RitualTheme,
   Shelf,
-  ShelfEntry,
   Theme,
   Today,
   Topic,
@@ -35,8 +37,6 @@ import {
   readingFor,
   ritualFor,
   ritualIds,
-  shelfPlan,
-  shelfReason,
   topics,
 } from "./astro-mock";
 export * from "./types";
@@ -44,7 +44,6 @@ const wait = <T>(value: T): Promise<T> =>
   new Promise((resolve) => setTimeout(() => resolve(structuredClone(value)), 600));
 let inventory = structuredClone(perfumes);
 let items: CartItem[] = [];
-let saved: ChartResult[] = [];
 export async function getPerfumes(filters?: {
   family?: string;
   style?: string;
@@ -120,11 +119,12 @@ export async function computeChart(profile: BirthProfile): Promise<Chart> {
 }
 
 /** Keeps one chart in sessionStorage so a reload keeps it. Nothing else is stored. */
-export function storeChart(name: string, chart: Chart): ChartRecord {
+export function storeChart(name: string, chart: Chart, prefs?: Prefs): ChartRecord {
   const record: ChartRecord = {
     id: `c${Date.now().toString(36)}${Math.random().toString(36).slice(2, 8)}`,
     name,
     chart,
+    prefs,
   };
   sessionStorage.setItem(CHART_KEY, JSON.stringify(record));
   return record;
@@ -161,50 +161,8 @@ const seedOf = (c: Chart, date: string) =>
   Math.floor(c.details.sun.longitude * 7 + c.details.moon.longitude * 3) +
   (Number(date.replaceAll("-", "")) % 97);
 const ritualForTheme = (theme: RitualTheme) => firstRitualOfTheme(theme);
-export async function getRecommendations(chart: Chart, prefs: Prefs): Promise<Recs> {
-  const candidates = inventory.filter(
-    (p) =>
-      !p.sold_out &&
-      (!prefs.style || prefs.style === "any" || p.style === prefs.style) &&
-      !prefs.avoid.some((a) =>
-        [p.name, p.scent_family, ...p.top_notes, ...p.heart_notes, ...p.base_notes]
-          .join(" ")
-          .toLowerCase()
-          .includes(a.toLowerCase()),
-      ) &&
-      (prefs.budget === "any" ||
-        (prefs.budget === "low"
-          ? p.price <= 80
-          : prefs.budget === "mid"
-            ? p.price > 80 && p.price <= 150
-            : p.price > 150)),
-  );
-  if (!candidates.length) throw new Error("NO_MATCHES");
-  const scores = [94, 88, 84, 79, 73, 61];
-  const reasons = [en.reason1, en.reason2, en.reason3, en.reason4, en.reason5, en.reason6];
-  const evidence: Evidence[] = [
-    { planet: "sun", sign: chart.sun, why: "why1" },
-    { planet: "moon", sign: chart.moon, why: "why2" },
-    { planet: "rising", sign: chart.rising ?? chart.sun, why: "why3" },
-    { planet: "venus", sign: chart.venus, why: "why4" },
-    { planet: "mars", sign: chart.mars, why: "why5" },
-    { planet: "mercury", sign: chart.mercury, why: "why6" },
-  ];
-  if (!chart.rising) evidence[2] = { planet: "venus", sign: chart.venus, why: "why3" };
-  const matches = Array.from({ length: 6 }, (_, i) => ({
-    perfume: candidates[i % candidates.length],
-    score: scores[i],
-    reason: reasons[i],
-    evidence: evidence[i],
-  }));
-  return wait({ signature: matches[0], others: matches.slice(1, 5), shadow: matches[5] });
-}
-export async function saveChart(result: ChartResult): Promise<{ id: string }> {
-  saved = [result, ...saved.filter((r) => r.id !== result.id)];
-  return wait({ id: result.id });
-}
-export async function listSavedCharts(): Promise<ChartResult[]> {
-  return wait(saved);
+export async function listSavedCharts(): Promise<{ id: string; profile: BirthProfile; chart: Chart; date: string }[]> {
+  return wait([]);
 }
 export async function getCart(): Promise<CartItem[]> {
   return wait(items);
@@ -232,75 +190,13 @@ export const cart = { getCart, addToCart, updateQty, removeFromCart };
 export async function login(email: string): Promise<{ ok: boolean }> {
   return wait({ ok: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) });
 }
-// CSV parsing supports escaped quotes and quoted commas, without a server dependency.
-export function parseCsv(text: string): string[][] {
-  const rows: string[][] = [];
-  let row: string[] = [];
-  let field = "";
-  let quoted = false;
-  for (let i = 0; i < text.length; i++) {
-    const c = text[i];
-    if (c === '"') {
-      if (quoted && text[i + 1] === '"') {
-        field += '"';
-        i++;
-      } else quoted = !quoted;
-    } else if (c === "," && !quoted) {
-      row.push(field);
-      field = "";
-    } else if ((c === "\n" || c === "\r") && !quoted) {
-      if (c === "\r" && text[i + 1] === "\n") i++;
-      row.push(field);
-      if (row.some(Boolean)) rows.push(row);
-      row = [];
-      field = "";
-    } else field += c;
-  }
-  row.push(field);
-  if (row.some(Boolean)) rows.push(row);
-  return rows;
-}
+/** Admin CSV import: validates against the controlled vocabularies, errors carry row numbers. */
 export async function importPerfumesCsv(
   file: File,
-): Promise<{ imported: number; errors: { row: number; message: string }[] }> {
-  const rows = parseCsv(await file.text());
-  const headers = rows.shift() ?? [];
-  const errors: { row: number; message: string }[] = [];
-  const imported: Perfume[] = [];
-  rows.forEach((r, i) => {
-    const o = Object.fromEntries(headers.map((h, j) => [h.trim(), r[j]?.trim() ?? ""]));
-    if (
-      !o.name ||
-      !o.scent_family ||
-      !Number.isFinite(Number(o.price)) ||
-      Number(o.price) <= 0 ||
-      !["feminine", "masculine", "unisex"].includes(o.style) ||
-      ![50, 100].includes(Number(o.size_ml)) ||
-      Number(o.intensity) < 1 ||
-      Number(o.intensity) > 5
-    ) {
-      errors.push({ row: i + 2, message: "importError" });
-      return;
-    }
-    imported.push({
-      id: o.id || `import-${Date.now()}-${i}`,
-      name: o.name,
-      brand: o.brand || "Atelier Sample",
-      price: Number(o.price),
-      currency: o.currency || "USD",
-      size_ml: Number(o.size_ml),
-      scent_family: o.scent_family,
-      style: o.style as Perfume["style"],
-      intensity: Number(o.intensity),
-      top_notes: (o.top_notes || "").split("|").filter(Boolean),
-      heart_notes: (o.heart_notes || "").split("|").filter(Boolean),
-      base_notes: (o.base_notes || "").split("|").filter(Boolean),
-      mood_tags: (o.mood_tags || "").split("|").filter(Boolean),
-      sold_out: o.sold_out === "true",
-    });
-  });
-  inventory = [...inventory, ...imported];
-  return wait({ imported: imported.length, errors });
+): Promise<{ imported: number; errors: ImportError[] }> {
+  const { perfumes: rows, errors } = parseCatalogue(await file.text());
+  inventory = [...inventory.filter((p) => !rows.some((r) => r.id === p.id)), ...rows];
+  return wait({ imported: rows.length, errors });
 }
 export async function updatePerfume(p: Perfume): Promise<Perfume> {
   inventory = inventory.map((v) => (v.id === p.id ? p : v));
@@ -402,28 +298,82 @@ export async function getRitual(id: string, lang: "en" | "vi"): Promise<Ritual> 
   if (!r) throw new Error("NOT_FOUND");
   return wait(r);
 }
-export async function getShelf(chartId: string, lang: "en" | "vi"): Promise<Shelf> {
-  void chartId;
-  const reasons = shelfReason(lang);
-  const entry = (k: keyof typeof shelfPlan, reason: string): ShelfEntry | null => {
-    const plan = shelfPlan[k];
-    const perfume = inventory.find((p) => p.id === plan.perfumeId);
-    const ritual = ritualFor(plan.ritualId, lang);
-    if (!perfume || !ritual) return null;
-    return {
-      perfume,
-      score: 0,
-      reason,
-      evidence: { planet: plan.planet, sign: plan.sign, why: reason },
-      ritualId: ritual.id,
-      ritualTitle: ritual.title,
-    };
+// ---------- scent matching (pure functions in src/lib/match) ----------
+const dict = (lang: "en" | "vi") => (lang === "vi" ? vi : en);
+/** Matching always reads the English note list, whatever the screen language. */
+const matchRitual = (id: string, lang: "en" | "vi"): MatchRitual | null => {
+  const en_ = ritualFor(id, "en");
+  const shown = ritualFor(id, lang);
+  return en_ && shown ? { id, title: shown.title, noteFamily: en_.noteFamily } : null;
+};
+const allMatchRituals = (lang: "en" | "vi") =>
+  ritualIds.map((id) => matchRitual(id, lang)).filter((r): r is MatchRitual => r !== null);
+function todayRitualId(chart: Chart): string {
+  try {
+    const plan = dayFor(natalLongitudes(chart), localNoon(todayDate()), skipFor(chart));
+    return ritualForTheme(plan.ritualTheme);
+  } catch {
+    return fallbackRitualId;
+  }
+}
+const toEntry = (pick: Pick | null, lang: "en" | "vi") => {
+  if (!pick) return null;
+  const { evidence, reason } = describePick(dict(lang), pick);
+  const ritual =
+    pick.kind === "week" ? pick.ritual : ritualForPerfume(pick.perfume, allMatchRituals(lang));
+  return {
+    perfume: pick.perfume,
+    score: Math.round(pick.score * 10) / 10,
+    reason,
+    evidence,
+    ritualId: ritual?.id ?? fallbackRitualId,
+    ritualTitle: ritual?.title ?? "",
   };
+};
+export async function getShelf(chartId: string, lang: "en" | "vi", ritualId?: string): Promise<Shelf> {
+  const { chart, prefs } = loadChart(chartId);
+  const ritual =
+    matchRitual(ritualId ?? todayRitualId(chart), lang) ?? matchRitual(fallbackRitualId, lang);
+  if (!ritual) throw new Error("NO_RITUAL");
+  const picks = buildShelf(inventory, chart, prefs, ritual);
   return wait({
-    forChart: entry("forChart", reasons.chart),
-    forWeek: entry("forWeek", reasons.week),
-    forShadow: entry("forShadow", reasons.shadow),
+    forChart: toEntry(picks.forChart, lang),
+    forWeek: toEntry(picks.forWeek, lang),
+    forShadow: toEntry(picks.forShadow, lang),
   });
+}
+/** The ritual page card. Without a chart of the visitor's own, ritual notes decide. */
+export async function getPerfumeForRitual(ritualId: string, lang: "en" | "vi", chartId?: string) {
+  const ritual = matchRitual(ritualId, lang);
+  if (!ritual) throw new Error("NOT_FOUND");
+  const record = chartId && chartId !== DEMO_ID ? (() => { try { return loadChart(chartId); } catch { return null; } })() : null;
+  return wait(toEntry(perfumeForRitual(inventory, ritual, record?.chart ?? null, record?.prefs), lang));
+}
+/** Everything the /dev/match page shows. */
+export function getMatchDebug(chartId: string, ritualId: string, lang: "en" | "vi") {
+  const { chart, prefs } = loadChart(chartId);
+  const ritual = matchRitual(ritualId, lang) ?? matchRitual(fallbackRitualId, lang);
+  if (!ritual) throw new Error("NO_RITUAL");
+  const { excluded } = applyFilters(inventory, prefs);
+  const shadow = shadowChart(chart);
+  const picks = buildShelf(inventory, chart, prefs, ritual);
+  return {
+    chart,
+    prefs,
+    ritual,
+    shadow,
+    rows: inventory.map((p) => ({
+      perfume: p,
+      breakdown: scorePerfume(p, chart),
+      shadowTotal: scorePerfume(p, shadow).total,
+      excluded: excluded.find((x) => x.perfume.id === p.id)?.why ?? null,
+    })),
+    shelf: {
+      forChart: toEntry(picks.forChart, lang),
+      forWeek: toEntry(picks.forWeek, lang),
+      forShadow: toEntry(picks.forShadow, lang),
+    },
+  };
 }
 let savedRituals: string[] = [];
 export async function saveRitual(id: string): Promise<string[]> {
