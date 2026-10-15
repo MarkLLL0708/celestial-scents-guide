@@ -65,6 +65,13 @@ function HandleLine({ chart, heading = false }: { chart: Chart; heading?: boolea
   return heading ? <h1 className="label">{text}</h1> : <p className="label">{text}</p>;
 }
 
+/** Current chart id after hydration (demo during SSR), so links never mismatch. */
+function useChartId() {
+  const [id, setId] = useState(api.DEMO_ID);
+  useEffect(() => setId(api.currentChartId()), []);
+  return id;
+}
+
 function MoonNote({ chart }: { chart: Chart }) {
   const { t, word } = useLanguage();
   if (!chart.moonAlternatives) return null;
@@ -135,7 +142,7 @@ export function RevealPage({ state = "" }: { state?: string }) {
   const [forced, setForced] = useState(state);
   useEffect(() => setForced(state), [state]);
   const q = useQuery({
-    queryKey: ["chart", "current"],
+    queryKey: ["chart", "current", api.currentChartId()],
     queryFn: () => api.getChartById(api.currentChartId()),
   });
   const record = q.data;
@@ -430,7 +437,7 @@ export function ReadingPage({
 export function TodayPage({ state = "" }: { state?: string }) {
   const { t, lang } = useLanguage();
   const q = useQuery({
-    queryKey: ["today", lang, api.todayDate()],
+    queryKey: ["today", lang, api.todayDate(), api.currentChartId()],
     queryFn: async () => {
       const today = await api.getToday(api.currentChartId(), api.todayDate(), lang);
       const ritual = await api.getRitual(today.ritualId, lang);
@@ -953,7 +960,7 @@ export function RitualPage({ id, state = "" }: { id: string; state?: string }) {
       </div>
       <p className="small muted italic">{t.ritualClaim}</p>
       {store.journey.readingOpened && (
-        <Link to="/chart/result/$id/shelf" params={{ id: api.currentChartId() }} className="today-strip">
+        <Link to="/chart/result/$id/shelf" params={{ id: chartId }} className="today-strip">
           <span className="label">{t.shelfStrip}</span>
           <ArrowRight size={18} aria-hidden="true" />
         </Link>
@@ -1062,7 +1069,7 @@ export function ShareDialog({
   const { notify } = useStore();
   const [busy, setBusy] = useState(false);
   const q = useQuery({
-    queryKey: ["today", lang],
+    queryKey: ["today", lang, api.todayDate(), api.currentChartId()],
     enabled: open,
     queryFn: async () => {
       const today = await api.getToday(api.currentChartId(), api.todayDate(), lang);
