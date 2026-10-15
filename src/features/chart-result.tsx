@@ -859,6 +859,7 @@ export function RitualPage({ id, state = "" }: { id: string; state?: string }) {
   const { t, lang } = useLanguage();
   const store = useStore();
   const queryClient = useQueryClient();
+  const chartId = useChartId();
   const [forced, setForced] = useState(state);
   useEffect(() => { setForced(state); setSaved(false); }, [state, id]);
   const [saved, setSaved] = useState(false);
