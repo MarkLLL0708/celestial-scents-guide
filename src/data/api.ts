@@ -441,6 +441,19 @@ export async function getShelf(
     forShadow: toEntry(picks.forShadow, lang),
   });
 }
+/** 3–5 perfumes for a chart, each paired with a ritual. */
+export async function getCapsule(chartId: string, lang: "en" | "vi", ritualId?: string) {
+  const { chart, prefs } = await getChartById(chartId);
+  await getPerfumes();
+  const ritual =
+    matchRitual(ritualId ?? todayRitualId(chart), lang) ?? matchRitual(fallbackRitualId, lang);
+  if (!ritual) throw new Error("NO_RITUAL");
+  return wait(
+    buildCapsule(inventory, chart, prefs, ritual)
+      .map((p) => toEntry(p, lang))
+      .filter((e): e is NonNullable<typeof e> => e !== null),
+  );
+}
 /** The ritual page card. Without a chart of the visitor's own, ritual notes decide. */
 export async function getPerfumeForRitual(ritualId: string, lang: "en" | "vi", chartId?: string) {
   const ritual = matchRitual(ritualId, lang);
