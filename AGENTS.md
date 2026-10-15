@@ -22,7 +22,7 @@
 - The current chart is the only thing kept in sessionStorage (one record with its id); the demo id resolves to a real chart computed from a fixed birth.
 - Approved library text is resolved in api.ts through privacy-safe keys with placeholder fallback; library keys and validation are shared pure modules, while generation prompts and providers remain server-only.
 - Library generation requires server-validated admin roles and a durable single-flight lease with terminal pause reasons, preventing duplicate billing and unauthorized writes.
-- Soft-sell limits live in src/lib/sellRules.ts (tested); ProductCard hides itself on no-sell screens, so new screens inherit the rule.
+- Soft-sell limits live in src/lib/sellRules.ts (tested); ProductCard hides itself on no-sell screens; the post-reading 3–5 perfume capsule comes from buildCapsule via api.getCapsule and the shared ScentCapsule, so every reading surface shows the same picks.
 - Shop uses an Outlet-only parent with separate index listing and product leaves, so details render correctly; keep filtered results visible with React transitions while replacement data loads.
 - Shared back navigation lives in the root shell, with questionnaire and Ask controls kept in their own headers so every content page has a way back.
 - Cloud stores only explicit privacy-safe chart projections; birth inputs and location context remain browser-only, and saved charts use UTC as a neutral display context when reopened.

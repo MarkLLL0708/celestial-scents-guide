@@ -13,3 +13,5 @@
 - [x] Step 08: approved text storage, generation, review, export, and screen integration
 - [x] Step 08: generate and approve only 48 English traits; verify chart A and report counts
 - [x] Step 08: signed-in admin regeneration, approval readback and invalid-content rejection
+
+- [x] Journey: 3–5 perfume capsule after chart/readings, ritual CTA, chart-gated tailored Ask
