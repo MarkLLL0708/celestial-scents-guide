@@ -7,6 +7,7 @@ import { chartFromStorage, recordForStorage } from "./chart-privacy";
 import { vi } from "@/i18n/vi";
 import {
   buildShelf,
+  buildCapsule,
   perfumeForRitual,
   ritualForPerfume,
   type MatchRitual,
