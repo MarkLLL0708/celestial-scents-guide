@@ -1050,6 +1050,7 @@ export function AskPage({ state = "" }: { state?: string }) {
         )}
       </div>
 
+      {own && (
       <form
         className="ask-bar"
         onSubmit={(e) => {
@@ -1075,6 +1076,7 @@ export function AskPage({ state = "" }: { state?: string }) {
           {t.askButton}
         </Button>
       </form>
+      )}
     </div>
   );
 }
