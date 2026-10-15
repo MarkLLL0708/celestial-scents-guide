@@ -389,7 +389,7 @@ export async function askNotes(
     transit: aspect
       ? toTransit(aspect)
       : { transiting: "moon", aspect: "conjunct", natal: "sun", orb: 0, theme, strength: 1 },
-    answer: `“${question.trim()}” — ${line}`,
+    answer: line,
     ritualId: ritualForTheme(plan.ritualTheme === "calm" ? "calm" : theme),
   });
 }
