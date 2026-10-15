@@ -2888,3 +2888,29 @@ h3 {
   .ask-after { flex-direction: column; align-items: stretch; }
   .ask-after .nn-button { width: 100%; }
 }
+
+/* Landing hero: quiet drifting starfield */
+.landing-hero-wrap {
+  position: relative;
+  overflow: hidden;
+}
+.landing-hero-wrap > .star-field {
+  animation: star-drift 90s linear infinite alternate;
+  inset: -4%;
+}
+.landing-hero-wrap > .wide {
+  position: relative;
+}
+.landing-dark > .star-field {
+  animation: star-drift 120s linear infinite alternate-reverse;
+}
+@keyframes star-drift {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-2.5%, 1.5%, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .landing-hero-wrap > .star-field,
+  .landing-dark > .star-field {
+    animation: none;
+  }
+}

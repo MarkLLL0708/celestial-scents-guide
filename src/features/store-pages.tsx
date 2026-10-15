@@ -37,6 +37,8 @@ export function Landing({ state = "" }: { state?: string }) {
   });
   return (
     <>
+      <div className="landing-hero-wrap">
+      <StarField />
       <div className="wide landing-hero">
         <div className="landing-lang">
           <LanguageToggle />
@@ -51,16 +53,7 @@ export function Landing({ state = "" }: { state?: string }) {
             </Link>
           </Button>
         </section>
-        <figure className="sample-card" aria-label={t.sampleCaption}>
-          <p className="label">{t.sampleToday}</p>
-          <p className="question">{t.sampleLine}</p>
-          <ul>
-            <li className="label muted">{t.sampleRow1}</li>
-            <li className="label muted">{t.sampleRow2}</li>
-            <li className="label muted">{t.sampleRow3}</li>
-          </ul>
-          <figcaption className="small muted">{t.sampleCaption}</figcaption>
-        </figure>
+      </div>
       </div>
 
       <section className="landing-dark" data-theme="dark">
@@ -81,28 +74,6 @@ export function Landing({ state = "" }: { state?: string }) {
         </div>
       </section>
 
-      <section className="narrow ritual-teaser">
-        <p className="label muted">{t.ritualTeaserLabel}</p>
-        {forced === "loading" || ritual.isPending ? (
-          <Skeleton />
-        ) : forced === "error" || ritual.isError || !ritual.data ? (
-          <StateMessage
-            message={t.ritualsError}
-            retry={() => {
-              setForced("");
-              void ritual.refetch();
-            }}
-          />
-        ) : (
-          <>
-            <h2 className="question">{ritual.data.title}</h2>
-            <p className="muted">{ritual.data.intention}</p>
-          </>
-        )}
-        <Link to="/rituals" className="quiet-link">
-          {t.seeRituals} →
-        </Link>
-      </section>
     </>
   );
 }
