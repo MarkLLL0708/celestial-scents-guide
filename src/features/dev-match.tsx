@@ -107,7 +107,10 @@ export function DevMatchPage() {
                 {[...data.rows]
                   .sort((a, b) => b.breakdown.total - a.breakdown.total)
                   .map((r) => {
-                    const week = weekScore(r.breakdown.total, ritualNotes(r.perfume, data.ritual).score);
+                    const week = weekScore(
+                      r.breakdown.total,
+                      ritualNotes(r.perfume, data.ritual).score,
+                    );
                     return r.breakdown.placements.map((pl, i) => (
                       <tr key={`${r.perfume.id}-${pl.placement}`}>
                         {i === 0 && (
@@ -123,8 +126,12 @@ export function DevMatchPage() {
                         <td>{pl.signs.map((s) => f2(s.moodScore)).join("/")}</td>
                         {i === 0 && (
                           <>
-                            <td rowSpan={r.breakdown.placements.length}>{f1(r.breakdown.chartScore)}</td>
-                            <td rowSpan={r.breakdown.placements.length}>{f1(r.breakdown.intensityBonus)}</td>
+                            <td rowSpan={r.breakdown.placements.length}>
+                              {f1(r.breakdown.chartScore)}
+                            </td>
+                            <td rowSpan={r.breakdown.placements.length}>
+                              {f1(r.breakdown.intensityBonus)}
+                            </td>
                             <td rowSpan={r.breakdown.placements.length}>{f1(r.breakdown.total)}</td>
                             <td rowSpan={r.breakdown.placements.length}>{f1(week)}</td>
                             <td rowSpan={r.breakdown.placements.length}>{f1(r.shadowTotal)}</td>

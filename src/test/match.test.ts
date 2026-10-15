@@ -34,13 +34,62 @@ const mk = (
 });
 
 const catalogue: Perfume[] = [
-  mk("p1", "Saffron Hour", "Oriental", 5, ["saffron", "bergamot", "rose", "cardamom", "amber", "vanilla"], ["bold", "radiant", "warm"]),
-  mk("p2", "Cedar Letter", "Woody", 3, ["pink pepper", "cedar", "vetiver", "sandalwood", "oakmoss"], ["refined", "serious", "grounded"]),
-  mk("p3", "Paper Rain", "Fresh", 2, ["mint", "bergamot", "tea", "violet", "white musk"], ["cool", "clean", "bright"]),
-  mk("p4", "Salt Jasmine", "Floral", 3, ["sea salt", "jasmine", "lily", "vanilla", "musk"], ["dreamy", "soft", "comforting"]),
-  mk("p5", "Dark Rose Room", "Oriental", 5, ["dark rose", "oud", "incense", "patchouli"], ["mysterious", "intense", "sensual"]),
-  mk("p6", "Green Ledger", "Green", 2, ["fig leaf", "vetiver", "tea", "lavender"], ["calm", "clean", "fresh"]),
-  mk("p7", "Leather Orchard", "Leather", 4, ["leather", "cardamom", "tobacco", "cedar"], ["adventurous", "warm", "refined"]),
+  mk(
+    "p1",
+    "Saffron Hour",
+    "Oriental",
+    5,
+    ["saffron", "bergamot", "rose", "cardamom", "amber", "vanilla"],
+    ["bold", "radiant", "warm"],
+  ),
+  mk(
+    "p2",
+    "Cedar Letter",
+    "Woody",
+    3,
+    ["pink pepper", "cedar", "vetiver", "sandalwood", "oakmoss"],
+    ["refined", "serious", "grounded"],
+  ),
+  mk(
+    "p3",
+    "Paper Rain",
+    "Fresh",
+    2,
+    ["mint", "bergamot", "tea", "violet", "white musk"],
+    ["cool", "clean", "bright"],
+  ),
+  mk(
+    "p4",
+    "Salt Jasmine",
+    "Floral",
+    3,
+    ["sea salt", "jasmine", "lily", "vanilla", "musk"],
+    ["dreamy", "soft", "comforting"],
+  ),
+  mk(
+    "p5",
+    "Dark Rose Room",
+    "Oriental",
+    5,
+    ["dark rose", "oud", "incense", "patchouli"],
+    ["mysterious", "intense", "sensual"],
+  ),
+  mk(
+    "p6",
+    "Green Ledger",
+    "Green",
+    2,
+    ["fig leaf", "vetiver", "tea", "lavender"],
+    ["calm", "clean", "fresh"],
+  ),
+  mk(
+    "p7",
+    "Leather Orchard",
+    "Leather",
+    4,
+    ["leather", "cardamom", "tobacco", "cedar"],
+    ["adventurous", "warm", "refined"],
+  ),
 ];
 const chartA: MatchChart = {
   sun: "Aquarius",
@@ -76,7 +125,9 @@ describe("shelf with the calm ritual", () => {
   const shelf = buildShelf(catalogue, chartA, noPrefs, calm);
   it("forChart is Cedar Letter with venus evidence", () => {
     expect(shelf.forChart?.perfume.name).toBe("Cedar Letter");
-    expect(describePick(en, shelf.forChart!).evidence).toBe("VENUS IN CAPRICORN ↔ VETIVER, CEDAR, OAKMOSS");
+    expect(describePick(en, shelf.forChart!).evidence).toBe(
+      "VENUS IN CAPRICORN ↔ VETIVER, CEDAR, OAKMOSS",
+    );
     expect(describePick(en, shelf.forChart!).reason).toBe(
       "your venus in capricorn likes vetiver, cedar and oakmoss. this has all three.",
     );
@@ -123,8 +174,7 @@ describe("filters", () => {
   it("unknown rising is left out and the rest renormalise", () => {
     const b = scorePerfume(byName("Cedar Letter"), { ...chartA, rising: null });
     expect(b.placements.map((p) => p.placement)).not.toContain("rising");
-    const expected =
-      (b.placements.reduce((a, p) => a + p.weight * p.signScore, 0) / 85) * 100;
+    const expected = (b.placements.reduce((a, p) => a + p.weight * p.signScore, 0) / 85) * 100;
     expect(b.chartScore).toBeCloseTo(expected, 6);
   });
   it("fewer than three eligible perfumes gives fewer entries", () => {

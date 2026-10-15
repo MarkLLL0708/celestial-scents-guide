@@ -1,10 +1,7 @@
 import type { Perfume, Prefs } from "@/data/types";
 
 export type Exclusion =
-  | { kind: "soldOut" }
-  | { kind: "avoid"; term: string }
-  | { kind: "style" }
-  | { kind: "budget" };
+  { kind: "soldOut" } | { kind: "avoid"; term: string } | { kind: "style" } | { kind: "budget" };
 
 /** Linear-interpolated quantile of sorted numbers. */
 function quantile(sorted: number[], q: number): number {
@@ -36,9 +33,7 @@ export function exclusionFor(
   if (p.sold_out) return { kind: "soldOut" };
   if (!prefs) return null;
   const text = searchText(p);
-  const term = prefs.avoid
-    .map((a) => a.trim().toLowerCase())
-    .find((a) => a && text.includes(a));
+  const term = prefs.avoid.map((a) => a.trim().toLowerCase()).find((a) => a && text.includes(a));
   if (term) return { kind: "avoid", term };
   if (prefs.style && prefs.style !== "any" && p.style !== prefs.style && p.style !== "unisex")
     return { kind: "style" };

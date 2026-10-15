@@ -1,6 +1,12 @@
 import { en } from "@/i18n/en";
 import { vi } from "@/i18n/vi";
-import { buildShelf, perfumeForRitual, ritualForPerfume, type MatchRitual, type Pick } from "@/lib/match/shelf";
+import {
+  buildShelf,
+  perfumeForRitual,
+  ritualForPerfume,
+  type MatchRitual,
+  type Pick,
+} from "@/lib/match/shelf";
 import { describePick } from "@/lib/match/text";
 import { parseCatalogue, type ImportError } from "@/lib/match/catalogue";
 import { applyFilters } from "@/lib/match/filters";
@@ -32,13 +38,7 @@ import type {
   Topic,
   Transit,
 } from "./types";
-import {
-  firstRitualOfTheme,
-  readingFor,
-  ritualFor,
-  ritualIds,
-  topics,
-} from "./astro-mock";
+import { firstRitualOfTheme, readingFor, ritualFor, ritualIds, topics } from "./astro-mock";
 export * from "./types";
 const wait = <T>(value: T): Promise<T> =>
   new Promise((resolve) => setTimeout(() => resolve(structuredClone(value)), 600));
@@ -161,7 +161,9 @@ const seedOf = (c: Chart, date: string) =>
   Math.floor(c.details.sun.longitude * 7 + c.details.moon.longitude * 3) +
   (Number(date.replaceAll("-", "")) % 97);
 const ritualForTheme = (theme: RitualTheme) => firstRitualOfTheme(theme);
-export async function listSavedCharts(): Promise<{ id: string; profile: BirthProfile; chart: Chart; date: string }[]> {
+export async function listSavedCharts(): Promise<
+  { id: string; profile: BirthProfile; chart: Chart; date: string }[]
+> {
   return wait([]);
 }
 export async function getCart(): Promise<CartItem[]> {
@@ -330,7 +332,11 @@ const toEntry = (pick: Pick | null, lang: "en" | "vi") => {
     ritualTitle: ritual?.title ?? "",
   };
 };
-export async function getShelf(chartId: string, lang: "en" | "vi", ritualId?: string): Promise<Shelf> {
+export async function getShelf(
+  chartId: string,
+  lang: "en" | "vi",
+  ritualId?: string,
+): Promise<Shelf> {
   const { chart, prefs } = loadChart(chartId);
   const ritual =
     matchRitual(ritualId ?? todayRitualId(chart), lang) ?? matchRitual(fallbackRitualId, lang);
@@ -346,8 +352,19 @@ export async function getShelf(chartId: string, lang: "en" | "vi", ritualId?: st
 export async function getPerfumeForRitual(ritualId: string, lang: "en" | "vi", chartId?: string) {
   const ritual = matchRitual(ritualId, lang);
   if (!ritual) throw new Error("NOT_FOUND");
-  const record = chartId && chartId !== DEMO_ID ? (() => { try { return loadChart(chartId); } catch { return null; } })() : null;
-  return wait(toEntry(perfumeForRitual(inventory, ritual, record?.chart ?? null, record?.prefs), lang));
+  const record =
+    chartId && chartId !== DEMO_ID
+      ? (() => {
+          try {
+            return loadChart(chartId);
+          } catch {
+            return null;
+          }
+        })()
+      : null;
+  return wait(
+    toEntry(perfumeForRitual(inventory, ritual, record?.chart ?? null, record?.prefs), lang),
+  );
 }
 /** Everything the /dev/match page shows. */
 export function getMatchDebug(chartId: string, ritualId: string, lang: "en" | "vi") {

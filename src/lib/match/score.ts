@@ -103,8 +103,10 @@ export function scorePerfume(p: Perfume, chart: MatchChart): ScoreBreakdown {
     };
   });
   const totalWeight = placements.reduce((a, x) => a + x.weight, 0);
-  const chartScore = (placements.reduce((a, x) => a + x.weight * x.signScore, 0) / totalWeight) * 100;
-  const intensityTarget = placements.reduce((a, x) => a + x.weight * x.intensityTarget, 0) / totalWeight;
+  const chartScore =
+    (placements.reduce((a, x) => a + x.weight * x.signScore, 0) / totalWeight) * 100;
+  const intensityTarget =
+    placements.reduce((a, x) => a + x.weight * x.intensityTarget, 0) / totalWeight;
   const intensityBonus = intensityBonusMax * (1 - Math.abs(p.intensity - intensityTarget) / 4);
   return {
     perfumeId: p.id,
@@ -132,7 +134,10 @@ export function shadowChart(c: MatchChart): MatchChart {
 }
 
 /** The placement (and sign) contributing most: largest weight × signScore. */
-export function strongestPlacement(b: ScoreBreakdown): { placement: MatchPlacement; parts: SignParts } {
+export function strongestPlacement(b: ScoreBreakdown): {
+  placement: MatchPlacement;
+  parts: SignParts;
+} {
   let best = { placement: b.placements[0].placement, parts: b.placements[0].signs[0], v: -1 };
   for (const pl of b.placements)
     for (const s of pl.signs) {
