@@ -540,15 +540,14 @@ const ritualText: Record<Lang, Record<string, RitualText>> = {
   },
 };
 
-const ritualMeta: Record<string, { theme: RitualTheme; durationMin: number; perfumeId: string }> =
-  {
-    "three-breath-doorway": { theme: "calm", durationMin: 2, perfumeId: "paper-woods" },
-    "first-date-pulse": { theme: "love", durationMin: 5, perfumeId: "white-margin" },
-    "clean-desk-scent": { theme: "work", durationMin: 3, perfumeId: "open-orbit" },
-    "coin-and-note": { theme: "luck", durationMin: 7, perfumeId: "velvet-error" },
-    "mirror-inventory": { theme: "self", durationMin: 4, perfumeId: "quiet-hide" },
-    "slow-evening": { theme: "evening", durationMin: 6, perfumeId: "after-hours" },
-  };
+const ritualMeta: Record<string, { theme: RitualTheme; durationMin: number; perfumeId: string }> = {
+  "three-breath-doorway": { theme: "calm", durationMin: 2, perfumeId: "paper-woods" },
+  "first-date-pulse": { theme: "love", durationMin: 5, perfumeId: "white-margin" },
+  "clean-desk-scent": { theme: "work", durationMin: 3, perfumeId: "open-orbit" },
+  "coin-and-note": { theme: "luck", durationMin: 7, perfumeId: "velvet-error" },
+  "mirror-inventory": { theme: "self", durationMin: 4, perfumeId: "quiet-hide" },
+  "slow-evening": { theme: "evening", durationMin: 6, perfumeId: "after-hours" },
+};
 export const ritualIds = Object.keys(ritualMeta);
 export const firstRitualOfTheme = (theme: RitualTheme): string =>
   ritualIds.find((id) => ritualMeta[id].theme === theme) ?? ritualIds[0];

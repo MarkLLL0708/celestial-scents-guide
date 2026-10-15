@@ -8,7 +8,8 @@ function Page() {
 }
 export const Route = createFileRoute("/shop/")({
   validateSearch: validatePreview,
-  loader: ({ context }) => context.queryClient.ensureQueryData(perfumeQuery({ family: "", style: "", maxPrice: 220 })),
+  loader: ({ context }) =>
+    context.queryClient.ensureQueryData(perfumeQuery({ family: "", style: "", maxPrice: 220 })),
   head: () => metadata("shop", "Perfumes from Atelier Sample."),
   component: Page,
 });
