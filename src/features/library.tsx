@@ -97,7 +97,7 @@ export function LibraryPage() {
       </div>
     );
   return (
-    <div className="wide stack">
+    <div className="wide stack library-page">
       <h1 className="xl">{t.libraryTitle}</h1>
       <div className="overflow-x-auto">
         <table className="w-full text-left">

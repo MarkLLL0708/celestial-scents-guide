@@ -172,21 +172,19 @@ export const generateLibrary = createServerFn({ method: "POST" })
           body = await generateText(key, data.kind, k, data.lang, signal);
           flags = validateText(data.kind, body);
         }
-        const { error } = await supabaseAdmin
-          .from("text_library")
-          .upsert(
-            {
-              kind: data.kind,
-              key: k,
-              lang: data.lang,
-              body,
-              flags,
-              model: LIBRARY_MODEL,
-              status: "draft",
-              updated_at: new Date().toISOString(),
-            },
-            { onConflict: "kind,key,lang" },
-          );
+        const { error } = await supabaseAdmin.from("text_library").upsert(
+          {
+            kind: data.kind,
+            key: k,
+            lang: data.lang,
+            body,
+            flags,
+            model: LIBRARY_MODEL,
+            status: "draft",
+            updated_at: new Date().toISOString(),
+          },
+          { onConflict: "kind,key,lang" },
+        );
         if (error) throw new Error(error.message);
         generated++;
         if (data.keys.length > 1) await new Promise((r) => setTimeout(r, 400));
