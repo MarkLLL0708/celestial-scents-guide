@@ -471,7 +471,7 @@ export function ResultPage({ id, state = "" }: { id: string; state?: string }) {
         </ul>
       </section>
 
-      <ScentCapsule chartId={id} compact />
+      {(journey.readingOpened || journey.ritualOpened) && <ScentCapsule chartId={id} compact />}
 
       <Link to="/today" className="today-strip">
         <span className="label">{t.movingToday}</span>
@@ -1000,6 +1000,7 @@ export function AskPage({ state = "" }: { state?: string }) {
               <Cell>
                 <p>{answer.answer}</p>
               </Cell>
+              <AskPairing chartId={chartId} ritualId={answer.ritualId} />
               <Cell>
                 <FeedbackRow thanks={t.readingThanks} />
                 <Disclaimer />
