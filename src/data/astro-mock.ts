@@ -550,6 +550,8 @@ const ritualMeta: Record<string, { theme: RitualTheme; durationMin: number; perf
     "slow-evening": { theme: "evening", durationMin: 6, perfumeId: "after-hours" },
   };
 export const ritualIds = Object.keys(ritualMeta);
+export const firstRitualOfTheme = (theme: RitualTheme): string =>
+  ritualIds.find((id) => ritualMeta[id].theme === theme) ?? ritualIds[0];
 export const ritualThemes: RitualTheme[] = ["calm", "love", "work", "luck", "self", "evening"];
 
 export function ritualFor(id: string, lang: Lang): Ritual | null {
