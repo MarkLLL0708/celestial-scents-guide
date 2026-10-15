@@ -2855,3 +2855,26 @@ h3 {
   .ask-tab.nn-text, .ask-tab { min-width: 72px; padding: 10px 8px; }
   .ask-question, .ask-question.nn-text { font-size: 14px; padding: 18px 8px; }
 }
+
+/* scent capsule: 3–5 perfumes after a reading */
+.capsule { display: flex; flex-direction: column; gap: 16px; }
+.capsule-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; }
+.capsule-card {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 20px;
+  border: var(--rule) solid var(--border);
+  padding: 16px;
+}
+.capsule-art { min-width: 0; }
+.capsule-body { display: flex; flex-direction: column; gap: 6px; min-width: 0; overflow-wrap: anywhere; }
+.capsule-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; margin-top: 10px; }
+.capsule-actions .nn-button, .capsule-cta .nn-button { width: auto; }
+.capsule-actions .quiet-link { margin: 0; }
+.capsule-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; padding: 20px; border: var(--rule) solid var(--foreground); }
+.ask-context { text-align: center; margin-bottom: 16px; }
+@media (max-width: 560px) {
+  .capsule-card { grid-template-columns: 1fr; }
+  .capsule-art { max-width: 140px; }
+  .capsule-cta .nn-button { width: 100%; }
+}
