@@ -3,7 +3,13 @@ import type { Perfume, Prefs } from "@/data/types";
 import { en } from "@/i18n/en";
 import { scorePerfume, type MatchChart } from "@/lib/match/score";
 import { applyFilters, priceTertiles } from "@/lib/match/filters";
-import { buildShelf, buildCapsule, CAPSULE_MIN, CAPSULE_MAX, type MatchRitual } from "@/lib/match/shelf";
+import {
+  buildShelf,
+  buildCapsule,
+  CAPSULE_MIN,
+  CAPSULE_MAX,
+  type MatchRitual,
+} from "@/lib/match/shelf";
 import { describePick } from "@/lib/match/text";
 import { parseCatalogue } from "@/lib/match/catalogue";
 

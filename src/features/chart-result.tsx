@@ -283,9 +283,7 @@ export function ScentCapsule({
       <h2 id="capsule-title" className="label section-heading">
         {t.capsuleTitle}
       </h2>
-      <p className="small muted">
-        {t.capsuleLead.replace("{n}", String(q.data?.length ?? 5))}
-      </p>
+      <p className="small muted">{t.capsuleLead.replace("{n}", String(q.data?.length ?? 5))}</p>
       {q.isPending ? (
         <div className="stack">
           <Skeleton />
@@ -1058,31 +1056,31 @@ export function AskPage({ state = "" }: { state?: string }) {
       </div>
 
       {own && (
-      <form
-        className="ask-bar"
-        onSubmit={(e) => {
-          e.preventDefault();
-          void ask(question);
-        }}
-      >
-        <label className="sr-only" htmlFor="ask-input">
-          {t.askQuestionLabel}
-        </label>
-        <input
-          id="ask-input"
-          className="ask-input"
-          value={question}
-          onChange={(e) => setQuestion(e.target.value)}
-          placeholder={t.askPlaceholder}
-        />
-        <Button
-          type="submit"
-          className="ask-submit"
-          disabled={!question.trim() || phase === "loading"}
+        <form
+          className="ask-bar"
+          onSubmit={(e) => {
+            e.preventDefault();
+            void ask(question);
+          }}
         >
-          {t.askButton}
-        </Button>
-      </form>
+          <label className="sr-only" htmlFor="ask-input">
+            {t.askQuestionLabel}
+          </label>
+          <input
+            id="ask-input"
+            className="ask-input"
+            value={question}
+            onChange={(e) => setQuestion(e.target.value)}
+            placeholder={t.askPlaceholder}
+          />
+          <Button
+            type="submit"
+            className="ask-submit"
+            disabled={!question.trim() || phase === "loading"}
+          >
+            {t.askButton}
+          </Button>
+        </form>
       )}
     </div>
   );
@@ -1291,11 +1289,12 @@ export function RitualPage({ id, state = "" }: { id: string; state?: string }) {
       <p className="muted italic">{r.why}</p>
       <p className="small muted">{t.anyPerfume}</p>
 
-      {perfume && (state === "sold-out" ? (
-        <ScentThatFits perfume={perfume} reason={q.data.reason || r.reason} />
-      ) : (
-        <ScentCapsule chartId={chartId} ritualId={r.id} withPrice cta="ask" />
-      ))}
+      {perfume &&
+        (state === "sold-out" ? (
+          <ScentThatFits perfume={perfume} reason={q.data.reason || r.reason} />
+        ) : (
+          <ScentCapsule chartId={chartId} ritualId={r.id} withPrice cta="ask" />
+        ))}
 
       <div className="stack">
         <Button
