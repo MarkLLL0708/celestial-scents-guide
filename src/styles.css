@@ -2814,3 +2814,32 @@ h3 {
     justify-content: flex-end;
   }
 }
+
+/* ---- ask: spacious, centered layout ---- */
+.ask-screen { position: relative; isolation: isolate; }
+.ask-stars { position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: 0.6; }
+.ask-body { max-width: 720px; padding-top: 48px; text-align: center; }
+.ask-tabs { justify-content: center; gap: 8px; margin-bottom: 48px; }
+.ask-tab.nn-text, .ask-tab { min-width: 88px; min-height: 80px; padding: 12px 16px; border: var(--rule) solid transparent; font-size: 13px; letter-spacing: 0.12em; }
+.ask-tab-active.nn-text, .ask-tab-active { border-color: var(--text); }
+.ask-list > .label { display: block; text-align: center; letter-spacing: 0.16em; margin-bottom: 8px; }
+.ask-list ul { display: flex; flex-direction: column; align-items: stretch; margin-top: 16px; }
+.ask-list li + li { border-top: var(--rule) solid var(--border); }
+.ask-question, .ask-question.nn-text {
+  width: 100%; justify-content: center; text-align: center; white-space: normal;
+  min-height: 64px; padding: 20px 12px; font-size: 15px; line-height: 24px;
+  letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; border: 0;
+}
+.ask-question:hover, .ask-question.nn-text:hover { color: var(--accent-invert); text-decoration: underline; text-underline-offset: 6px; }
+.ask-loading { padding: 48px 0; gap: 24px; align-items: center; }
+.ask-answer { text-align: left; }
+.ask-answer .question { font-size: 18px; line-height: 28px; text-align: center; }
+.ask-answer p { line-height: 26px; }
+.ask-bar { padding: 16px var(--page-pad) calc(16px + env(safe-area-inset-bottom)); gap: 12px; justify-content: center; }
+.ask-input { min-height: 52px; font-size: 15px; padding: 0 16px; flex: 1; max-width: 600px; border: var(--rule) solid var(--border); }
+.ask-submit { min-height: 52px; padding: 0 24px; }
+@media (max-width: 767px) {
+  .ask-body { padding-top: 32px; }
+  .ask-tab.nn-text, .ask-tab { min-width: 72px; padding: 10px 8px; }
+  .ask-question, .ask-question.nn-text { font-size: 14px; padding: 18px 8px; }
+}
