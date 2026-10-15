@@ -1539,3 +1539,34 @@ export function ShareDialog({
     </ScentDialog>
   );
 }
+
+/** Names the ritual and the top perfume picked for this chart under an Ask answer. */
+function AskPairing({ chartId, ritualId }: { chartId: string; ritualId: string }) {
+  const { t, lang } = useLanguage();
+  const ritualQ = useQuery({
+    queryKey: ["ritual", ritualId, lang],
+    queryFn: () => api.getRitual(ritualId, lang),
+  });
+  const capsuleQ = useQuery({
+    queryKey: ["capsule", chartId, ritualId, lang],
+    queryFn: () => api.getCapsule(chartId, lang, ritualId),
+  });
+  const pick = capsuleQ.data?.[0];
+  if (!ritualQ.data || !pick) return null;
+  const notes = [...pick.perfume.top_notes, ...pick.perfume.heart_notes].slice(0, 3).join(", ");
+  return (
+    <div className="cell ask-pairing">
+      <p className="label muted">{t.askPairTitle}</p>
+      <p>
+        {t.askPairLine
+          .replace("{ritual}", ritualQ.data.title)
+          .replace("{perfume}", pick.perfume.name)
+          .replace("{notes}", notes)}
+      </p>
+      <p className="small muted">{pick.reason}</p>
+      <Link to="/shop/$id" params={{ id: pick.perfume.id }} className="label">
+        {t.askPairBottle}
+      </Link>
+    </div>
+  );
+}
