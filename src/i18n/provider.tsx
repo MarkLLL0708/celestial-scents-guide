@@ -1,14 +1,15 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { useContext, useEffect, useState, type ReactNode } from "react";
 import { en, type Dictionary, type TranslationKey } from "./en";
 import { vi } from "./vi";
+import { stableContext } from "@/lib/stable-context";
 type Lang = "en" | "vi";
 const LANG_KEY = "natal-notes:lang";
-const Context = createContext<{
+const Context = stableContext<{
   lang: Lang;
   setLang: (l: Lang) => void;
   t: Dictionary;
   word: (key: string) => string;
-}>({ lang: "en", setLang: () => {}, t: en, word: (k) => k });
+}>("NatalLanguage", { lang: "en", setLang: () => {}, t: en, word: (k) => k });
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [lang, setLanguage] = useState<Lang>("en");
   const t = lang === "en" ? en : vi;

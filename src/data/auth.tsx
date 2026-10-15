@@ -1,10 +1,11 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { useContext, useEffect, useState, type ReactNode } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "@tanstack/react-router";
 import type { User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
+import { stableContext } from "@/lib/stable-context";
 
-const AuthContext = createContext<{ user: User | null; ready: boolean }>({
+const AuthContext = stableContext<{ user: User | null; ready: boolean }>("NatalAuth", {
   user: null,
   ready: false,
 });
