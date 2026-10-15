@@ -22,6 +22,7 @@ import { Route as ChartLoadingRouteImport } from './routes/chart.loading'
 import { Route as ChartNewRouteImport } from './routes/chart.new'
 import { Route as ChartRevealRouteImport } from './routes/chart.reveal'
 import { Route as DevChartRouteImport } from './routes/dev.chart'
+import { Route as DevMatchRouteImport } from './routes/dev.match'
 import { Route as RitualsIndexRouteImport } from './routes/rituals.index'
 import { Route as RitualsIdRouteImport } from './routes/rituals.$id'
 import { Route as ShopIndexRouteImport } from './routes/shop.index'
@@ -95,6 +96,11 @@ const DevChartRoute = DevChartRouteImport.update({
   path: '/dev/chart',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DevMatchRoute = DevMatchRouteImport.update({
+  id: '/dev/match',
+  path: '/dev/match',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RitualsIndexRoute = RitualsIndexRouteImport.update({
   id: '/rituals/',
   path: '/rituals/',
@@ -145,6 +151,7 @@ export interface FileRoutesByFullPath {
   '/chart/new': typeof ChartNewRoute
   '/chart/reveal': typeof ChartRevealRoute
   '/dev/chart': typeof DevChartRoute
+  '/dev/match': typeof DevMatchRoute
   '/rituals/$id': typeof RitualsIdRoute
   '/shop/$id': typeof ShopIdRoute
   '/rituals/': typeof RitualsIndexRoute
@@ -166,6 +173,7 @@ export interface FileRoutesByTo {
   '/chart/new': typeof ChartNewRoute
   '/chart/reveal': typeof ChartRevealRoute
   '/dev/chart': typeof DevChartRoute
+  '/dev/match': typeof DevMatchRoute
   '/rituals/$id': typeof RitualsIdRoute
   '/shop/$id': typeof ShopIdRoute
   '/rituals': typeof RitualsIndexRoute
@@ -189,6 +197,7 @@ export interface FileRoutesById {
   '/chart/new': typeof ChartNewRoute
   '/chart/reveal': typeof ChartRevealRoute
   '/dev/chart': typeof DevChartRoute
+  '/dev/match': typeof DevMatchRoute
   '/rituals/$id': typeof RitualsIdRoute
   '/shop/$id': typeof ShopIdRoute
   '/rituals/': typeof RitualsIndexRoute
@@ -213,6 +222,7 @@ export interface FileRouteTypes {
     | '/chart/new'
     | '/chart/reveal'
     | '/dev/chart'
+    | '/dev/match'
     | '/rituals/$id'
     | '/shop/$id'
     | '/rituals/'
@@ -234,6 +244,7 @@ export interface FileRouteTypes {
     | '/chart/new'
     | '/chart/reveal'
     | '/dev/chart'
+    | '/dev/match'
     | '/rituals/$id'
     | '/shop/$id'
     | '/rituals'
@@ -256,6 +267,7 @@ export interface FileRouteTypes {
     | '/chart/new'
     | '/chart/reveal'
     | '/dev/chart'
+    | '/dev/match'
     | '/rituals/$id'
     | '/shop/$id'
     | '/rituals/'
@@ -279,6 +291,7 @@ export interface RootRouteChildren {
   ChartNewRoute: typeof ChartNewRoute
   ChartRevealRoute: typeof ChartRevealRoute
   DevChartRoute: typeof DevChartRoute
+  DevMatchRoute: typeof DevMatchRoute
   RitualsIdRoute: typeof RitualsIdRoute
   RitualsIndexRoute: typeof RitualsIndexRoute
   ChartResultIdRoute: typeof ChartResultIdRoute
@@ -379,6 +392,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DevChartRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dev/match': {
+      id: '/dev/match'
+      path: '/dev/match'
+      fullPath: '/dev/match'
+      preLoaderRoute: typeof DevMatchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/rituals/': {
       id: '/rituals/'
       path: '/rituals'
@@ -457,6 +477,7 @@ const rootRouteChildren: RootRouteChildren = {
   ChartNewRoute: ChartNewRoute,
   ChartRevealRoute: ChartRevealRoute,
   DevChartRoute: DevChartRoute,
+  DevMatchRoute: DevMatchRoute,
   RitualsIdRoute: RitualsIdRoute,
   RitualsIndexRoute: RitualsIndexRoute,
   ChartResultIdRoute: ChartResultIdRoute,
