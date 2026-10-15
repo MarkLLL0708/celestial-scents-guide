@@ -26,3 +26,4 @@
 - Shop uses an Outlet-only parent with separate index listing and product leaves, so details render correctly; keep filtered results visible with React transitions while replacement data loads.
 - Shared back navigation lives in the root shell, with questionnaire and Ask controls kept in their own headers so every content page has a way back.
 - Cloud stores only explicit privacy-safe chart projections; birth inputs and location context remain browser-only, and saved charts use UTC as a neutral display context when reopened.
+- Shared React contexts are created with stableContext() so they keep the same identity across hot reloads; otherwise providers and consumers drift apart and the preview blanks.
