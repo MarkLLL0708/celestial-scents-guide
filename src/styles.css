@@ -263,3 +263,14 @@ h1,h2,h3{font-family:var(--font-mono)}
 .section,.section-heading,.plain-row,.note-row,.collection-title,.hero-bottom,.site-header,.site-footer,.placement-expand{border-color:color-mix(in oklab,var(--border) 28%,transparent)}
 .section .section-heading,.section>.section-heading:first-child{border-top:0;padding-top:0}
 .plain-row:last-child{border-bottom:0}
+
+/* chart check page */
+.dev-grid{display:grid;gap:var(--space-4,16px);grid-template-columns:1fr}
+@media (min-width:768px){.dev-grid{grid-template-columns:1fr 1fr}}
+.dev-field .input{width:100%;background:transparent;color:inherit;border:0;border-bottom:1px solid var(--border);padding:8px 0;font:inherit}
+.dev-field .input:focus-visible{outline:2px solid var(--focus,currentColor);outline-offset:2px}
+.dev-meta{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;overflow-wrap:anywhere}
+.dev-table-wrap{max-width:100%;overflow-x:auto}
+.dev-table{width:100%;border-collapse:collapse;font-size:13px}
+.dev-table th,.dev-table td{border-bottom:1px solid var(--border);padding:6px 8px;text-align:left;font-weight:400;overflow-wrap:anywhere}
+.placement-line{margin-top:8px}
