@@ -1,3 +1,4 @@
+import type React from "react";
 import { createContext, useContext, useState, type ReactNode } from "react";
 import * as api from "./api";
 import type { BirthProfile, Prefs, ChartResult, CartItem } from "./types";
@@ -35,7 +36,9 @@ export interface Journey {
   readingOpened: boolean;
   ritualOpened: boolean;
 }
-const Context = createContext<Store | null>(null);
+// Keep one context object across hot reloads so live providers and consumers always match.
+const globalStore = globalThis as { __natalStoreContext?: React.Context<Store | null> };
+const Context = (globalStore.__natalStoreContext ??= createContext<Store | null>(null));
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [profile, setProfile] = useState(initialProfile);
   const [prefs, setPrefs] = useState(initialPrefs);
