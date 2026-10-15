@@ -919,11 +919,11 @@ export function RitualPage({ id, state = "" }: { id: string; state?: string }) {
   }, [state, id]);
   const [saved, setSaved] = useState(false);
   const q = useQuery({
-    queryKey: ["ritual-full", id, lang],
+    queryKey: ["ritual-full", id, lang, chartId],
     queryFn: async () => {
       const ritual = await api.getRitual(id, lang);
-      const perfume = await api.getPerfume(ritual.perfumeId);
-      return { ritual, perfume };
+      const match = await api.getPerfumeForRitual(id, lang, chartId);
+      return { ritual, perfume: match?.perfume ?? null, reason: match?.reason ?? "" };
     },
     retry: false,
   });
@@ -1000,7 +1000,7 @@ export function RitualPage({ id, state = "" }: { id: string; state?: string }) {
       <p className="muted italic">{r.why}</p>
       <p className="small muted">{t.anyPerfume}</p>
 
-      {perfume && <ScentThatFits perfume={perfume} reason={r.reason} />}
+      {perfume && <ScentThatFits perfume={perfume} reason={q.data.reason || r.reason} />}
 
       <div className="stack">
         <Button
@@ -1032,6 +1032,21 @@ export function RitualPage({ id, state = "" }: { id: string; state?: string }) {
 }
 
 /* ---------- shelf ---------- */
+function SampleButton({ perfume }: { perfume: Perfume }) {
+  const { t } = useLanguage();
+  const { add, notify } = useStore();
+  return (
+    <Button
+      variant="secondary"
+      onClick={async () => {
+        await add(perfume.id);
+        notify(t.added);
+      }}
+    >
+      {t.addSample}
+    </Button>
+  );
+}
 export function ShelfPage({ id, state = "" }: { id: string; state?: string }) {
   const { t, lang, word } = useLanguage();
   const [forced, setForced] = useState(state);
@@ -1082,11 +1097,7 @@ export function ShelfPage({ id, state = "" }: { id: string; state?: string }) {
                   <p className="label">{label}</p>
                 </div>
                 <div className="evidence-cell">
-                  <span className="label">
-                    {glyphs[e.evidence?.planet ?? "sun"]}{" "}
-                    {t[planetKey(e.evidence?.planet ?? "sun")]}{" "}
-                    {word(e.evidence?.sign ?? "").toUpperCase()}
-                  </span>
+                  <span className="label">{e.evidence}</span>
                   <span className="small">{e.reason}</span>
                 </div>
                 <div className="shelf-body">
@@ -1106,8 +1117,15 @@ export function ShelfPage({ id, state = "" }: { id: string; state?: string }) {
                     <Notes perfume={e.perfume} />
                     <p>
                       ${e.perfume.price} · {e.perfume.size_ml} ml
+                      {e.perfume.sample_price !== undefined &&
+                        ` · ${t.samplePrice.replace("{price}", String(e.perfume.sample_price))}`}
                     </p>
-                    <AddButton perfume={e.perfume} />
+                    <div className="fit-actions">
+                      <AddButton perfume={e.perfume} />
+                      {e.perfume.sample_price !== undefined && !e.perfume.sold_out && (
+                        <SampleButton perfume={e.perfume} />
+                      )}
+                    </div>
                   </div>
                 </div>
               </article>

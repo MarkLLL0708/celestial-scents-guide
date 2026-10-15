@@ -468,7 +468,6 @@ export function SavedList({ state = "" }: { state?: string }) {
                     .map((s) => (s ? word(s) : "—"))
                     .join(" / ")}
                 </p>
-                <p className="small muted">{r.recs.signature.perfume.name}</p>
               </div>
               <ArrowRight size={18} />
             </Link>
@@ -549,11 +548,11 @@ export function AdminPage({ state = "" }: { state?: string }) {
   const [upload, setUpload] = useState(state === "import-errors" || state === "importing");
   const [file, setFile] = useState<File | null>(null);
   const [busy, setBusy] = useState(false);
-  const [errors, setErrors] = useState<{ row: number; message: string }[]>(
+  const [errors, setErrors] = useState<{ row: number; field: string; value: string }[]>(
     state === "import-errors"
       ? [
-          { row: 2, message: "importError" },
-          { row: 4, message: "importError" },
+          { row: 2, field: "scent_family", value: "Smoky" },
+          { row: 4, field: "mood_tags", value: "loud" },
         ]
       : [],
   );
@@ -660,7 +659,7 @@ export function AdminPage({ state = "" }: { state?: string }) {
           <ul className="small field-error" role="alert">
             {errors.map((e) => (
               <li key={e.row}>
-                {t.row} {e.row}: {word(e.message)}
+                {t.row} {e.row}: {word("importError")} ({e.field} “{e.value}”)
               </li>
             ))}
           </ul>

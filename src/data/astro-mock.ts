@@ -540,13 +540,13 @@ const ritualText: Record<Lang, Record<string, RitualText>> = {
   },
 };
 
-const ritualMeta: Record<string, { theme: RitualTheme; durationMin: number; perfumeId: string }> = {
-  "three-breath-doorway": { theme: "calm", durationMin: 2, perfumeId: "paper-woods" },
-  "first-date-pulse": { theme: "love", durationMin: 5, perfumeId: "white-margin" },
-  "clean-desk-scent": { theme: "work", durationMin: 3, perfumeId: "open-orbit" },
-  "coin-and-note": { theme: "luck", durationMin: 7, perfumeId: "velvet-error" },
-  "mirror-inventory": { theme: "self", durationMin: 4, perfumeId: "quiet-hide" },
-  "slow-evening": { theme: "evening", durationMin: 6, perfumeId: "after-hours" },
+const ritualMeta: Record<string, { theme: RitualTheme; durationMin: number }> = {
+  "three-breath-doorway": { theme: "calm", durationMin: 2 },
+  "first-date-pulse": { theme: "love", durationMin: 5 },
+  "clean-desk-scent": { theme: "work", durationMin: 3 },
+  "coin-and-note": { theme: "luck", durationMin: 7 },
+  "mirror-inventory": { theme: "self", durationMin: 4 },
+  "slow-evening": { theme: "evening", durationMin: 6 },
 };
 export const ritualIds = Object.keys(ritualMeta);
 export const firstRitualOfTheme = (theme: RitualTheme): string =>
@@ -558,37 +558,3 @@ export function ritualFor(id: string, lang: Lang): Ritual | null {
   if (!meta) return null;
   return { id, ...meta, ...ritualText[lang][id] };
 }
-
-const shelfText: Record<Lang, { chart: string; week: string; shadow: string }> = {
-  en: {
-    chart: "for the cancer moon: soft, close, the same every day.",
-    week: "for transiting venus trine your moon: light enough to wear to the thing you nearly cancelled.",
-    shadow: "for mars in gemini, the side that talks fast and wants something sharper.",
-  },
-  vi: {
-    chart: "cho mặt trăng cự giải: mềm, gần, ngày nào cũng như nhau.",
-    week: "cho kim tinh quá cảnh tam hợp mặt trăng: đủ nhẹ để dùng cho cuộc hẹn bạn suýt hủy.",
-    shadow: "cho hỏa tinh song tử, phía nói nhanh và muốn điều gì sắc hơn.",
-  },
-};
-export const shelfPlan = {
-  forChart: {
-    perfumeId: "white-margin",
-    ritualId: "slow-evening",
-    planet: "moon" as const,
-    sign: "Cancer",
-  },
-  forWeek: {
-    perfumeId: "salt-index",
-    ritualId: "coin-and-note",
-    planet: "venus" as const,
-    sign: "Pisces",
-  },
-  forShadow: {
-    perfumeId: "velvet-error",
-    ritualId: "first-date-pulse",
-    planet: "mars" as const,
-    sign: "Gemini",
-  },
-};
-export const shelfReason = (lang: Lang) => shelfText[lang];

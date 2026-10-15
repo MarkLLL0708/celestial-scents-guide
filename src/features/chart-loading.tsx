@@ -30,7 +30,7 @@ export function ChartLoading() {
   const [reduced, setReduced] = useState(false);
   const [failed, setFailed] = useState(false);
   const [attempt, setAttempt] = useState(0);
-  const { profile } = useStore();
+  const { profile, prefs } = useStore();
 
   useEffect(() => {
     let cancelled = false;
@@ -38,7 +38,7 @@ export function ChartLoading() {
     void (async () => {
       try {
         const chart = await api.computeChart(profile);
-        if (!cancelled) api.storeChart(profile.name, chart);
+        if (!cancelled) api.storeChart(profile.name, chart, prefs);
       } catch {
         if (!cancelled) setFailed(true);
       }
@@ -46,7 +46,7 @@ export function ChartLoading() {
     return () => {
       cancelled = true;
     };
-  }, [profile, attempt]);
+  }, [profile, prefs, attempt]);
 
   useEffect(() => {
     if (failed) return;
