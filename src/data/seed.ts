@@ -1,4 +1,5 @@
-import type { Perfume, Chart } from "./types";
+import type { Perfume, Chart, CityHit } from "./types";
+import { buildChart } from "@/lib/astro/to-chart";
 const entries: [
   string,
   string,
@@ -159,38 +160,99 @@ export const perfumes: Perfume[] = entries.map((p, i) => ({
   intensity: (i % 5) + 1,
   sold_out: i === 9,
 }));
-export const demoChart: Chart = {
-  sun: "Aquarius",
-  moon: "Cancer",
-  rising: "Libra",
-  venus: "Pisces",
-  mars: "Gemini",
-  mercury: "Capricorn",
-  jupiter: "Sagittarius",
-  saturn: "Pisces",
-  degrees: {
-    sun: 25,
-    moon: 8,
-    rising: 17,
-    venus: 14,
-    mars: 3,
-    mercury: 29,
-    jupiter: 11,
-    saturn: 22,
+// Demo chart: Hanoi, 14 Feb 1992, 08:30 local — computed by the real engine.
+export const demoChart: Chart = buildChart({
+  year: 1992,
+  month: 2,
+  day: 14,
+  hour: 8,
+  minute: 30,
+  lat: 21.0285,
+  lon: 105.8542,
+  timezone: "Asia/Bangkok",
+});
+// Fallback list when the city search service cannot be reached.
+export const cities: CityHit[] = [
+  {
+    city: "Hanoi",
+    region: "Hanoi",
+    country: "Vietnam",
+    lat: 21.0285,
+    lon: 105.8542,
+    timezone: "Asia/Bangkok",
   },
-  elements: { fire: 15, earth: 20, air: 40, water: 25 },
-};
-export const cities = [
-  { city: "Hanoi", region: "Hoàn Kiếm", country: "Vietnam" },
-  { city: "Ho Chi Minh City", region: "District 1", country: "Vietnam" },
-  { city: "Da Nang", region: "Hải Châu", country: "Vietnam" },
-  { city: "Singapore", region: "Central Region", country: "Singapore" },
-  { city: "Shanghai", region: "Huangpu", country: "China" },
-  { city: "Hong Kong", region: "Central and Western", country: "China" },
-  { city: "Tokyo", region: "Chiyoda", country: "Japan" },
-  { city: "Bangkok", region: "Phra Nakhon", country: "Thailand" },
-  { city: "London", region: "Westminster", country: "United Kingdom" },
-  { city: "New York", region: "Manhattan", country: "United States" },
+  {
+    city: "Ho Chi Minh City",
+    region: "Ho Chi Minh",
+    country: "Vietnam",
+    lat: 10.8231,
+    lon: 106.6297,
+    timezone: "Asia/Ho_Chi_Minh",
+  },
+  {
+    city: "Da Nang",
+    region: "Da Nang",
+    country: "Vietnam",
+    lat: 16.0544,
+    lon: 108.2022,
+    timezone: "Asia/Ho_Chi_Minh",
+  },
+  {
+    city: "Singapore",
+    region: "Central Region",
+    country: "Singapore",
+    lat: 1.2897,
+    lon: 103.8501,
+    timezone: "Asia/Singapore",
+  },
+  {
+    city: "Shanghai",
+    region: "Shanghai",
+    country: "China",
+    lat: 31.2222,
+    lon: 121.4581,
+    timezone: "Asia/Shanghai",
+  },
+  {
+    city: "Hong Kong",
+    region: "Central and Western",
+    country: "China",
+    lat: 22.2783,
+    lon: 114.1747,
+    timezone: "Asia/Hong_Kong",
+  },
+  {
+    city: "Tokyo",
+    region: "Tokyo",
+    country: "Japan",
+    lat: 35.6895,
+    lon: 139.6917,
+    timezone: "Asia/Tokyo",
+  },
+  {
+    city: "Bangkok",
+    region: "Bangkok",
+    country: "Thailand",
+    lat: 13.7563,
+    lon: 100.5018,
+    timezone: "Asia/Bangkok",
+  },
+  {
+    city: "London",
+    region: "England",
+    country: "United Kingdom",
+    lat: 51.5074,
+    lon: -0.1278,
+    timezone: "Europe/London",
+  },
+  {
+    city: "New York",
+    region: "New York",
+    country: "United States",
+    lat: 40.7128,
+    lon: -74.006,
+    timezone: "America/New_York",
+  },
 ];
 
 export const cityLabel = (c: { city: string; region: string; country: string }) =>
