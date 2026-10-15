@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, type ReactNode } from "react";
 import * as api from "./api";
 import type { BirthProfile, Prefs, ChartResult, CartItem } from "./types";
+import { useAccount } from "./auth";
 const initialProfile: BirthProfile = {
   name: "",
   day: 0,
@@ -20,7 +21,6 @@ interface Store {
   result: ChartResult | null;
   setResult: (r: ChartResult) => void;
   user: boolean;
-  setUser: (v: boolean) => void;
   cartItems: CartItem[];
   setCartItems: (v: CartItem[]) => void;
   add: (id: string) => Promise<void>;
@@ -40,7 +40,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [profile, setProfile] = useState(initialProfile);
   const [prefs, setPrefs] = useState(initialPrefs);
   const [result, setResult] = useState<ChartResult | null>(null);
-  const [user, setUser] = useState(false);
+  const { user: account } = useAccount();
+  const user = !!account;
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [notice, setNotice] = useState<Store["notice"]>(null);
   const [journey, setJourney] = useState<Journey>({
@@ -60,7 +61,6 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         result,
         setResult,
         user,
-        setUser,
         cartItems,
         setCartItems,
         add,

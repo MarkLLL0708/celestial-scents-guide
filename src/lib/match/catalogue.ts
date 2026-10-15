@@ -54,6 +54,9 @@ export function parseCatalogue(text: string): { perfumes: Perfume[]; errors: Imp
     if (!(STYLES as readonly string[]).includes(o.style)) err("style");
     const price = Number(o.price);
     if (!Number.isFinite(price) || price <= 0) err("price");
+    const size = Number(o.size_ml);
+    if (!Number.isFinite(size) || size <= 0) err("size_ml");
+    if (!["TRUE", "FALSE"].includes((o.sold_out ?? "").toUpperCase())) err("sold_out");
     const intensity = Number(o.intensity);
     if (!Number.isInteger(intensity) || intensity < 1 || intensity > 5) err("intensity");
     const moods = list(o.mood_tags ?? "");
@@ -71,7 +74,7 @@ export function parseCatalogue(text: string): { perfumes: Perfume[]; errors: Imp
       brand: o.brand || "",
       price,
       currency: o.currency || "USD",
-      size_ml: Number(o.size_ml) || 0,
+      size_ml: size,
       scent_family: o.scent_family,
       style: o.style as Perfume["style"],
       intensity,

@@ -23,3 +23,5 @@
 - Reading paragraphs, ritual copy and the today/ask text bank are placeholder text (astro-mock.ts, lib/astro/text-bank.ts) chosen by real aspect themes, so AI-written text can replace them later.
 - Soft-sell limits live in src/lib/sellRules.ts (tested); ProductCard hides itself on no-sell screens, so new screens inherit the rule.
 - Shop uses an Outlet-only parent with separate index listing and product leaves, so details render correctly; keep filtered results visible with React transitions while replacement data loads.
+- Shared back navigation lives in the root shell, with questionnaire and Ask controls kept in their own headers so every content page has a way back.
+- Cloud stores only explicit privacy-safe chart projections; birth inputs and location context remain browser-only, and saved charts use UTC as a neutral display context when reopened.

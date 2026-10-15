@@ -1,0 +1,34 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1792067747185,
+      "tag": "0000_natal_accounts_and_catalogue",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1792067951844,
+      "tag": "0001_chart_position_privacy_guard",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1792068174609,
+      "tag": "0002_restrict_privileged_function_execution",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1792068642859,
+      "tag": "0003_safe_recursive_birth_privacy",
+      "breakpoints": true
+    }
+  ]
+}

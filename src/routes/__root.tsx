@@ -15,10 +15,11 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { LanguageProvider, useLanguage } from "@/i18n/provider";
 import { StoreProvider } from "@/data/context";
-import { Header, Footer, Toast, TabBar } from "@/components/scent/shell";
+import { Header, Footer, Toast, TabBar, PageBack } from "@/components/scent/shell";
 import { Button } from "@/components/ui/button";
 import { StarField } from "@/components/scent/cosmos";
 import { themeFor, bareRoutes } from "@/lib/theme";
+import { AuthProvider } from "@/data/auth";
 
 function NotFoundComponent() {
   const { t } = useLanguage();
@@ -132,18 +133,21 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <LanguageProvider>
-        <StoreProvider>
-          <div className="theme-shell" data-theme={theme}>
-            {theme === "dark" && <StarField />}
-            {!bare && <Header />}
-            <main id="main-content">
-              <Outlet />
-            </main>
-            {!bare && <Footer />}
-            {!bare && <TabBar />}
-            <Toast />
-          </div>
-        </StoreProvider>
+        <AuthProvider>
+          <StoreProvider>
+            <div className="theme-shell" data-theme={theme}>
+              {theme === "dark" && <StarField />}
+              {!bare && <Header />}
+              <main id="main-content">
+                <PageBack />
+                <Outlet />
+              </main>
+              {!bare && <Footer />}
+              {!bare && <TabBar />}
+              <Toast />
+            </div>
+          </StoreProvider>
+        </AuthProvider>
       </LanguageProvider>
     </QueryClientProvider>
   );
