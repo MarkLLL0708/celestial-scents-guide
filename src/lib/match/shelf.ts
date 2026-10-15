@@ -155,3 +155,45 @@ export function ritualForPerfume(p: Perfume, rituals: MatchRitual[]): MatchRitua
 }
 
 export { strongestPlacement };
+
+/** Capsule size after a reading: at least three, at most five perfumes. */
+export const CAPSULE_MIN = 3;
+export const CAPSULE_MAX = 5;
+
+/**
+ * The 3–5 perfumes shown after a reading: the three shelf picks first
+ * (chart, this week's ritual, other side), then the next best ritual blends.
+ */
+export function buildCapsule(
+  catalogue: Perfume[],
+  chart: MatchChart,
+  prefs: Prefs | undefined,
+  ritual: MatchRitual,
+): Pick[] {
+  const shelf = buildShelf(catalogue, chart, prefs, ritual);
+  const out: Pick[] = [shelf.forChart, shelf.forWeek, shelf.forShadow].filter(
+    (p): p is Pick => p !== null,
+  );
+  const taken = new Set(out.map((p) => p.perfume.id));
+  const { eligible } = applyFilters(catalogue, prefs);
+  const rest = eligible
+    .filter((p) => !taken.has(p.id))
+    .map((p) => {
+      const breakdown = scorePerfume(p, chart);
+      const rn = ritualNotes(p, ritual);
+      return { perfume: p, breakdown, matched: rn.matched, v: weekScore(breakdown.total, rn.score) };
+    })
+    .sort((a, b) => b.v - a.v || a.perfume.id.localeCompare(b.perfume.id));
+  for (const x of rest) {
+    if (out.length >= CAPSULE_MAX) break;
+    out.push({
+      kind: "week",
+      perfume: x.perfume,
+      score: x.v,
+      breakdown: x.breakdown,
+      ritual,
+      matched: x.matched,
+    });
+  }
+  return out.slice(0, CAPSULE_MAX);
+}

@@ -7,6 +7,7 @@ import { chartFromStorage, recordForStorage } from "./chart-privacy";
 import { vi } from "@/i18n/vi";
 import {
   buildShelf,
+  buildCapsule,
   perfumeForRitual,
   ritualForPerfume,
   type MatchRitual,
@@ -45,6 +46,7 @@ import type {
 } from "./types";
 import { firstRitualOfTheme, readingFor, ritualFor, ritualIds, topics } from "./astro-mock";
 export * from "./types";
+import { perfumes as samplePerfumes } from "./seed";
 const wait = <T>(value: T): Promise<T> =>
   new Promise((resolve) => setTimeout(() => resolve(structuredClone(value)), 600));
 let inventory: Perfume[] = [];
@@ -54,7 +56,22 @@ export async function getPerfumes(filters?: {
   style?: string;
   maxPrice?: number;
 }): Promise<Perfume[]> {
-  const rows = await cloud.publicPerfumes();
+  let rows: Awaited<ReturnType<typeof cloud.publicPerfumes>> = [];
+  try {
+    rows = await cloud.publicPerfumes();
+  } catch {
+    rows = [];
+  }
+  // Until a catalogue is uploaded, the sample catalogue keeps picks and shop filled.
+  if (!rows.length) {
+    inventory = structuredClone(samplePerfumes);
+    return inventory.filter(
+      (p) =>
+        (!filters?.family || p.scent_family === filters.family) &&
+        (!filters?.style || p.style === filters.style) &&
+        (!filters?.maxPrice || p.price <= filters.maxPrice),
+    );
+  }
   inventory = rows.map(({ image_url, sample_price, ...p }) => ({
     ...p,
     style: p.style as Perfume["style"],
@@ -440,6 +457,19 @@ export async function getShelf(
     forWeek: toEntry(picks.forWeek, lang),
     forShadow: toEntry(picks.forShadow, lang),
   });
+}
+/** 3–5 perfumes for a chart, each paired with a ritual. */
+export async function getCapsule(chartId: string, lang: "en" | "vi", ritualId?: string) {
+  const { chart, prefs } = await getChartById(chartId);
+  await getPerfumes();
+  const ritual =
+    matchRitual(ritualId ?? todayRitualId(chart), lang) ?? matchRitual(fallbackRitualId, lang);
+  if (!ritual) throw new Error("NO_RITUAL");
+  return wait(
+    buildCapsule(inventory, chart, prefs, ritual)
+      .map((p) => toEntry(p, lang))
+      .filter((e): e is NonNullable<typeof e> => e !== null),
+  );
 }
 /** The ritual page card. Without a chart of the visitor's own, ritual notes decide. */
 export async function getPerfumeForRitual(ritualId: string, lang: "en" | "vi", chartId?: string) {

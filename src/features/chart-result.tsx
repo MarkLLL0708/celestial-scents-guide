@@ -256,6 +256,109 @@ export function RevealPage({ state = "" }: { state?: string }) {
   );
 }
 
+/* ---------- scent capsule: 3–5 perfumes after a reading ---------- */
+export function ScentCapsule({
+  chartId,
+  ritualId,
+  withPrice = false,
+  cta = "both",
+}: {
+  chartId: string;
+  ritualId?: string;
+  withPrice?: boolean;
+  cta?: "both" | "ask" | "none";
+}) {
+  const { t, lang, word } = useLanguage();
+  const { add, notify } = useStore();
+  const q = useQuery({
+    queryKey: ["capsule", chartId, ritualId ?? "", lang],
+    queryFn: () => api.getCapsule(chartId, lang, ritualId),
+    placeholderData: keepPreviousData,
+  });
+  const lead = ritualId ?? q.data?.[0]?.ritualId;
+  return (
+    <section className="sky-section capsule" aria-labelledby="capsule-title">
+      <h2 id="capsule-title" className="label section-heading">
+        {t.capsuleTitle}
+      </h2>
+      <p className="small muted">{t.capsuleLead}</p>
+      {q.isPending ? (
+        <div className="stack">
+          <Skeleton />
+          <Skeleton />
+        </div>
+      ) : q.isError || !q.data ? (
+        <StateMessage message={t.capsuleError} retry={() => void q.refetch()} />
+      ) : (
+        <ol className="capsule-list">
+          {q.data.map((e, i) => (
+            <li key={e.perfume.id} className="capsule-card">
+              <div className="capsule-art">
+                <Bottle family={e.perfume.scent_family} name={e.perfume.name} />
+              </div>
+              <div className="capsule-body">
+                <p className="label muted">
+                  0{i + 1} · {word(e.perfume.scent_family)}
+                </p>
+                <h3 className="question">{e.perfume.name}</h3>
+                <p className="label muted">{e.perfume.brand}</p>
+                <p className="small">{e.reason}</p>
+                <Notes perfume={e.perfume} />
+                {withPrice && (
+                  <p className="label">
+                    ${e.perfume.price} · {e.perfume.size_ml} ml
+                  </p>
+                )}
+                <div className="capsule-actions">
+                  <Button asChild>
+                    <Link to="/rituals/$id" params={{ id: e.ritualId }}>
+                      {t.capsuleRitual}
+                      <ArrowRight size={16} aria-hidden="true" />
+                    </Link>
+                  </Button>
+                  <Link to="/shop/$id" params={{ id: e.perfume.id }} className="quiet-link">
+                    {t.seeScent} →
+                  </Link>
+                  {withPrice && (
+                    <Button
+                      variant="secondary"
+                      disabled={e.perfume.sold_out}
+                      onClick={async () => {
+                        await add(e.perfume.id);
+                        notify(t.added);
+                      }}
+                    >
+                      {e.perfume.sold_out ? t.soldOut : t.add}
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </li>
+          ))}
+        </ol>
+      )}
+      {cta !== "none" && (
+        <div className="capsule-cta">
+          {cta === "both" && lead && (
+            <Button asChild size="lg">
+              <Link to="/rituals/$id" params={{ id: lead }}>
+                {t.beginRitual}
+                <ArrowRight size={16} aria-hidden="true" />
+              </Link>
+            </Button>
+          )}
+          <Button asChild variant="secondary" size="lg">
+            <Link to="/ask">{t.askCta}</Link>
+          </Button>
+        </div>
+      )}
+      <Link to="/shop" className="small muted underline">
+        {t.capsuleArchive}
+      </Link>
+    </section>
+  );
+}
+
 /* ---------- your sky ---------- */
 export function ResultPage({ id, state = "" }: { id: string; state?: string }) {
   const { t, word } = useLanguage();
@@ -365,6 +468,8 @@ export function ResultPage({ id, state = "" }: { id: string; state?: string }) {
           ))}
         </ul>
       </section>
+
+      <ScentCapsule chartId={id} />
 
       <Link to="/today" className="today-strip">
         <span className="label">{t.movingToday}</span>
@@ -494,13 +599,7 @@ export function ReadingPage({
           </Accordion.Root>
           <FeedbackRow thanks={t.readingThanks} />
           <Disclaimer />
-          <Link
-            to="/rituals/$id"
-            params={{ id: ritualForTheme[themeForTopic[topic]] }}
-            className="quiet-link"
-          >
-            {t.ritualForThis} →
-          </Link>
+          <ScentCapsule chartId={id} ritualId={ritualForTheme[themeForTopic[topic]]} />
         </>
       )}
     </div>
@@ -801,6 +900,22 @@ export function AskPage({ state = "" }: { state?: string }) {
   );
   const [answer, setAnswer] = useState<api.AstroAnswer | null>(null);
   const [asked, setAsked] = useState("");
+  const { word } = useLanguage();
+  const chartId = useChartId();
+  const own = chartId !== api.DEMO_ID || !!state;
+  const chartQ = useQuery({
+    queryKey: ["chart", chartId],
+    queryFn: () => api.getChartById(chartId),
+    enabled: own,
+  });
+  const c = chartQ.data?.chart;
+  const tailored = c
+    ? [
+        t.qTailor1.replace("{sun}", word(c.sun)),
+        t.qTailor2.replace("{moon}", word(c.moon)),
+        t.qTailor3,
+      ]
+    : [];
 
   const ask = async (q: string, theme = category) => {
     if (!q.trim()) return;
@@ -854,7 +969,15 @@ export function AskPage({ state = "" }: { state?: string }) {
           ))}
         </div>
 
-        {phase === "loading" ? (
+        {!own ? (
+          <StateMessage message={t.askGate}>
+            <Button asChild>
+              <Link to="/chart/new" search={{ step: 1, state: "" }}>
+                {t.readChart}
+              </Link>
+            </Button>
+          </StateMessage>
+        ) : phase === "loading" ? (
           <div className="ask-loading" aria-live="polite">
             <SolarSystem size="md" />
             <p className="label muted">{t.askLoading}</p>
@@ -897,19 +1020,27 @@ export function AskPage({ state = "" }: { state?: string }) {
           </div>
         ) : (
           <div className="ask-list">
+            {c && (
+              <p className="label ask-context">
+                {t.askContext.replace(
+                  "{handle}",
+                  `☉ ${word(c.sun)} ☽ ${word(c.moon)} ↑ ${c.rising ? word(c.rising) : "—"}`,
+                )}
+              </p>
+            )}
             <p className="label muted">{t.suggested}</p>
             {state === "empty" ? (
               <p className="small muted">{t.askEmpty}</p>
             ) : (
               <ul>
-                {questionKeys[category].map((k) => (
-                  <li key={k}>
+                {[...tailored, ...questionKeys[category].map((k) => t[k])].map((text) => (
+                  <li key={text}>
                     <Button
                       variant="text"
                       className="label ask-question"
-                      onClick={() => setQuestion(t[k])}
+                      onClick={() => setQuestion(text)}
                     >
-                      {t[k]}
+                      {text}
                     </Button>
                   </li>
                 ))}
@@ -919,6 +1050,7 @@ export function AskPage({ state = "" }: { state?: string }) {
         )}
       </div>
 
+      {own && (
       <form
         className="ask-bar"
         onSubmit={(e) => {
@@ -944,6 +1076,7 @@ export function AskPage({ state = "" }: { state?: string }) {
           {t.askButton}
         </Button>
       </form>
+      )}
     </div>
   );
 }
@@ -1154,7 +1287,11 @@ export function RitualPage({ id, state = "" }: { id: string; state?: string }) {
       <p className="muted italic">{r.why}</p>
       <p className="small muted">{t.anyPerfume}</p>
 
-      {perfume && <ScentThatFits perfume={perfume} reason={q.data.reason || r.reason} />}
+      {perfume && (state === "sold-out" ? (
+        <ScentThatFits perfume={perfume} reason={q.data.reason || r.reason} />
+      ) : (
+        <ScentCapsule chartId={chartId} ritualId={r.id} withPrice cta="ask" />
+      ))}
 
       <div className="stack">
         <Button
