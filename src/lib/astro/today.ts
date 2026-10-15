@@ -27,8 +27,7 @@ export function planDay(aspects: AspectHit[]): DayPlan {
   const pushing = aspects.find((a) => a.kind === "hard") ?? null;
   const rest = aspects.filter((a) => a !== working && a !== pushing);
   const lights = rest.filter((a) => a.natal === "sun" || a.natal === "moon");
-  const protect =
-    lights.find((a) => a.kind === "hard") ?? lights[0] ?? rest[0] ?? null;
+  const protect = lights.find((a) => a.kind === "hard") ?? lights[0] ?? rest[0] ?? null;
   const tone = { self: 0, love: 0, work: 0, luck: 0 } as Record<AspectTheme, number>;
   for (const th of TIE_ORDER) {
     const sum = aspects.filter((a) => a.theme === th).reduce((s, a) => s + a.strength, 0);
@@ -38,11 +37,7 @@ export function planDay(aspects: AspectHit[]): DayPlan {
   return { aspects, working, pushing, protect, tone, ritualTheme };
 }
 
-export function dayFor(
-  natal: Partial<Longitudes>,
-  instant: Date,
-  skipNatal: Body[] = [],
-): DayPlan {
+export function dayFor(natal: Partial<Longitudes>, instant: Date, skipNatal: Body[] = []): DayPlan {
   return planDay(aspectsBetween(bodyLongitudes(instant), natal, { skipNatal }));
 }
 

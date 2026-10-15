@@ -50,10 +50,7 @@ export function ascendant(utc: Date, lat: number, lon: number): number | null {
   const eps = ((23.439291 - 0.0130042 * T) * Math.PI) / 180;
   const phi = (lat * Math.PI) / 180;
   return norm(
-    (Math.atan2(
-      Math.cos(lst),
-      -(Math.sin(lst) * Math.cos(eps) + Math.tan(phi) * Math.sin(eps)),
-    ) *
+    (Math.atan2(Math.cos(lst), -(Math.sin(lst) * Math.cos(eps) + Math.tan(phi) * Math.sin(eps))) *
       180) /
       Math.PI,
   );

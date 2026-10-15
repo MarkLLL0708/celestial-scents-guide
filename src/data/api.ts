@@ -3,8 +3,6 @@ import { vi } from "@/i18n/vi";
 import { DateTime } from "luxon";
 import { perfumes, demoChart, cities } from "./seed";
 import { buildChart, natalLongitudes, toTransit } from "@/lib/astro/to-chart";
-import { aspectsBetween } from "@/lib/astro/aspects";
-import { bodyLongitudes } from "@/lib/astro/placements";
 import { dayFor, localNoon, weekFor } from "@/lib/astro/today";
 import { pickLine, quietBank, summaryBank, type BlockSlot } from "@/lib/astro/text-bank";
 import type {
@@ -30,6 +28,7 @@ import type {
   Theme,
   Today,
   Topic,
+  Transit,
 } from "./types";
 import {
   firstRitualOfTheme,
@@ -38,7 +37,6 @@ import {
   ritualIds,
   shelfPlan,
   shelfReason,
-  todayFor,
   topics,
 } from "./astro-mock";
 export * from "./types";
@@ -161,7 +159,7 @@ function loadChart(id: string): ChartRecord {
 const skipFor = (c: Chart): Body[] => (c.birthTimeKnown ? [] : ["moon"]);
 const seedOf = (c: Chart, date: string) =>
   Math.floor(c.details.sun.longitude * 7 + c.details.moon.longitude * 3) +
-  Number(date.replaceAll("-", "")) % 97;
+  (Number(date.replaceAll("-", "")) % 97);
 const ritualForTheme = (theme: RitualTheme) => firstRitualOfTheme(theme);
 export async function getRecommendations(chart: Chart, prefs: Prefs): Promise<Recs> {
   const candidates = inventory.filter(
@@ -313,7 +311,11 @@ export async function getChartById(id: string): Promise<ChartRecord> {
   return wait(loadChart(id));
 }
 
-export async function getReading(chartId: string, topic: Topic, lang: "en" | "vi"): Promise<Reading> {
+export async function getReading(
+  chartId: string,
+  topic: Topic,
+  lang: "en" | "vi",
+): Promise<Reading> {
   if (!topics.includes(topic)) throw new Error("NOT_FOUND");
   const { chart } = loadChart(chartId);
   const d = chart.details;
@@ -379,12 +381,7 @@ export async function askNotes(
   const date = todayDate();
   const plan = dayFor(natalLongitudes(chart), localNoon(date), skipFor(chart));
   const hit = plan.aspects.find((a) => a.theme === category) ?? plan.aspects[0];
-  // Fallback when the sky is empty against this chart: use the strongest aspect over the week.
-  const aspect =
-    hit ??
-    aspectsBetween(bodyLongitudes(localNoon(date)), natalLongitudes(chart), {
-      skipNatal: skipFor(chart),
-    })[0];
+  const aspect = hit;
   const theme = aspect?.theme ?? category;
   const slot: BlockSlot = aspect?.kind === "hard" ? "pushing" : "working";
   const line = pickLine(lang, slot, theme, seedOf(chart, date) + question.trim().length);

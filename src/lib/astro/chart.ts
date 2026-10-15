@@ -1,5 +1,12 @@
 import { DateTime } from "luxon";
-import { ascendant, bodyLongitudes, signOf, type Body, type Longitudes, type Sign } from "./placements";
+import {
+  ascendant,
+  bodyLongitudes,
+  signOf,
+  type Body,
+  type Longitudes,
+  type Sign,
+} from "./placements";
 import { ELEMENT_OF, MODALITY_OF, PLACEMENT_WEIGHTS, type WeightedPlacement } from "./config";
 
 export interface NatalInput {
