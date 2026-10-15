@@ -181,7 +181,12 @@ export function buildCapsule(
     .map((p) => {
       const breakdown = scorePerfume(p, chart);
       const rn = ritualNotes(p, ritual);
-      return { perfume: p, breakdown, matched: rn.matched, v: weekScore(breakdown.total, rn.score) };
+      return {
+        perfume: p,
+        breakdown,
+        matched: rn.matched,
+        v: weekScore(breakdown.total, rn.score),
+      };
     })
     .sort((a, b) => b.v - a.v || a.perfume.id.localeCompare(b.perfume.id));
   for (const x of rest) {
