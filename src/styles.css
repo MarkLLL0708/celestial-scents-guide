@@ -2805,3 +2805,12 @@ h3 {
 .language-inline {
   justify-content: flex-end;
 }
+.landing-lang {
+  display: none;
+}
+@media (max-width: 767px) {
+  .landing-lang {
+    display: flex;
+    justify-content: flex-end;
+  }
+}

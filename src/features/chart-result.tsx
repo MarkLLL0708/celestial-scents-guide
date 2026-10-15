@@ -438,7 +438,11 @@ function TodayTip() {
   const [show, setShow] = useState(false);
   useEffect(() => {
     try {
-      setShow(!!api.currentChartId() && api.currentChartId() !== api.DEMO_ID && !localStorage.getItem(TIP_KEY));
+      setShow(
+        !!api.currentChartId() &&
+          api.currentChartId() !== api.DEMO_ID &&
+          !localStorage.getItem(TIP_KEY),
+      );
     } catch {
       /* storage blocked */
     }
