@@ -28,13 +28,8 @@ import { ScentDialog } from "@/components/scent/dialog";
 import { StateMessage, ProductSkeletons } from "./shared";
 import type { Perfume } from "@/data/types";
 export function Landing({ state = "" }: { state?: string }) {
-  const { t, lang } = useLanguage();
-  const [forced, setForced] = useState(state);
-  useEffect(() => setForced(state), [state]);
-  const ritual = useQuery({
-    queryKey: ["ritual", "three-breath-doorway", lang],
-    queryFn: () => api.getRitual("three-breath-doorway", lang),
-  });
+  const { t } = useLanguage();
+  void state;
   return (
     <>
       <div className="landing-hero-wrap">

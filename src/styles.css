@@ -2896,6 +2896,8 @@ h3 {
 }
 .landing-hero-wrap > .star-field {
   animation: star-drift 90s linear infinite alternate;
+  position: absolute;
+  z-index: 0;
   inset: -4%;
 }
 .landing-hero-wrap > .wide {
