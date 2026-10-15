@@ -73,7 +73,17 @@ export function DatePicker({
             min={1}
             max={key === "day" ? 31 : key === "month" ? 12 : 9999}
             value={profile[key] || ""}
-            onChange={(e) => onChange({ ...profile, [key]: Number(e.target.value) })}
+            onChange={(e) => {
+              onChange({ ...profile, [key]: Number(e.target.value) });
+              const full = key === "year" ? 4 : 2;
+              if (key !== "year" && e.target.value.length >= full) {
+                const inputs = e.currentTarget
+                  .closest(".number-fields")
+                  ?.querySelectorAll<HTMLInputElement>("input");
+                const list = inputs ? Array.from(inputs) : [];
+                list[list.indexOf(e.currentTarget) + 1]?.focus();
+              }
+            }}
             aria-label={t[key]}
             aria-invalid={showError && !!error}
           />
