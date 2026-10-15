@@ -603,10 +603,10 @@ const categories: { theme: Theme; key: keyof Dictionary; note: NoteName }[] = [
   { theme: "luck", key: "catLuck", note: "amber" },
 ];
 const questionKeys: Record<Theme, (keyof Dictionary)[]> = {
-  self: ["qSelf1", "qSelf2", "qSelf3", "qSelf4"],
-  love: ["qLove1", "qLove2", "qLove3", "qLove4"],
-  work: ["qWork1b", "qWork2b", "qWork3b", "qWork4b"],
-  luck: ["qLuck1", "qLuck2", "qLuck3", "qLuck4"],
+  self: ["qSelf1", "qSelf2", "qSelf3", "qSelf4", "qSelf5", "qSelf6", "qSelf7", "qSelf8", "qSelf9", "qSelf10", "qSelf11", "qSelf12"],
+  love: ["qLove1", "qLove2", "qLove3", "qLove4", "qLove5", "qLove6", "qLove7", "qLove8", "qLove9", "qLove10", "qLove11", "qLove12"],
+  work: ["qWork1b", "qWork2b", "qWork3b", "qWork4b", "qWork5", "qWork6", "qWork7", "qWork8", "qWork9", "qWork10", "qWork11", "qWork12"],
+  luck: ["qLuck1", "qLuck2", "qLuck3", "qLuck4", "qLuck5", "qLuck6", "qLuck7", "qLuck8", "qLuck9", "qLuck10", "qLuck11", "qLuck12"],
 };
 
 export function AspectGlyph({ aspect }: { aspect: Aspect }) {
