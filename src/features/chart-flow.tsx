@@ -11,7 +11,7 @@ import {
 } from "@/components/scent/controls";
 import { useLanguage } from "@/i18n/provider";
 import { useStore } from "@/data/context";
-import { cities, cityLabel } from "@/data/seed";
+import { cityLabel } from "@/data/seed";
 import { validateBirthDate } from "@/data/validation";
 import type { BirthProfile, Prefs } from "@/data/types";
 
@@ -109,7 +109,9 @@ export function ChartFlow({ step: rawStep }: { step?: number }) {
     else go(step + 1);
   };
 
-  const city = cities.find((c) => c.city === profile.city);
+  const place = profile.region
+    ? cityLabel({ city: profile.city, region: profile.region, country: profile.country })
+    : profile.city;
   const time =
     profile.hour === null
       ? t.unknownTime
@@ -153,7 +155,17 @@ export function ChartFlow({ step: rawStep }: { step?: number }) {
       <CitySearch
         answer
         value={profile.city}
-        onSelect={(c, country) => setProfile({ ...profile, city: c, country })}
+        onSelect={(c) =>
+          setProfile({
+            ...profile,
+            city: c?.city ?? "",
+            country: c?.country ?? "",
+            region: c?.region,
+            lat: c?.lat,
+            lon: c?.lon,
+            timezone: c?.timezone,
+          })
+        }
         error={showError && !valid ? t.cityError : undefined}
       />
     );
@@ -206,7 +218,7 @@ export function ChartFlow({ step: rawStep }: { step?: number }) {
               [t.name, profile.name, 1],
               [t.birthDate, `${profile.day}/${profile.month}/${profile.year}`, 2],
               [t.birthTime, time, 3],
-              [t.birthPlace, city ? cityLabel(city) : profile.city, 4],
+              [t.birthPlace, place, 4],
               [t.preferences, prefText || t.noPreference, 5],
             ] as const
           ).map(([label, value, target]) => (

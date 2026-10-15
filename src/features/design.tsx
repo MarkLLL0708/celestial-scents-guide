@@ -118,7 +118,7 @@ function Library() {
 
       <SectionHeader>{t.citySearch}</SectionHeader>
       <Row label={t.default}>
-        <CitySearch value={city} onSelect={(c) => setCity(c)} />
+        <CitySearch value={city} onSelect={(c) => setCity(c?.city ?? "")} />
       </Row>
       <Row label={t.error}>
         <CitySearch value="" onSelect={() => {}} error={t.cityError} />
