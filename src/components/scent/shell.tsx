@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { ShoppingBag, User, X } from "lucide-react";
+import { Flame, MessageCircle, Orbit, ShoppingBag, Sun, User, X } from "lucide-react";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/i18n/provider";
@@ -32,11 +32,10 @@ export function LanguageToggle() {
   );
 }
 const tabs = [
-  { to: "/today", key: "tabToday", nav: "navToday", match: "/today" },
-  { to: "/chart/new", key: "tabChart", nav: "navChart", match: "/chart" },
-  { to: "/ask", key: "tabAsk", nav: "navAsk", match: "/ask" },
-  { to: "/rituals", key: "tabRituals", nav: "navRituals", match: "/rituals" },
-  { to: "/shop", key: "tabShop", nav: "navShop", match: "/shop" },
+  { to: "/today", key: "tabToday", nav: "navToday", match: "/today", Icon: Sun },
+  { to: "/chart/new", key: "tabChart", nav: "navChart", match: "/chart", Icon: Orbit },
+  { to: "/ask", key: "tabAsk", nav: "navAsk", match: "/ask", Icon: MessageCircle },
+  { to: "/rituals", key: "tabRituals", nav: "navRituals", match: "/rituals", Icon: Flame },
 ] as const;
 function useNav() {
   const { journey } = useStore();
@@ -52,6 +51,7 @@ export function Header() {
   const { cartItems } = useStore();
   const count = cartItems.reduce((n, p) => n + p.quantity, 0);
   const nav = useNav();
+  const path = useRouterState({ select: (s) => s.location.pathname });
   return (
     <header className="site-header">
       <Link to="/" className="wordmark">
@@ -69,6 +69,13 @@ export function Header() {
         ))}
       </nav>
       <div className="header-tools">
+        <Link
+          to="/shop"
+          className="shop-link"
+          aria-current={path.startsWith("/shop") ? "page" : undefined}
+        >
+          {t.navShop}
+        </Link>
         <LanguageToggle />
         <Link to="/you" className="cart-link" aria-label={t.navYou}>
           <User size={19} />
@@ -93,7 +100,8 @@ export function TabBar() {
           className={`label tab ${n.active ? "tab-active" : ""}`}
           aria-current={n.active ? "page" : undefined}
         >
-          {t[n.key]}
+          <n.Icon size={24} strokeWidth={1.25} aria-hidden="true" />
+          <span>{t[n.key]}</span>
         </Link>
       ))}
     </nav>
