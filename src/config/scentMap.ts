@@ -70,24 +70,77 @@ export const SIGN_ORDER = [
 export type SignName = (typeof SIGN_ORDER)[number];
 
 export const signs: Record<SignName, { element: Element; notes: string[]; moods: MoodTag[] }> = {
-  Aries: { element: "fire", notes: ["ginger", "pepper", "cardamom", "leather"], moods: ["bold", "energetic"] },
-  Taurus: { element: "earth", notes: ["sandalwood", "rose", "vanilla", "fig"], moods: ["sensual", "grounded"] },
-  Gemini: { element: "air", notes: ["bergamot", "mint", "tea", "lavender"], moods: ["playful", "bright"] },
-  Cancer: { element: "water", notes: ["jasmine", "musk", "vanilla", "sea salt"], moods: ["comforting", "soft"] },
-  Leo: { element: "fire", notes: ["amber", "saffron", "orange blossom", "vanilla"], moods: ["radiant", "bold"] },
-  Virgo: { element: "earth", notes: ["lavender", "vetiver", "tea", "cedar"], moods: ["clean", "calm"] },
-  Libra: { element: "air", notes: ["rose", "peony", "neroli", "musk"], moods: ["elegant", "romantic"] },
-  Scorpio: { element: "water", notes: ["oud", "incense", "dark rose", "patchouli"], moods: ["mysterious", "intense"] },
-  Sagittarius: { element: "fire", notes: ["bergamot", "cardamom", "tobacco", "cedar"], moods: ["adventurous", "warm"] },
-  Capricorn: { element: "earth", notes: ["vetiver", "cedar", "leather", "oakmoss"], moods: ["refined", "serious"] },
-  Aquarius: { element: "air", notes: ["violet", "mint", "pink pepper", "iris"], moods: ["unusual", "cool"] },
-  Pisces: { element: "water", notes: ["jasmine", "lily", "vanilla", "sea salt"], moods: ["dreamy", "soft"] },
+  Aries: {
+    element: "fire",
+    notes: ["ginger", "pepper", "cardamom", "leather"],
+    moods: ["bold", "energetic"],
+  },
+  Taurus: {
+    element: "earth",
+    notes: ["sandalwood", "rose", "vanilla", "fig"],
+    moods: ["sensual", "grounded"],
+  },
+  Gemini: {
+    element: "air",
+    notes: ["bergamot", "mint", "tea", "lavender"],
+    moods: ["playful", "bright"],
+  },
+  Cancer: {
+    element: "water",
+    notes: ["jasmine", "musk", "vanilla", "sea salt"],
+    moods: ["comforting", "soft"],
+  },
+  Leo: {
+    element: "fire",
+    notes: ["amber", "saffron", "orange blossom", "vanilla"],
+    moods: ["radiant", "bold"],
+  },
+  Virgo: {
+    element: "earth",
+    notes: ["lavender", "vetiver", "tea", "cedar"],
+    moods: ["clean", "calm"],
+  },
+  Libra: {
+    element: "air",
+    notes: ["rose", "peony", "neroli", "musk"],
+    moods: ["elegant", "romantic"],
+  },
+  Scorpio: {
+    element: "water",
+    notes: ["oud", "incense", "dark rose", "patchouli"],
+    moods: ["mysterious", "intense"],
+  },
+  Sagittarius: {
+    element: "fire",
+    notes: ["bergamot", "cardamom", "tobacco", "cedar"],
+    moods: ["adventurous", "warm"],
+  },
+  Capricorn: {
+    element: "earth",
+    notes: ["vetiver", "cedar", "leather", "oakmoss"],
+    moods: ["refined", "serious"],
+  },
+  Aquarius: {
+    element: "air",
+    notes: ["violet", "mint", "pink pepper", "iris"],
+    moods: ["unusual", "cool"],
+  },
+  Pisces: {
+    element: "water",
+    notes: ["jasmine", "lily", "vanilla", "sea salt"],
+    moods: ["dreamy", "soft"],
+  },
 };
 
 export const placementWeights = { venus: 30, moon: 25, sun: 20, rising: 15, mars: 10 } as const;
 export type MatchPlacement = keyof typeof placementWeights;
 
-export const intensityTargets: Record<Element, number> = { fire: 4.5, earth: 3.5, air: 2.5, water: 3 };
+export const intensityTargets: Record<Element, number> = {
+  fire: 4.5,
+  earth: 3.5,
+  air: 2.5,
+  water: 3,
+};
 
 /** signScore = family * a + notes * b + mood * c */
 export const signScoreParts = { family: 0.4, notes: 0.4, mood: 0.2 } as const;
