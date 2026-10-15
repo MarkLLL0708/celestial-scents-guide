@@ -20,6 +20,7 @@ export function maxProductCards(path: string): number {
   const p = clean(path);
   if (isNoSellScreen(p)) return 0;
   if (/^\/chart\/result\/[^/]+\/shelf$/.test(p)) return 3;
+  if (p.startsWith("/rituals/")) return 5;
   if (p === "/shop" || p === "/design" || p.startsWith("/admin")) return Infinity;
   return 1;
 }
