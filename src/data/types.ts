@@ -13,6 +13,8 @@ export interface Perfume {
   base_notes: string[];
   mood_tags: string[];
   sold_out: boolean;
+  image_url?: string;
+  sample_price?: number;
 }
 export interface BirthProfile {
   name: string;
@@ -66,33 +68,16 @@ export interface Prefs {
   style: string;
   budget: "any" | "low" | "mid" | "high";
 }
-export interface Evidence {
-  planet: "sun" | "moon" | "rising" | "venus" | "mars" | "mercury";
-  sign: string;
-  why: string;
-}
-export interface Match {
-  perfume: Perfume;
-  score: number;
-  reason: string;
-  evidence?: Evidence;
-}
 export interface AskAnswer {
   evidence: string;
   answer: string;
   perfumeId: string;
-}
-export interface Recs {
-  signature: Match;
-  others: Match[];
-  shadow: Match;
 }
 export interface ChartResult {
   id: string;
   profile: BirthProfile;
   chart: Chart;
   prefs: Prefs;
-  recs: Recs;
   date: string;
 }
 export interface CartItem {
@@ -155,10 +140,15 @@ export interface Ritual {
   steps: string[];
   why: string;
   noteFamily: string;
-  perfumeId: string;
   reason: string;
 }
-export interface ShelfEntry extends Match {
+export interface MatchEntry {
+  perfume: Perfume;
+  score: number;
+  reason: string;
+  evidence: string;
+}
+export interface ShelfEntry extends MatchEntry {
   ritualId: string;
   ritualTitle: string;
 }
@@ -171,4 +161,5 @@ export interface ChartRecord {
   id: string;
   name: string;
   chart: Chart;
+  prefs?: Prefs;
 }

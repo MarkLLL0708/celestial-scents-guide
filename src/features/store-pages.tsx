@@ -468,7 +468,6 @@ export function SavedList({ state = "" }: { state?: string }) {
                     .map((s) => (s ? word(s) : "—"))
                     .join(" / ")}
                 </p>
-                <p className="small muted">{r.recs.signature.perfume.name}</p>
               </div>
               <ArrowRight size={18} />
             </Link>
