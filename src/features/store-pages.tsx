@@ -616,6 +616,11 @@ export function YouPage({ state = "" }: { state?: string }) {
         )}
       </section>
       {info.data?.admin && (
+        <Link to="/admin/library" className="quiet-link">
+          {t.libraryTitle}
+        </Link>
+      )}
+      {info.data?.admin && (
         <Link to="/admin/perfumes" className="quiet-link">
           {t.admin}
         </Link>

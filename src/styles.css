@@ -3,6 +3,18 @@
 @import "./styles/tokens.css";
 @source "../src";
 @custom-variant dark (&:is(.dark *));
+.library-page select,
+.library-page input,
+.library-page textarea {
+  background: var(--bg);
+  color: var(--text);
+  border: var(--rule) solid var(--border);
+  padding: 8px;
+  max-width: 100%;
+  font-family: var(--font-mono);
+}
+.library-page label { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.library-page th, .library-page td { padding: 12px 8px; border-bottom: var(--rule) solid var(--border); }
 * {
   box-sizing: border-box;
   border-color: var(--border);

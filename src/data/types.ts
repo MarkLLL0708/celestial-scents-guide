@@ -101,10 +101,12 @@ export interface Transit {
 export interface Block {
   transit: Transit;
   text: string;
+  fromLibrary?: boolean;
 }
 export interface Today {
   date: string;
   summary: string;
+  summaryFromLibrary?: boolean;
   tone: Record<Theme, number>;
   working: Block | null;
   pushing: Block | null;
@@ -115,7 +117,12 @@ export interface Today {
 export interface Reading {
   topic: Topic;
   title: string;
-  sections: { title: string; body: string }[];
+  sections: {
+    title: string;
+    body: string;
+    fromLibrary?: boolean;
+    placement?: { body: Planet; sign: string; degree: number };
+  }[];
   placements?: { body: Planet; sign: string; degree: number }[];
   week?: { transit: Transit; date: string } | null;
 }
