@@ -393,14 +393,12 @@ export function ReadingPage({
           <HandleLine chart={chartQ.data?.chart ?? demoChart} />
           {q.data.week && (
             <p className="label muted placement-line">
-              {t.strongestWeek
-                .replace("{transit}", transitText(t, q.data.week.transit))
-                .replace(
-                  "{day}",
-                  new Date(q.data.week.date).toLocaleDateString(lang === "vi" ? "vi-VN" : "en-GB", {
-                    weekday: "long",
-                  }),
-                )}
+              {t.strongestWeek.replace("{transit}", transitText(t, q.data.week.transit)).replace(
+                "{day}",
+                new Date(q.data.week.date).toLocaleDateString(lang === "vi" ? "vi-VN" : "en-GB", {
+                  weekday: "long",
+                }),
+              )}
             </p>
           )}
           <Accordion.Root type="multiple" defaultValue={["s0"]} className="reading-accordion">
@@ -525,11 +523,11 @@ export function TodayPage({ state = "" }: { state?: string }) {
                   <p>{data.today.quiet ?? t.quietDay}</p>
                 </Cell>
               ) : (
-              <Cell key={label}>
-                <p className="label">{label}</p>
-                <p className="label muted cell-evidence">{transitText(t, b.transit)}</p>
-                <p>{b.text}</p>
-              </Cell>
+                <Cell key={label}>
+                  <p className="label">{label}</p>
+                  <p className="label muted cell-evidence">{transitText(t, b.transit)}</p>
+                  <p>{b.text}</p>
+                </Cell>
               ),
             )
           : [0, 1, 2].map((i) => (
@@ -633,7 +631,9 @@ export function AskPage({ state = "" }: { state?: string }) {
     <div className="ask-screen">
       <header className="ask-header">
         <Button asChild variant="text" size="icon" className="ask-close">
-          <Link to="/today" aria-label={t.close}><X size={20} /></Link>
+          <Link to="/today" aria-label={t.close}>
+            <X size={20} />
+          </Link>
         </Button>
         <h1 className="label">{t.askTitle}</h1>
         <span className="chart-step-spacer" aria-hidden="true" />
@@ -642,7 +642,8 @@ export function AskPage({ state = "" }: { state?: string }) {
       <div className="ask-body">
         <div className="ask-tabs" role="tablist" aria-label={t.categories}>
           {categories.map((c) => (
-            <Button variant="text"
+            <Button
+              variant="text"
               key={c.theme}
               role="tab"
               aria-selected={category === c.theme}
@@ -708,7 +709,11 @@ export function AskPage({ state = "" }: { state?: string }) {
               <ul>
                 {questionKeys[category].map((k) => (
                   <li key={k}>
-                    <Button variant="text" className="label ask-question" onClick={() => setQuestion(t[k])}>
+                    <Button
+                      variant="text"
+                      className="label ask-question"
+                      onClick={() => setQuestion(t[k])}
+                    >
                       {t[k]}
                     </Button>
                   </li>
@@ -784,7 +789,13 @@ export function RitualsPage({ state = "" }: { state?: string }) {
         {loading ? (
           <Skeleton />
         ) : failed ? (
-          <StateMessage message={t.ritualsError} retry={() => { setForced(""); void q.refetch(); }} />
+          <StateMessage
+            message={t.ritualsError}
+            retry={() => {
+              setForced("");
+              void q.refetch();
+            }}
+          />
         ) : forced === "empty" || !q.data?.length ? (
           <StateMessage message={t.ritualsEmpty} />
         ) : (
@@ -861,7 +872,10 @@ export function RitualPage({ id, state = "" }: { id: string; state?: string }) {
   const queryClient = useQueryClient();
   const chartId = useChartId();
   const [forced, setForced] = useState(state);
-  useEffect(() => { setForced(state); setSaved(false); }, [state, id]);
+  useEffect(() => {
+    setForced(state);
+    setSaved(false);
+  }, [state, id]);
   const [saved, setSaved] = useState(false);
   const q = useQuery({
     queryKey: ["ritual-full", id, lang],
@@ -896,7 +910,13 @@ export function RitualPage({ id, state = "" }: { id: string; state?: string }) {
   if (forced === "error" || (!forced && q.isError) || !q.data)
     return (
       <div className="narrow">
-        <StateMessage message={t.ritualsError} retry={() => { setForced(""); void q.refetch(); }} />
+        <StateMessage
+          message={t.ritualsError}
+          retry={() => {
+            setForced("");
+            void q.refetch();
+          }}
+        />
       </div>
     );
   const r = q.data.ritual;
@@ -1003,7 +1023,13 @@ export function ShelfPage({ id, state = "" }: { id: string; state?: string }) {
           <Skeleton product />
         </div>
       ) : failed ? (
-        <StateMessage message={t.shelfError} retry={() => { setForced(""); void q.refetch(); }} />
+        <StateMessage
+          message={t.shelfError}
+          retry={() => {
+            setForced("");
+            void q.refetch();
+          }}
+        />
       ) : (
         entries
           .filter((x) => x.e)

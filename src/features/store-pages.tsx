@@ -80,7 +80,13 @@ export function Landing({ state = "" }: { state?: string }) {
         {forced === "loading" || ritual.isPending ? (
           <Skeleton />
         ) : forced === "error" || ritual.isError || !ritual.data ? (
-          <StateMessage message={t.ritualsError} retry={() => { setForced(""); void ritual.refetch(); }} />
+          <StateMessage
+            message={t.ritualsError}
+            retry={() => {
+              setForced("");
+              void ritual.refetch();
+            }}
+          />
         ) : (
           <>
             <h2 className="question">{ritual.data.title}</h2>
