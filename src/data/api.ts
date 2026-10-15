@@ -46,6 +46,7 @@ import type {
 } from "./types";
 import { firstRitualOfTheme, readingFor, ritualFor, ritualIds, topics } from "./astro-mock";
 export * from "./types";
+import { perfumes as samplePerfumes } from "./seed";
 const wait = <T>(value: T): Promise<T> =>
   new Promise((resolve) => setTimeout(() => resolve(structuredClone(value)), 600));
 let inventory: Perfume[] = [];
@@ -55,7 +56,22 @@ export async function getPerfumes(filters?: {
   style?: string;
   maxPrice?: number;
 }): Promise<Perfume[]> {
-  const rows = await cloud.publicPerfumes();
+  let rows: Awaited<ReturnType<typeof cloud.publicPerfumes>> = [];
+  try {
+    rows = await cloud.publicPerfumes();
+  } catch {
+    rows = [];
+  }
+  // Until a catalogue is uploaded, the sample catalogue keeps picks and shop filled.
+  if (!rows.length) {
+    inventory = structuredClone(samplePerfumes);
+    return inventory.filter(
+      (p) =>
+        (!filters?.family || p.scent_family === filters.family) &&
+        (!filters?.style || p.style === filters.style) &&
+        (!filters?.maxPrice || p.price <= filters.maxPrice),
+    );
+  }
   inventory = rows.map(({ image_url, sample_price, ...p }) => ({
     ...p,
     style: p.style as Perfume["style"],
