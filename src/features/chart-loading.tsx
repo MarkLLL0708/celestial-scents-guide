@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useLanguage } from "@/i18n/provider";
+import { useStore } from "@/data/context";
+import * as api from "@/data/api";
+import { StateMessage } from "./shared";
 
 export function CrescentSpinner() {
   return (
@@ -25,8 +28,28 @@ export function ChartLoading() {
   const [letters, setLetters] = useState(0);
   const [fact, setFact] = useState(0);
   const [reduced, setReduced] = useState(false);
+  const [failed, setFailed] = useState(false);
+  const [attempt, setAttempt] = useState(0);
+  const { profile } = useStore();
 
   useEffect(() => {
+    let cancelled = false;
+    // Runs in the browser only; birth details never leave the device.
+    void (async () => {
+      try {
+        const chart = await api.computeChart(profile);
+        if (!cancelled) api.storeChart(profile.name, chart);
+      } catch {
+        if (!cancelled) setFailed(true);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [profile, attempt]);
+
+  useEffect(() => {
+    if (failed) return;
     const m = window.matchMedia("(prefers-reduced-motion: reduce)");
     setReduced(m.matches);
     const msg = setInterval(() => {
@@ -40,7 +63,7 @@ export function ChartLoading() {
       clearInterval(f);
       clearTimeout(done);
     };
-  }, [navigate]);
+  }, [navigate, failed]);
 
   useEffect(() => {
     if (reduced) return;
@@ -49,6 +72,18 @@ export function ChartLoading() {
   }, [index, reduced]);
 
   const message = messages[index];
+  if (failed)
+    return (
+      <div className="ink chart-loading">
+        <StateMessage
+          message={t.chartComputeError}
+          retry={() => {
+            setFailed(false);
+            setAttempt((n) => n + 1);
+          }}
+        />
+      </div>
+    );
   return (
     <div className="ink chart-loading">
       <CrescentSpinner />

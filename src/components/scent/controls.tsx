@@ -4,6 +4,8 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/i18n/provider";
 import { cities, cityLabel } from "@/data/seed";
+import { searchCities } from "@/data/api";
+import type { CityHit } from "@/data/types";
 import type { BirthProfile } from "@/data/types";
 import { validateBirthDate } from "@/data/validation";
 export function UnderlineInput({
@@ -149,21 +151,35 @@ export function CitySearch({
   answer = false,
 }: {
   value: string;
-  onSelect: (city: string, country: string) => void;
+  onSelect: (city: CityHit | null) => void;
   error?: string;
   disabled?: boolean;
   answer?: boolean;
 }) {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const id = useId();
   const [query, setQuery] = useState(() => {
     const c = cities.find((c) => c.city === value);
     return c ? cityLabel(c) : value;
   });
   const [open, setOpen] = useState(false);
-  const filtered = cities
-    .filter((c) => c.city.toLowerCase().includes(query.toLowerCase()))
-    .slice(0, 5);
+  const [results, setResults] = useState<CityHit[]>([]);
+  useEffect(() => {
+    if (!open || !query.trim()) {
+      setResults([]);
+      return;
+    }
+    let live = true;
+    const timer = setTimeout(() => {
+      void searchCities(query, lang).then((r) => {
+        if (live) setResults(r);
+      });
+    }, 300);
+    return () => {
+      live = false;
+      clearTimeout(timer);
+    };
+  }, [query, lang, open]);
   return (
     <div className={`field ${answer ? "answer-field" : ""}`}>
       <label className={answer ? "label muted answer-prompt" : "question"} htmlFor={id}>
@@ -177,7 +193,7 @@ export function CitySearch({
           onValueChange={(q) => {
             setQuery(q);
             setOpen(true);
-            onSelect("", "");
+            onSelect(null);
           }}
           onFocus={() => setOpen(true)}
           placeholder={t.city}
@@ -188,13 +204,13 @@ export function CitySearch({
           {open && query && (
             <>
               <Command.Empty>{t.noCities}</Command.Empty>
-              {filtered.map((c) => (
+              {results.map((c) => (
                 <Command.Item
-                  key={c.city}
-                  value={c.city}
+                  key={`${c.city}-${c.lat}-${c.lon}`}
+                  value={`${c.city}-${c.lat}-${c.lon}`}
                   onSelect={() => {
                     setQuery(cityLabel(c));
-                    onSelect(c.city, c.country);
+                    onSelect(c);
                     setOpen(false);
                   }}
                 >
@@ -207,7 +223,7 @@ export function CitySearch({
       </Command>
       {open && query && (
         <span className="sr-only" role="status">
-          {t.cityResults.replace("{count}", String(filtered.length))}
+          {t.cityResults.replace("{count}", String(results.length))}
         </span>
       )}
       {error && (

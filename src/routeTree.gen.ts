@@ -21,6 +21,7 @@ import { Route as YouRouteImport } from './routes/you'
 import { Route as ChartLoadingRouteImport } from './routes/chart.loading'
 import { Route as ChartNewRouteImport } from './routes/chart.new'
 import { Route as ChartRevealRouteImport } from './routes/chart.reveal'
+import { Route as DevChartRouteImport } from './routes/dev.chart'
 import { Route as RitualsIndexRouteImport } from './routes/rituals.index'
 import { Route as RitualsIdRouteImport } from './routes/rituals.$id'
 import { Route as ShopIndexRouteImport } from './routes/shop.index'
@@ -89,6 +90,11 @@ const ChartRevealRoute = ChartRevealRouteImport.update({
   path: '/chart/reveal',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DevChartRoute = DevChartRouteImport.update({
+  id: '/dev/chart',
+  path: '/dev/chart',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RitualsIndexRoute = RitualsIndexRouteImport.update({
   id: '/rituals/',
   path: '/rituals/',
@@ -138,6 +144,7 @@ export interface FileRoutesByFullPath {
   '/chart/loading': typeof ChartLoadingRoute
   '/chart/new': typeof ChartNewRoute
   '/chart/reveal': typeof ChartRevealRoute
+  '/dev/chart': typeof DevChartRoute
   '/rituals/$id': typeof RitualsIdRoute
   '/shop/$id': typeof ShopIdRoute
   '/rituals/': typeof RitualsIndexRoute
@@ -158,6 +165,7 @@ export interface FileRoutesByTo {
   '/chart/loading': typeof ChartLoadingRoute
   '/chart/new': typeof ChartNewRoute
   '/chart/reveal': typeof ChartRevealRoute
+  '/dev/chart': typeof DevChartRoute
   '/rituals/$id': typeof RitualsIdRoute
   '/shop/$id': typeof ShopIdRoute
   '/rituals': typeof RitualsIndexRoute
@@ -180,6 +188,7 @@ export interface FileRoutesById {
   '/chart/loading': typeof ChartLoadingRoute
   '/chart/new': typeof ChartNewRoute
   '/chart/reveal': typeof ChartRevealRoute
+  '/dev/chart': typeof DevChartRoute
   '/rituals/$id': typeof RitualsIdRoute
   '/shop/$id': typeof ShopIdRoute
   '/rituals/': typeof RitualsIndexRoute
@@ -203,6 +212,7 @@ export interface FileRouteTypes {
     | '/chart/loading'
     | '/chart/new'
     | '/chart/reveal'
+    | '/dev/chart'
     | '/rituals/$id'
     | '/shop/$id'
     | '/rituals/'
@@ -223,6 +233,7 @@ export interface FileRouteTypes {
     | '/chart/loading'
     | '/chart/new'
     | '/chart/reveal'
+    | '/dev/chart'
     | '/rituals/$id'
     | '/shop/$id'
     | '/rituals'
@@ -244,6 +255,7 @@ export interface FileRouteTypes {
     | '/chart/loading'
     | '/chart/new'
     | '/chart/reveal'
+    | '/dev/chart'
     | '/rituals/$id'
     | '/shop/$id'
     | '/rituals/'
@@ -266,6 +278,7 @@ export interface RootRouteChildren {
   ChartLoadingRoute: typeof ChartLoadingRoute
   ChartNewRoute: typeof ChartNewRoute
   ChartRevealRoute: typeof ChartRevealRoute
+  DevChartRoute: typeof DevChartRoute
   RitualsIdRoute: typeof RitualsIdRoute
   RitualsIndexRoute: typeof RitualsIndexRoute
   ChartResultIdRoute: typeof ChartResultIdRoute
@@ -359,6 +372,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ChartRevealRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dev/chart': {
+      id: '/dev/chart'
+      path: '/dev/chart'
+      fullPath: '/dev/chart'
+      preLoaderRoute: typeof DevChartRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/rituals/': {
       id: '/rituals/'
       path: '/rituals'
@@ -436,6 +456,7 @@ const rootRouteChildren: RootRouteChildren = {
   ChartLoadingRoute: ChartLoadingRoute,
   ChartNewRoute: ChartNewRoute,
   ChartRevealRoute: ChartRevealRoute,
+  DevChartRoute: DevChartRoute,
   RitualsIdRoute: RitualsIdRoute,
   RitualsIndexRoute: RitualsIndexRoute,
   ChartResultIdRoute: ChartResultIdRoute,

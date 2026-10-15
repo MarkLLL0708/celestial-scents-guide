@@ -102,8 +102,16 @@ export function SolarSystem({ size = "lg" }: { size?: "md" | "lg" }) {
     { r: 104, size: 4, dur: 96, start: 60, ring: false, bright: 0.6 },
   ];
   const stars = [
-    [14, 22, 1.1], [178, 16, 0.9], [190, 60, 1.2], [12, 150, 1], [30, 188, 0.8],
-    [168, 182, 1.1], [196, 140, 0.7], [52, 10, 0.8], [96, 6, 1], [8, 84, 0.7],
+    [14, 22, 1.1],
+    [178, 16, 0.9],
+    [190, 60, 1.2],
+    [12, 150, 1],
+    [30, 188, 0.8],
+    [168, 182, 1.1],
+    [196, 140, 0.7],
+    [52, 10, 0.8],
+    [96, 6, 1],
+    [8, 84, 0.7],
   ];
   return (
     <svg className={`solar solar-${size}`} viewBox="0 0 220 220" aria-hidden="true">
@@ -115,20 +123,56 @@ export function SolarSystem({ size = "lg" }: { size?: "md" | "lg" }) {
         </radialGradient>
       </defs>
       {stars.map(([x, y, r], i) => (
-        <circle key={i} cx={x} cy={y} r={r} fill="currentColor" className="star-twinkle" style={{ animationDelay: `${i * 0.7}s` }} />
+        <circle
+          key={i}
+          cx={x}
+          cy={y}
+          r={r}
+          fill="currentColor"
+          className="star-twinkle"
+          style={{ animationDelay: `${i * 0.7}s` }}
+        />
       ))}
       {planets.map((p, i) => (
-        <circle key={i} cx="110" cy="110" r={p.r} fill="none" stroke="currentColor" strokeOpacity="0.18" strokeWidth="0.75" />
+        <circle
+          key={i}
+          cx="110"
+          cy="110"
+          r={p.r}
+          fill="none"
+          stroke="currentColor"
+          strokeOpacity="0.18"
+          strokeWidth="0.75"
+        />
       ))}
       <circle cx="110" cy="110" r="26" fill={`url(#sg${id})`} className="solar-glow" />
       <circle cx="110" cy="110" r="9" fill="#fff" />
       {planets.map((p, i) => (
-        <g key={i} className="solar-orbit" style={{ animationDuration: `${p.dur}s`, animationDelay: `${(-p.start / 360) * p.dur}s` }}>
+        <g
+          key={i}
+          className="solar-orbit"
+          style={{ animationDuration: `${p.dur}s`, animationDelay: `${(-p.start / 360) * p.dur}s` }}
+        >
           <g transform={`translate(${110 + p.r} 110)`}>
             <circle r={p.size} fill="currentColor" opacity={p.bright} />
-            <circle r={p.size} fill="none" stroke="var(--bg)" strokeWidth="1" opacity="0.35" strokeDasharray={`${p.size} ${p.size * 2}`} />
+            <circle
+              r={p.size}
+              fill="none"
+              stroke="var(--bg)"
+              strokeWidth="1"
+              opacity="0.35"
+              strokeDasharray={`${p.size} ${p.size * 2}`}
+            />
             {p.ring && (
-              <ellipse rx={p.size + 4.5} ry={(p.size + 4.5) * 0.32} fill="none" stroke="currentColor" strokeWidth="1" opacity="0.8" transform="rotate(-18)" />
+              <ellipse
+                rx={p.size + 4.5}
+                ry={(p.size + 4.5) * 0.32}
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1"
+                opacity="0.8"
+                transform="rotate(-18)"
+              />
             )}
           </g>
         </g>

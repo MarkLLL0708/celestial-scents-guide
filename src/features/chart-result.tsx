@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { keepPreviousData, useQuery, useQueryClient } from "@tanstack/react-query";
 import * as Accordion from "@radix-ui/react-accordion";
 import { ArrowRight, ChevronDown, ChevronLeft, ThumbsUp, ThumbsDown, X } from "lucide-react";
@@ -65,6 +65,37 @@ function HandleLine({ chart, heading = false }: { chart: Chart; heading?: boolea
   return heading ? <h1 className="label">{text}</h1> : <p className="label">{text}</p>;
 }
 
+/** Current chart id after hydration (demo during SSR), so links never mismatch. */
+function useChartId() {
+  const [id, setId] = useState(api.DEMO_ID);
+  useEffect(() => setId(api.currentChartId()), []);
+  return id;
+}
+
+function MoonNote({ chart }: { chart: Chart }) {
+  const { t, word } = useLanguage();
+  if (!chart.moonAlternatives) return null;
+  return (
+    <p className="small muted">
+      {t.moonEither
+        .replace("{a}", word(chart.moonAlternatives[0]))
+        .replace("{b}", word(chart.moonAlternatives[1]))}
+    </p>
+  );
+}
+
+function PlacementLine({ items }: { items: { body: Planet; sign: string; degree: number }[] }) {
+  const { t, word } = useLanguage();
+  if (!items.length) return null;
+  return (
+    <p className="label muted placement-line">
+      {items
+        .map((p) => `${glyphs[p.body]} ${t[planetKey(p.body)]} ${p.degree}° ${word(p.sign)}`)
+        .join(" · ")}
+    </p>
+  );
+}
+
 export function FeedbackRow({ thanks }: { thanks?: string }) {
   const { t } = useLanguage();
   const { notify } = useStore();
@@ -108,13 +139,19 @@ function Disclaimer() {
 /* ---------- reveal ---------- */
 export function RevealPage({ state = "" }: { state?: string }) {
   const { t } = useLanguage();
-  const { profile } = useStore();
   const [forced, setForced] = useState(state);
   useEffect(() => setForced(state), [state]);
-  const unknownTime = profile.hour === null || forced === "unknown-time";
-  const chart = { ...demoChart, rising: unknownTime ? null : demoChart.rising };
+  const q = useQuery({
+    queryKey: ["chart", "current", api.currentChartId()],
+    queryFn: () => api.getChartById(api.currentChartId()),
+  });
+  const record = q.data;
+  const unknownTime = forced === "unknown-time" || (record ? !record.chart.birthTimeKnown : false);
+  const chart = record
+    ? { ...record.chart, rising: unknownTime ? null : record.chart.rising }
+    : demoChart;
 
-  if (forced === "loading")
+  if (forced === "loading" || (!forced && q.isPending))
     return (
       <div className="chart-loading">
         <SolarSystem />
@@ -123,11 +160,17 @@ export function RevealPage({ state = "" }: { state?: string }) {
         </div>
       </div>
     );
-  if (forced === "error")
+  if (forced === "error" || (!forced && q.isError))
     return (
       <div className="chart-loading">
         <Orb variant="disc" size="md" />
-        <StateMessage message={t.revealError} retry={() => setForced("")} />
+        <StateMessage
+          message={t.revealError}
+          retry={() => {
+            setForced("");
+            void q.refetch();
+          }}
+        />
       </div>
     );
 
@@ -142,11 +185,12 @@ export function RevealPage({ state = "" }: { state?: string }) {
           <p>{t.trait3}</p>
         </div>
         {unknownTime && <p className="label muted">{t.noRising}</p>}
+        <MoonNote chart={chart} />
         <p className="label muted reveal-caption">{t.revealCaption}</p>
       </div>
       <div className="reveal-bottom">
         <Button asChild>
-          <Link to="/chart/result/$id" params={{ id: "demo" }}>
+          <Link to="/chart/result/$id" params={{ id: record?.id ?? api.DEMO_ID }}>
             {t.continue}
           </Link>
         </Button>
@@ -163,7 +207,8 @@ export function RevealPage({ state = "" }: { state?: string }) {
 /* ---------- your sky ---------- */
 export function ResultPage({ id, state = "" }: { id: string; state?: string }) {
   const { t, word } = useLanguage();
-  const { profile, journey, markJourney } = useStore();
+  const { journey, markJourney } = useStore();
+  const navigate = useNavigate();
   const [shareOpen, setShareOpen] = useState(false);
   useEffect(() => markJourney("chartSeen"), [markJourney]);
   const q = useQuery({ queryKey: ["chart", id], queryFn: () => api.getChartById(id) });
@@ -191,7 +236,7 @@ export function ResultPage({ id, state = "" }: { id: string; state?: string }) {
       </div>
     );
   const record = q.data ?? { id, name: "An", chart: demoChart };
-  const unknownTime = forced === "unknown-time" || profile.hour === null;
+  const unknownTime = forced === "unknown-time" || !record.chart.birthTimeKnown;
   const chart = { ...record.chart, rising: unknownTime ? null : record.chart.rising };
   const deg = (p: Planet) => (chart.degrees[p] !== undefined ? ` ${chart.degrees[p]}°` : "");
   const rows: { p: Planet; sign: string; label: string; text: string; tag?: string }[] = [
@@ -223,6 +268,7 @@ export function ResultPage({ id, state = "" }: { id: string; state?: string }) {
         <PlacementBadge label={t.rising} sign={chart.rising} index={2} />
       </div>
       {unknownTime && <p className="small muted">{t.noRising}</p>}
+      <MoonNote chart={chart} />
 
       <section className="sky-section">
         <h2 className="label section-heading">{t.chart}</h2>
@@ -280,6 +326,15 @@ export function ResultPage({ id, state = "" }: { id: string; state?: string }) {
         <Button variant="secondary" onClick={() => setShareOpen(true)}>
           {t.share}
         </Button>
+        <Button
+          variant="text"
+          onClick={() => {
+            api.clearChart();
+            void navigate({ to: "/chart/new", search: { step: 1 } });
+          }}
+        >
+          {t.takeAgain}
+        </Button>
       </div>
       <ShareDialog open={shareOpen} onOpenChange={setShareOpen} name={record.name} chart={chart} />
     </div>
@@ -299,6 +354,7 @@ export function ReadingPage({
   const { t, lang } = useLanguage();
   const { markJourney } = useStore();
   useEffect(() => markJourney("readingOpened"), [markJourney]);
+  const chartQ = useQuery({ queryKey: ["chart", id], queryFn: () => api.getChartById(id) });
   const q = useQuery({
     queryKey: ["reading", id, topic, lang],
     queryFn: () => api.getReading(id, topic, lang),
@@ -333,7 +389,18 @@ export function ReadingPage({
       ) : (
         <>
           <h1 className="xl">{q.data.title}</h1>
-          <HandleLine chart={demoChart} />
+          <PlacementLine items={q.data.placements ?? []} />
+          <HandleLine chart={chartQ.data?.chart ?? demoChart} />
+          {q.data.week && (
+            <p className="label muted placement-line">
+              {t.strongestWeek.replace("{transit}", transitText(t, q.data.week.transit)).replace(
+                "{day}",
+                new Date(q.data.week.date).toLocaleDateString(lang === "vi" ? "vi-VN" : "en-GB", {
+                  weekday: "long",
+                }),
+              )}
+            </p>
+          )}
           <Accordion.Root type="multiple" defaultValue={["s0"]} className="reading-accordion">
             {q.data.sections.map((s, i) => (
               <Accordion.Item key={s.title} value={`s${i}`} className="reading-item">
@@ -368,10 +435,9 @@ export function ReadingPage({
 export function TodayPage({ state = "" }: { state?: string }) {
   const { t, lang } = useLanguage();
   const q = useQuery({
-    queryKey: ["today", lang],
+    queryKey: ["today", lang, api.todayDate(), api.currentChartId()],
     queryFn: async () => {
-      const date = new Date().toISOString().slice(0, 10);
-      const today = await api.getToday("demo", date, lang);
+      const today = await api.getToday(api.currentChartId(), api.todayDate(), lang);
       const ritual = await api.getRitual(today.ritualId, lang);
       return { today, ritual };
     },
@@ -450,13 +516,20 @@ export function TodayPage({ state = "" }: { state?: string }) {
 
       <CellGrid columns={1}>
         {data
-          ? blocks.map(({ label, b }) => (
-              <Cell key={label}>
-                <p className="label">{label}</p>
-                <p className="label muted cell-evidence">{transitText(t, b.transit)}</p>
-                <p>{b.text}</p>
-              </Cell>
-            ))
+          ? blocks.map(({ label, b }) =>
+              b === null ? (
+                <Cell key={label}>
+                  <p className="label">{label}</p>
+                  <p>{data.today.quiet ?? t.quietDay}</p>
+                </Cell>
+              ) : (
+                <Cell key={label}>
+                  <p className="label">{label}</p>
+                  <p className="label muted cell-evidence">{transitText(t, b.transit)}</p>
+                  <p>{b.text}</p>
+                </Cell>
+              ),
+            )
           : [0, 1, 2].map((i) => (
               <Cell key={i}>
                 <Skeleton />
@@ -542,7 +615,7 @@ export function AskPage({ state = "" }: { state?: string }) {
     setAsked(q);
     setPhase("loading");
     try {
-      setAnswer(await api.askNotes(q, theme, "demo", lang));
+      setAnswer(await api.askNotes(q, theme, api.currentChartId(), lang));
       setPhase("answered");
     } catch {
       setPhase("error");
@@ -558,7 +631,9 @@ export function AskPage({ state = "" }: { state?: string }) {
     <div className="ask-screen">
       <header className="ask-header">
         <Button asChild variant="text" size="icon" className="ask-close">
-          <Link to="/today" aria-label={t.close}><X size={20} /></Link>
+          <Link to="/today" aria-label={t.close}>
+            <X size={20} />
+          </Link>
         </Button>
         <h1 className="label">{t.askTitle}</h1>
         <span className="chart-step-spacer" aria-hidden="true" />
@@ -567,7 +642,8 @@ export function AskPage({ state = "" }: { state?: string }) {
       <div className="ask-body">
         <div className="ask-tabs" role="tablist" aria-label={t.categories}>
           {categories.map((c) => (
-            <Button variant="text"
+            <Button
+              variant="text"
               key={c.theme}
               role="tab"
               aria-selected={category === c.theme}
@@ -633,7 +709,11 @@ export function AskPage({ state = "" }: { state?: string }) {
               <ul>
                 {questionKeys[category].map((k) => (
                   <li key={k}>
-                    <Button variant="text" className="label ask-question" onClick={() => setQuestion(t[k])}>
+                    <Button
+                      variant="text"
+                      className="label ask-question"
+                      onClick={() => setQuestion(t[k])}
+                    >
                       {t[k]}
                     </Button>
                   </li>
@@ -709,7 +789,13 @@ export function RitualsPage({ state = "" }: { state?: string }) {
         {loading ? (
           <Skeleton />
         ) : failed ? (
-          <StateMessage message={t.ritualsError} retry={() => { setForced(""); void q.refetch(); }} />
+          <StateMessage
+            message={t.ritualsError}
+            retry={() => {
+              setForced("");
+              void q.refetch();
+            }}
+          />
         ) : forced === "empty" || !q.data?.length ? (
           <StateMessage message={t.ritualsEmpty} />
         ) : (
@@ -784,8 +870,12 @@ export function RitualPage({ id, state = "" }: { id: string; state?: string }) {
   const { t, lang } = useLanguage();
   const store = useStore();
   const queryClient = useQueryClient();
+  const chartId = useChartId();
   const [forced, setForced] = useState(state);
-  useEffect(() => { setForced(state); setSaved(false); }, [state, id]);
+  useEffect(() => {
+    setForced(state);
+    setSaved(false);
+  }, [state, id]);
   const [saved, setSaved] = useState(false);
   const q = useQuery({
     queryKey: ["ritual-full", id, lang],
@@ -820,7 +910,13 @@ export function RitualPage({ id, state = "" }: { id: string; state?: string }) {
   if (forced === "error" || (!forced && q.isError) || !q.data)
     return (
       <div className="narrow">
-        <StateMessage message={t.ritualsError} retry={() => { setForced(""); void q.refetch(); }} />
+        <StateMessage
+          message={t.ritualsError}
+          retry={() => {
+            setForced("");
+            void q.refetch();
+          }}
+        />
       </div>
     );
   const r = q.data.ritual;
@@ -885,7 +981,7 @@ export function RitualPage({ id, state = "" }: { id: string; state?: string }) {
       </div>
       <p className="small muted italic">{t.ritualClaim}</p>
       {store.journey.readingOpened && (
-        <Link to="/chart/result/$id/shelf" params={{ id: "demo" }} className="today-strip">
+        <Link to="/chart/result/$id/shelf" params={{ id: chartId }} className="today-strip">
           <span className="label">{t.shelfStrip}</span>
           <ArrowRight size={18} aria-hidden="true" />
         </Link>
@@ -927,7 +1023,13 @@ export function ShelfPage({ id, state = "" }: { id: string; state?: string }) {
           <Skeleton product />
         </div>
       ) : failed ? (
-        <StateMessage message={t.shelfError} retry={() => { setForced(""); void q.refetch(); }} />
+        <StateMessage
+          message={t.shelfError}
+          retry={() => {
+            setForced("");
+            void q.refetch();
+          }}
+        />
       ) : (
         entries
           .filter((x) => x.e)
@@ -994,11 +1096,10 @@ export function ShareDialog({
   const { notify } = useStore();
   const [busy, setBusy] = useState(false);
   const q = useQuery({
-    queryKey: ["today", lang],
+    queryKey: ["today", lang, api.todayDate(), api.currentChartId()],
     enabled: open,
     queryFn: async () => {
-      const date = new Date().toISOString().slice(0, 10);
-      const today = await api.getToday("demo", date, lang);
+      const today = await api.getToday(api.currentChartId(), api.todayDate(), lang);
       const ritual = await api.getRitual(today.ritualId, lang);
       return { today, ritual };
     },

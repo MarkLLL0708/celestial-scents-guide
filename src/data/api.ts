@@ -1,11 +1,19 @@
 import { en } from "@/i18n/en";
 import { vi } from "@/i18n/vi";
-import { perfumes, demoChart } from "./seed";
+import { DateTime } from "luxon";
+import { perfumes, demoChart, cities } from "./seed";
+import { buildChart, natalLongitudes, toTransit } from "@/lib/astro/to-chart";
+import { dayFor, localNoon, weekFor } from "@/lib/astro/today";
+import { pickLine, quietBank, summaryBank, type BlockSlot } from "@/lib/astro/text-bank";
 import type {
   Perfume,
   BirthProfile,
   Chart,
+  CityHit,
   Prefs,
+  Body,
+  Block,
+  WeekEntry,
   Recs,
   ChartResult,
   CartItem,
@@ -20,15 +28,15 @@ import type {
   Theme,
   Today,
   Topic,
+  Transit,
 } from "./types";
 import {
-  answerFor,
+  firstRitualOfTheme,
   readingFor,
   ritualFor,
   ritualIds,
   shelfPlan,
   shelfReason,
-  todayFor,
   topics,
 } from "./astro-mock";
 export * from "./types";
@@ -54,9 +62,105 @@ export async function getPerfumes(filters?: {
 export async function getPerfume(id: string): Promise<Perfume | null> {
   return wait(inventory.find((p) => p.id === id) ?? null);
 }
-export async function computeChart(profile: BirthProfile): Promise<Chart> {
-  return wait({ ...demoChart, rising: profile.hour === null ? null : demoChart.rising });
+// ---------- real astrology engine (runs in the browser; birth details never leave it) ----------
+const CHART_KEY = "natal-notes:chart";
+export const DEMO_ID = "demo";
+
+export async function searchCities(query: string, lang: "en" | "vi"): Promise<CityHit[]> {
+  const q = query.trim();
+  if (!q) return [];
+  const fallback = () =>
+    cities.filter((c) => c.city.toLowerCase().includes(q.toLowerCase())).slice(0, 5);
+  try {
+    const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(q)}&count=5&language=${lang}&format=json`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("GEOCODE_FAILED");
+    const json = (await res.json()) as {
+      results?: {
+        name: string;
+        admin1?: string;
+        country?: string;
+        latitude: number;
+        longitude: number;
+        timezone?: string;
+      }[];
+    };
+    const hits = (json.results ?? [])
+      .filter((r) => r.timezone)
+      .map((r) => ({
+        city: r.name,
+        region: r.admin1 ?? "",
+        country: r.country ?? "",
+        lat: r.latitude,
+        lon: r.longitude,
+        timezone: r.timezone ?? "UTC",
+      }));
+    return hits.length ? hits : fallback();
+  } catch {
+    return fallback();
+  }
 }
+
+export async function computeChart(profile: BirthProfile): Promise<Chart> {
+  const c =
+    profile.lat !== undefined && profile.lon !== undefined && profile.timezone
+      ? { lat: profile.lat, lon: profile.lon, timezone: profile.timezone }
+      : cities.find((x) => x.city === profile.city);
+  if (!c) throw new Error("NO_PLACE");
+  return buildChart({
+    year: profile.year,
+    month: profile.month,
+    day: profile.day,
+    hour: profile.hour,
+    minute: profile.minute,
+    lat: c.lat,
+    lon: c.lon,
+    timezone: c.timezone,
+  });
+}
+
+/** Keeps one chart in sessionStorage so a reload keeps it. Nothing else is stored. */
+export function storeChart(name: string, chart: Chart): ChartRecord {
+  const record: ChartRecord = {
+    id: `c${Date.now().toString(36)}${Math.random().toString(36).slice(2, 8)}`,
+    name,
+    chart,
+  };
+  sessionStorage.setItem(CHART_KEY, JSON.stringify(record));
+  return record;
+}
+function readStored(): ChartRecord | null {
+  if (typeof window === "undefined") return null;
+  const raw = sessionStorage.getItem(CHART_KEY);
+  return raw ? (JSON.parse(raw) as ChartRecord) : null;
+}
+/** Current chart id: the stored one if present, else the demo chart. */
+export function currentChartId(): string {
+  try {
+    return readStored()?.id ?? DEMO_ID;
+  } catch {
+    return DEMO_ID;
+  }
+}
+export function clearChart(): void {
+  try {
+    sessionStorage.removeItem(CHART_KEY);
+  } catch {
+    /* storage unavailable: nothing to clear */
+  }
+}
+const demoRecord = (): ChartRecord => ({ id: DEMO_ID, name: "An", chart: demoChart });
+function loadChart(id: string): ChartRecord {
+  if (id === DEMO_ID) return demoRecord();
+  const r = readStored();
+  if (!r || r.id !== id) throw new Error("NOT_FOUND");
+  return r;
+}
+const skipFor = (c: Chart): Body[] => (c.birthTimeKnown ? [] : ["moon"]);
+const seedOf = (c: Chart, date: string) =>
+  Math.floor(c.details.sun.longitude * 7 + c.details.moon.longitude * 3) +
+  (Number(date.replaceAll("-", "")) % 97);
+const ritualForTheme = (theme: RitualTheme) => firstRitualOfTheme(theme);
 export async function getRecommendations(chart: Chart, prefs: Prefs): Promise<Recs> {
   const candidates = inventory.filter(
     (p) =>
@@ -204,32 +308,90 @@ export async function updatePerfume(p: Perfume): Promise<Perfume> {
 }
 
 export async function getChartById(id: string): Promise<ChartRecord> {
-  if (id !== "demo" && !saved.some((r) => r.id === id)) throw new Error("NOT_FOUND");
-  const r = saved.find((x) => x.id === id);
-  return wait({ id, name: r?.profile.name || "An", chart: r?.chart ?? demoChart });
+  return wait(loadChart(id));
 }
+
 export async function getReading(
   chartId: string,
   topic: Topic,
   lang: "en" | "vi",
 ): Promise<Reading> {
-  void chartId;
   if (!topics.includes(topic)) throw new Error("NOT_FOUND");
-  return wait(readingFor(topic, lang));
+  const { chart } = loadChart(chartId);
+  const d = chart.details;
+  const pick = (body: Body | "rising") => {
+    const p = body === "rising" ? d.rising : d[body];
+    return p ? [{ body, sign: p.sign, degree: Math.floor(p.degree) }] : [];
+  };
+  const by: Record<Topic, (Body | "rising")[]> = {
+    you: ["sun", "moon", "rising"],
+    love: ["venus", "moon"],
+    work: ["mercury", "saturn", "mars"],
+    luck: ["jupiter"],
+  };
+  const reading: Reading = { ...readingFor(topic, lang), placements: by[topic].flatMap(pick) };
+  if (topic === "luck") {
+    const best = getWeekSync(chart)
+      .filter((w): w is WeekEntry & { transit: Transit } => w.transit !== null)
+      .sort((a, b) => b.transit.strength - a.transit.strength || a.transit.orb - b.transit.orb)[0];
+    reading.week = best ? { transit: best.transit, date: best.date } : null;
+  }
+  return wait(reading);
 }
+
+function getWeekSync(chart: Chart): WeekEntry[] {
+  return weekFor(natalLongitudes(chart), skipFor(chart)).map((w) => ({
+    date: w.date,
+    transit: w.aspect ? toTransit(w.aspect) : null,
+  }));
+}
+export async function getWeek(chartId: string): Promise<WeekEntry[]> {
+  return wait(getWeekSync(loadChart(chartId).chart));
+}
+
+/** date is the visitor's local calendar day (YYYY-MM-DD); the instant used is local noon. */
 export async function getToday(chartId: string, date: string, lang: "en" | "vi"): Promise<Today> {
-  void chartId;
-  return wait(todayFor(date, lang));
+  const { chart } = loadChart(chartId);
+  const plan = dayFor(natalLongitudes(chart), localNoon(date), skipFor(chart));
+  const seed = seedOf(chart, date);
+  const block = (slot: BlockSlot, a: typeof plan.working): Block | null =>
+    a ? { transit: toTransit(a), text: pickLine(lang, slot, a.theme, seed) } : null;
+  const lead = plan.working ?? plan.pushing ?? plan.protect;
+  return wait({
+    date,
+    summary: lead ? summaryBank[lang][lead.theme] : quietBank[lang],
+    tone: plan.tone,
+    working: block("working", plan.working),
+    pushing: block("pushing", plan.pushing),
+    protect: block("protect", plan.protect),
+    quiet: plan.aspects.length ? undefined : quietBank[lang],
+    ritualId: ritualForTheme(plan.ritualTheme),
+  });
 }
+export const todayDate = () => DateTime.local().toISODate() ?? "";
+
 export async function askNotes(
   question: string,
   category: Theme,
   chartId: string,
   lang: "en" | "vi",
 ): Promise<AstroAnswer> {
-  void chartId;
   if (!question.trim()) throw new Error("EMPTY_QUESTION");
-  return wait(answerFor(question, category, lang));
+  const { chart } = loadChart(chartId);
+  const date = todayDate();
+  const plan = dayFor(natalLongitudes(chart), localNoon(date), skipFor(chart));
+  const hit = plan.aspects.find((a) => a.theme === category) ?? plan.aspects[0];
+  const aspect = hit;
+  const theme = aspect?.theme ?? category;
+  const slot: BlockSlot = aspect?.kind === "hard" ? "pushing" : "working";
+  const line = pickLine(lang, slot, theme, seedOf(chart, date) + question.trim().length);
+  return wait({
+    transit: aspect
+      ? toTransit(aspect)
+      : { transiting: "moon", aspect: "conjunct", natal: "sun", orb: 0, theme, strength: 1 },
+    answer: line,
+    ritualId: ritualForTheme(plan.ritualTheme === "calm" ? "calm" : theme),
+  });
 }
 export async function listRituals(lang: "en" | "vi", theme?: RitualTheme): Promise<Ritual[]> {
   const all = ritualIds.map((id) => ritualFor(id, lang)).filter((r): r is Ritual => r !== null);

@@ -10,6 +10,7 @@ function Page() {
 export const Route = createFileRoute("/shop/$id")({
   validateSearch: validatePreview,
   loader: ({ context, params }) => context.queryClient.ensureQueryData(productQuery(params.id)),
-  head: ({ loaderData }) => metadata(loaderData?.name ?? "perfume not found", "One perfume, its notes and price."),
+  head: ({ loaderData }) =>
+    metadata(loaderData?.name ?? "perfume not found", "One perfume, its notes and price."),
   component: Page,
 });
