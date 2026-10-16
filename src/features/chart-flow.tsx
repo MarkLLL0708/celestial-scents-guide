@@ -252,9 +252,9 @@ export function ChartFlow({ step: rawStep }: { step?: number }) {
         {content}
       </div>
       <div className="chart-step-bottom">
-        {[2, 3, 4].includes(step) && <p className="small muted chart-helper">{t.helperData}</p>}
+        {[2, 3, 4].includes(step) && <p className="small muted chart-helper wheel-privacy">{t.wheelPrivacy}</p>}
         <Button onClick={next} disabled={!valid}>
-          {step === TOTAL ? t.seeMatches : t.next}
+          {step === TOTAL ? t.seeMatches : t.continue}
         </Button>
         {step > 1 && (
           <Button variant="text" onClick={() => go(step - 1)}>

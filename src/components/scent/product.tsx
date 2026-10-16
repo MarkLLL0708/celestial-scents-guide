@@ -6,6 +6,7 @@ import { useLanguage } from "@/i18n/provider";
 import { useStore } from "@/data/context";
 import type { Perfume } from "@/data/types";
 import { Bottle } from "./artwork";
+import { PerfumePrice, perfumeName } from "./catalogue-details";
 export function Notes({ perfume }: { perfume: Perfume }) {
   const { t, word } = useLanguage();
   return (
@@ -13,7 +14,7 @@ export function Notes({ perfume }: { perfume: Perfume }) {
       {(["top", "heart", "base"] as const).map((k) => (
         <div className="note-row" key={k}>
           <span className="label">{t[k]}</span>
-          <span>{perfume[`${k}_notes`].map(word).join(", ")}</span>
+          <span>{perfume[`${k}_notes`].map(word).join(", ") || "—"}</span>
         </div>
       ))}
     </div>
@@ -32,7 +33,7 @@ export function AddButton({
   const inCart = forceInCart || store.cartItems.some((p) => p.perfume.id === perfume.id);
   return (
     <Button
-      disabled={perfume.sold_out}
+      disabled={perfume.sold_out || perfume.details_pending}
       loading={busy}
       onClick={async () => {
         setBusy(true);
@@ -41,7 +42,7 @@ export function AddButton({
         setBusy(false);
       }}
     >
-      {perfume.sold_out ? t.soldOut : inCart ? t.inCart : t.add}
+      {perfume.details_pending ? t.detailsPending : perfume.sold_out ? t.soldOut : inCart ? t.inCart : t.add}
     </Button>
   );
 }
@@ -60,23 +61,23 @@ export function ProductCard({
   compact?: boolean;
   forceInCart?: boolean;
 }) {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const path = useRouterState({ select: (s) => s.location.pathname });
   if (!allowsPrice(path)) return null;
   return (
     <article className={`product product-${variant} ${variant === "signature" ? "ink" : ""}`}>
       {variant === "shadow" && <p className="label mb-4">{t.shadow}</p>}
       <div className="product-image">
-        <Bottle family={perfume.scent_family} name={perfume.name} />
+        <Bottle family={perfume.scent_family} name={perfumeName(perfume, lang)} />
       </div>
       <div className="product-meta">
         <div>
           <Link to="/shop/$id" params={{ id: perfume.id }} className="product-name">
-            {perfume.name}
+            {perfumeName(perfume, lang)}
           </Link>
           <p className="label product-brand">{perfume.brand}</p>
           <p className="product-price">
-            ${perfume.price} · {perfume.size_ml} ml
+            <PerfumePrice perfume={perfume} />
           </p>
         </div>
         {score !== undefined && (
