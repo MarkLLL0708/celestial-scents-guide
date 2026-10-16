@@ -27,3 +27,7 @@
 - Shared back navigation lives in the root shell, with questionnaire and Ask controls kept in their own headers so every content page has a way back.
 - Cloud stores only explicit privacy-safe chart projections; birth inputs and location context remain browser-only, and saved charts use UTC as a neutral display context when reopened.
 - Shared React contexts are created with stableContext() so they keep the same identity across hot reloads; otherwise providers and consumers drift apart and the preview blanks.
+- Catalogue names and bilingual story hooks have a bundled source with Cloud overrides; incomplete commercial metadata disables purchase and does not influence price, style or intensity scoring, so unknown facts never become fabricated offers.
+- Outer-planet chart placements are computed separately from the established seven-body daily-transit model and remain optional on saved charts, preserving existing references and old records.
+- Saved scent capsules and ritual step progress use authenticated owner-scoped Cloud services; raw birth edits stay in the browser and only calculated charts may be saved.
+- Placement, daily and chapter interpretations are pure browser-safe astrology services reached through api.ts, keeping screens free of astrology logic.
