@@ -57,11 +57,26 @@ export const liveAsk = createServerFn({ method: "POST" })
     if (!apiKey) return { ok: false as const, reason: "unavailable" as const };
     const prompt = `Language: ${data.lang}. Category: ${data.theme === "luck" ? "mood" : data.theme}. Question: "${data.question.replace(/"/g, "'")}". Sun ${data.sun}, Moon ${data.moon}, Rising ${data.rising ?? "unknown"}. Today: ${data.transit} (${data.sky}). Ritual: ${data.ritual}. Perfume: ${data.perfume ?? "none"}${data.notes ? ` with notes ${data.notes}` : ""}.`;
     try {
-      const { generateText } = await import("ai");
-      const { createLovableAiGatewayProvider } = await import("@/lib/ai/gateway-helpers.server");
-      const provider = createLovableAiGatewayProvider(apiKey, undefined, { baseURL: "https://ai.gateway.lovable.dev/v1" });
-      const res = await generateText({ model: provider("google/gemini-3-flash-preview"), system: SYSTEM, prompt, maxRetries: 1, abortSignal: AbortSignal.timeout(20000) });
-      const body = res.text.trim();
+      const { streamText } = await import("ai");
+      const { createOpenAI } = await import("@ai-sdk/openai");
+      const { createLovableAiGatewayRunIdFetch } = await import("@/lib/ai/gateway-helpers.server");
+      const openai = createOpenAI({
+        baseURL: "https://ai.gateway.lovable.dev/v1",
+        apiKey: "unused",
+        headers: { "Lovable-API-Key": apiKey, "X-Lovable-AIG-SDK": "vercel-ai-sdk" },
+        fetch: createLovableAiGatewayRunIdFetch(undefined).fetch,
+      });
+      const res = streamText({
+        model: openai.responses("openai/gpt-6-astra"),
+        system: SYSTEM,
+        prompt,
+        maxRetries: 1,
+        providerOptions: {
+          openai: { forceReasoning: true, reasoningEffort: "low", reasoningSummary: "auto", store: false, include: ["reasoning.encrypted_content"] },
+        },
+      });
+      const text = await res.text;
+      const body = text.trim();
       if (!body || validateLiveAnswer(body).length) {
         await log("fallback");
         return { ok: false as const, reason: "invalid" as const };
