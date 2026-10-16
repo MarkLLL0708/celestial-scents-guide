@@ -665,6 +665,8 @@ export const en = {
   "setExactTime": "Set my exact time",
   "detailsPending": "Price and size to be confirmed",
   "notesPending": "These notes are provisional. Confirmation is still pending.",
+  "citrus": "Citrus",
+  "wood": "Wood",
   "bestseller": "Top {n}",
   "saveCapsule": "Save these scents",
   "capsuleSaved": "Your scents are saved.",

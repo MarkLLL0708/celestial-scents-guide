@@ -666,6 +666,8 @@ export const vi: Dictionary = {
   "setExactTime": "Nhập giờ sinh chính xác",
   "detailsPending": "Giá và dung tích đang chờ xác nhận",
   "notesPending": "Các nốt hương này còn tạm tính, đang chờ xác nhận.",
+  "citrus": "Cam chanh",
+  "wood": "Gỗ",
   "bestseller": "Top {n}",
   "saveCapsule": "Lưu những mùi hương này",
   "capsuleSaved": "Đã lưu bộ mùi hương của bạn.",

@@ -6,6 +6,7 @@ import { parseCatalogue } from "@/lib/match/catalogue";
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "@/integrations/supabase/types";
 import { ritualFor } from "./astro-mock";
+import catalogueNames from "./perfume-names.json";
 
 export const publicPerfumes = createServerFn({ method: "GET" }).handler(async () => {
   const url = process.env["SUPABASE_URL"];
@@ -81,8 +82,6 @@ export const saveRitualRecord = createServerFn({ method: "POST" })
 export const deleteMyData = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const removed = await context.supabase.from("saved_capsules").delete().eq("user_id", context.userId);
-    if (removed.error) throw new Error(removed.error.message);
     const { error } = await context.supabase.rpc("delete_my_natal_data");
     if (error) throw new Error(error.message);
     return { ok: true };
@@ -135,6 +134,9 @@ export const saveCapsuleRecord = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth]).inputValidator(capsuleSchema)
   .handler(async ({ data, context }) => {
     if (!ritualFor(data.ritualId, "en")) throw new Error("Invalid ritual");
+    if (!data.perfumeIds.every((id) => catalogueNames.some((p) => p.id === id))) throw new Error("Invalid perfume");
+    const saved = await context.supabase.from("saved_charts").select("id").eq("id", data.chartId).eq("user_id", context.userId).maybeSingle();
+    if (saved.error || !saved.data) throw new Error("Chart unavailable");
     const { error } = await context.supabase.from("saved_capsules").upsert({ user_id: context.userId, chart_id: data.chartId, ritual_id: data.ritualId, perfume_ids: data.perfumeIds }, { onConflict: "user_id,chart_id,ritual_id" });
     if (error) throw new Error(error.message);
     return { ok: true };
