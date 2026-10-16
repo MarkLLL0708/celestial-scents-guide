@@ -29,6 +29,30 @@ export type Database = {
         }
         Relationships: []
       }
+      ask_usage: {
+        Row: {
+          created_at: string
+          id: string
+          lang: string
+          source: string
+          subject: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          lang: string
+          source: string
+          subject: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          lang?: string
+          source?: string
+          subject?: string
+        }
+        Relationships: []
+      }
       feedback: {
         Row: {
           created_at: string
