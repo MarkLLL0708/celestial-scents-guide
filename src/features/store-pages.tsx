@@ -742,7 +742,7 @@ export function AdminPage({ state = "" }: { state?: string }) {
             }
           }}
         >
-          {t.scentArchive}
+          {t.shopArchive}
         </Button>
         <Button variant="secondary" onClick={() => setUpload(true)}>
           {t.upload}
