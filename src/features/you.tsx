@@ -157,8 +157,7 @@ export function UpdatesPanel({ chartId }: { chartId: string }) {
         <StateMessage message={t.youError} retry={() => today.refetch()} />
       ) : !today.data ? (
         <div className="stack" aria-busy="true">
-          <Skeleton className="h-10" />
-          <Skeleton className="h-24" />
+          <Skeleton />
         </div>
       ) : (
         <article className="stack you-update">
