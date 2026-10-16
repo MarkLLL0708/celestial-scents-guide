@@ -7,13 +7,15 @@ import type { Dictionary } from "@/i18n/en";
 import * as api from "@/data/api";
 import { signs } from "@/lib/library/keys";
 import type { Block, Chart, Planet } from "@/data/types";
+import { Bottle } from "@/components/scent/artwork";
+import { perfumeName } from "@/components/scent/catalogue-details";
 import { glyphs, transitText, FeedbackRow } from "./chart-result";
 import { StateMessage } from "./shared";
 import { Skeleton } from "@/components/scent/controls";
 
 const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 const planetKey = (p: Planet) => `planet${cap(p)}` as keyof Dictionary;
-const ORDER: Planet[] = ["rising", "sun", "moon", "mercury", "venus", "mars", "jupiter", "saturn"];
+const ORDER: Planet[] = ["rising", "sun", "moon", "mercury", "venus", "mars", "jupiter", "saturn", "uranus", "neptune", "pluto"];
 
 /** Whole-sign house of a sign, counted from the rising sign; null without a birth time. */
 export function wholeSignHouse(sign: string, rising: string | null): number | null {
@@ -29,7 +31,7 @@ export function useYouChart() {
   useEffect(() => setId(api.currentChartId()), []);
   const q = useQuery({
     queryKey: ["chart", id],
-    queryFn: () => api.getChartById(id!),
+    queryFn: () => { if (!id) throw new Error("No chart"); return api.getChartById(id); },
     enabled: !!id,
   });
   return { id, isDemo: id === api.DEMO_ID, ...q };
@@ -107,7 +109,7 @@ function TensionIcon({ kind }: { kind: "power" | "pressure" | "trouble" }) {
 }
 
 export function UpdatesPanel({ chartId }: { chartId: string }) {
-  const { t, lang } = useLanguage();
+  const { t, lang, word } = useLanguage();
   const [days, setDays] = useState<{ iso: string; d: Date; offset: number }[]>([]);
   const [date, setDate] = useState("");
   useEffect(() => {
@@ -126,9 +128,12 @@ export function UpdatesPanel({ chartId }: { chartId: string }) {
   });
   const ritual = useQuery({
     queryKey: ["ritual", today.data?.ritualId, lang],
-    queryFn: () => api.getRitual(today.data!.ritualId, lang),
+    queryFn: () => { const ritualId = today.data?.ritualId; if (!ritualId) throw new Error("No ritual"); return api.getRitual(ritualId, lang); },
     enabled: !!today.data?.ritualId,
   });
+  const chart = useQuery({ queryKey: ["chart", chartId], queryFn: () => api.getChartById(chartId) });
+  const scent = useQuery({ queryKey: ["daily-scent", chartId, date, today.data?.ritualId, lang], queryFn: () => api.getCapsule(chartId, lang, today.data?.ritualId), enabled: !!today.data });
+  const pick = scent.data?.[0];
   const weekday = new Intl.DateTimeFormat(lang === "vi" ? "vi-VN" : "en-GB", { weekday: "short" });
   const rows: { kind: "power" | "pressure" | "trouble"; label: string; block: Block | null }[] = today.data
     ? [
@@ -141,7 +146,7 @@ export function UpdatesPanel({ chartId }: { chartId: string }) {
     <div className="stack">
       <div className="day-strip" role="group" aria-label={t.youDays}>
         {days.map((d) => (
-          <button
+          <Button variant="text"
             key={d.iso}
             type="button"
             className="day-pill"
@@ -150,7 +155,7 @@ export function UpdatesPanel({ chartId }: { chartId: string }) {
           >
             <span className="label">{d.offset === 0 ? t.youToday : weekday.format(d.d).toUpperCase()}</span>
             <span className={`day-num ${d.offset === 0 ? "day-today" : ""}`}>{d.d.getDate()}</span>
-          </button>
+          </Button>
         ))}
       </div>
       {today.isError ? (
@@ -167,25 +172,32 @@ export function UpdatesPanel({ chartId }: { chartId: string }) {
           ) : (
             <ul className="tension-list">
               {rows
-                .filter((r) => r.block)
+                .flatMap((r) => r.block ? [r as { kind: "power" | "pressure" | "trouble"; label: string; block: Block }] : [])
                 .map((r) => (
                   <li key={r.kind} className="tension-row">
                     <TensionIcon kind={r.kind} />
                     <div className="stack-sm">
                       <p>
-                        {r.label} <span className="underlined">{transitText(t, r.block!.transit)}</span>
+                         {r.label} <span className="underlined">{transitText(t, r.block.transit)}</span>
                       </p>
-                      <p className="small muted">{r.block!.text}</p>
+                       <p className="small muted">{r.block.text}</p>
                     </div>
                   </li>
                 ))}
             </ul>
           )}
+          {chart.data && <section className="daily-reading stack">
+            <h3 className="label muted">{t.youDailyReading}</h3>
+            {rows.flatMap((r) => r.block ? [r.block] : []).map((block) => <div className="stack-sm" key={transitText(t,block.transit)}>
+              {api.interpretDaily(chart.data.chart, block.transit, lang).map((text,i) => <p key={i} className={i === 0 ? "small muted" : ""}>{text}</p>)}
+            </div>)}
+          </section>}
           {ritual.data && (
             <div className="you-ground">
-              <p className="label muted">{t.youGround}</p>
-              <p>{ritual.data.title}</p>
-              <Button asChild variant="secondary">
+              <p className="label muted">{t.dailyScent}</p>
+              {pick && <div className="daily-pairing"><Bottle family={pick.perfume.scent_family} name={perfumeName(pick.perfume,lang)} /><div className="stack-sm"><h3 className="question">{perfumeName(pick.perfume,lang)}</h3><p>{t.dailyScentLine.replace("{perfume}",perfumeName(pick.perfume,lang)).replace("{ritual}",ritual.data.title).replace("{notes}",pick.perfume.heart_notes.slice(0,3).map(word).join(", "))}</p><p className="small muted">{pick.reason}</p></div></div>}
+              {!pick && <p>{ritual.data.title}</p>}
+              <Button asChild>
                 <Link to="/rituals/$id" params={{ id: ritual.data.id }}>
                   {t.youSeeRitual}
                 </Link>
@@ -200,7 +212,7 @@ export function UpdatesPanel({ chartId }: { chartId: string }) {
 }
 
 export function ChartGrid({ chart }: { chart: Chart }) {
-  const { t, word } = useLanguage();
+  const { t, word, lang } = useLanguage();
   const [active, setActive] = useState<Planet>("sun");
   const rows = ORDER.flatMap((p) => {
     const sign = p === "rising" ? chart.rising : chart[p];
@@ -211,12 +223,12 @@ export function ChartGrid({ chart }: { chart: Chart }) {
   const sel = rows.find((r) => r.p === active) ?? rows[0];
   return (
     <div className="stack">
-      <p className="small muted">{t.youGridHint}</p>
       <div className="grid-frame">
         <span className="grid-side label muted" aria-hidden="true">
           {t.youSigns}
         </span>
         <table className="planet-grid">
+          <colgroup><col className="grid-sign-col"/><col className="grid-body-col"/><col className="grid-house-col"/></colgroup>
           <thead className="sr-only">
             <tr>
               <th>{t.youSigns}</th>
@@ -229,15 +241,15 @@ export function ChartGrid({ chart }: { chart: Chart }) {
               <tr key={r.p} className={r.p === sel?.p ? "grid-active" : ""}>
                 <td>{word(r.sign)}</td>
                 <td>
-                  <button
+                  <Button variant="text"
                     type="button"
                     className="label grid-planet"
                     aria-pressed={r.p === sel?.p}
                     onClick={() => setActive(r.p)}
                   >
-                    <span aria-hidden="true">{glyphs[r.p]}</span> {t[planetKey(r.p)]}
+                    <span aria-hidden="true">{glyphs[r.p]}</span><span>{t[planetKey(r.p)]}</span>
                     {r.degree !== undefined && <span className="muted"> {Math.floor(r.degree)}°</span>}
-                  </button>
+                  </Button>
                 </td>
                 <td className="grid-house">{r.house ?? "—"}</td>
               </tr>
@@ -250,18 +262,8 @@ export function ChartGrid({ chart }: { chart: Chart }) {
       </div>
       {sel && (
         <section className="placement-card stack" aria-live="polite">
-          <h2 className="lg">
-            {t.youInSign.replace("{planet}", t[planetKey(sel.p)]).replace("{sign}", word(sel.sign))}
-          </h2>
-          <p>{t[`mean${cap(sel.p)}` as keyof Dictionary]}</p>
-          <p>{t[`sign${sel.sign}` as keyof Dictionary]}</p>
-          <p className="muted">
-            {sel.house
-              ? t.youHouseLine
-                  .replace("{n}", t[`ord${sel.house}` as keyof Dictionary])
-                  .replace("{meaning}", t[`house${sel.house}` as keyof Dictionary])
-              : t.youNoHouse}
-          </p>
+          <h2 className="lg">{api.inspectPlacement(chart, sel.p, lang).title}</h2>
+          {api.inspectPlacement(chart, sel.p, lang).paragraphs.map((p,i) => <p key={i} className={i === 2 ? "muted" : ""}>{p}</p>)}
         </section>
       )}
     </div>

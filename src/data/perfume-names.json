@@ -1,0 +1,1165 @@
+[
+  {
+    "id": "P-001",
+    "name": "White Shirt",
+    "name_vi": "Áo Sơ Mi Trắng",
+    "story_hook": "ironing the one shirt that makes you feel ready for anything",
+    "scent_family": "Fresh",
+    "heart_notes": [
+      "tea",
+      "soap"
+    ],
+    "mood_tags": [
+      "clean",
+      "calm",
+      "refined"
+    ],
+    "review_note": "name taken from your own examples",
+    "bestseller_rank": 3,
+    "brand": "",
+    "price": 0,
+    "currency": "",
+    "size_ml": 0,
+    "style": "unisex",
+    "intensity": 3,
+    "top_notes": [],
+    "base_notes": [],
+    "sold_out": false,
+    "details_pending": true,
+    "story_vi": "Chiếc áo vừa là phẳng, khiến bạn thấy mình sẵn sàng cho mọi chuyện."
+  },
+  {
+    "id": "P-002",
+    "name": "Pocket Tissue",
+    "name_vi": "Khăn Giấy Bỏ Túi",
+    "story_hook": "the tissue your mother always had, right when you needed it",
+    "scent_family": "Fresh",
+    "heart_notes": [
+      "tea",
+      "citrus",
+      "wood"
+    ],
+    "mood_tags": [
+      "clean",
+      "cool",
+      "bright"
+    ],
+    "review_note": null,
+    "bestseller_rank": 5,
+    "brand": "",
+    "price": 0,
+    "currency": "",
+    "size_ml": 0,
+    "style": "unisex",
+    "intensity": 3,
+    "top_notes": [],
+    "base_notes": [],
+    "sold_out": false,
+    "details_pending": true,
+    "story_vi": "Khăn giấy mẹ luôn mang theo, đúng lúc bạn cần nhất."
+  },
+  {
+    "id": "P-003",
+    "name": "Overtime Tea",
+    "name_vi": "Trà Tăng Ca",
+    "story_hook": "the tea you make at 9pm because the work isn't done and neither are you",
+    "scent_family": "Citrus",
+    "heart_notes": [
+      "green tea",
+      "green mandarin"
+    ],
+    "mood_tags": [
+      "calm",
+      "bright",
+      "playful"
+    ],
+    "review_note": null,
+    "bestseller_rank": 10,
+    "brand": "",
+    "price": 0,
+    "currency": "",
+    "size_ml": 0,
+    "style": "unisex",
+    "intensity": 3,
+    "top_notes": [],
+    "base_notes": [],
+    "sold_out": false,
+    "details_pending": true,
+    "story_vi": "Chén trà lúc chín giờ tối. Việc chưa xong, bạn cũng chưa muốn dừng."
+  },
+  {
+    "id": "P-004",
+    "name": "Grandpa's Tea",
+    "name_vi": "Trà Của Ông",
+    "story_hook": "grandfather's thermos on the table, the radio on low",
+    "scent_family": "Floral",
+    "heart_notes": [
+      "green tea",
+      "jasmine"
+    ],
+    "mood_tags": [
+      "comforting",
+      "calm",
+      "warm"
+    ],
+    "review_note": null,
+    "bestseller_rank": null,
+    "brand": "",
+    "price": 0,
+    "currency": "",
+    "size_ml": 0,
+    "style": "unisex",
+    "intensity": 3,
+    "top_notes": [],
+    "base_notes": [],
+    "sold_out": false,
+    "details_pending": true,
+    "story_vi": "Bình trà của ông trên bàn, tiếng radio khe khẽ."
+  },
+  {
+    "id": "P-005",
+    "name": "Cold Water",
+    "name_vi": "Ly Nước Lạnh",
+    "story_hook": "the first glass of water on a hot day, before you say a word",
+    "scent_family": "Fresh",
+    "heart_notes": [
+      "spring water",
+      "sweetness"
+    ],
+    "mood_tags": [
+      "cool",
+      "fresh",
+      "clean"
+    ],
+    "review_note": null,
+    "bestseller_rank": null,
+    "brand": "",
+    "price": 0,
+    "currency": "",
+    "size_ml": 0,
+    "style": "unisex",
+    "intensity": 3,
+    "top_notes": [],
+    "base_notes": [],
+    "sold_out": false,
+    "details_pending": true,
+    "story_vi": "Ngụm nước đầu tiên giữa ngày nóng, trước cả một lời nói."
+  },
+  {
+    "id": "P-006",
+    "name": "The Neighbour",
+    "name_vi": "Hàng Xóm",
+    "story_hook": "knocking on the door with tea and no real reason",
+    "scent_family": "Floral",
+    "heart_notes": [
+      "oolong tea",
+      "osmanthus"
+    ],
+    "mood_tags": [
+      "warm",
+      "comforting",
+      "soft"
+    ],
+    "review_note": null,
+    "bestseller_rank": null,
+    "brand": "",
+    "price": 0,
+    "currency": "",
+    "size_ml": 0,
+    "style": "unisex",
+    "intensity": 3,
+    "top_notes": [],
+    "base_notes": [],
+    "sold_out": false,
+    "details_pending": true,
+    "story_vi": "Gõ cửa nhà bên với ấm trà, chẳng cần lý do gì."
+  },
+  {
+    "id": "P-007",
+    "name": "Library",
+    "name_vi": "Thư Viện",
+    "story_hook": "a quiet afternoon, a stolen hour, a book you never returned",
+    "scent_family": "Woody",
+    "heart_notes": [
+      "tea",
+      "wood",
+      "paper"
+    ],
+    "mood_tags": [
+      "calm",
+      "refined",
+      "serious"
+    ],
+    "review_note": null,
+    "bestseller_rank": null,
+    "brand": "",
+    "price": 0,
+    "currency": "",
+    "size_ml": 0,
+    "style": "unisex",
+    "intensity": 3,
+    "top_notes": [],
+    "base_notes": [],
+    "sold_out": false,
+    "details_pending": true,
+    "story_vi": "Một chiều yên, một giờ dành riêng, cuốn sách mượn mãi chưa trả."
+  },
+  {
+    "id": "P-008",
+    "name": "Clean Sheets",
+    "name_vi": "Ga Giường Mới Giặt",
+    "story_hook": "Sunday evening, fresh sheets, the week not started yet",
+    "scent_family": "Fresh",
+    "heart_notes": [
+      "white tea",
+      "buddha's hand",
+      "soap"
+    ],
+    "mood_tags": [
+      "clean",
+      "comforting",
+      "calm"
+    ],
+    "review_note": "notes: buddha's hand comes from the name only",
+    "bestseller_rank": null,
+    "brand": "",
+    "price": 0,
+    "currency": "",
+    "size_ml": 0,
+    "style": "unisex",
+    "intensity": 3,
+    "top_notes": [],
+    "base_notes": [],
+    "sold_out": false,
+    "details_pending": true,
+    "story_vi": "Tối Chủ nhật, ga vừa giặt, tuần mới còn chưa bắt đầu."
+  },
+  {
+    "id": "P-009",
+    "name": "Rich Girl",
+    "name_vi": "Cô Nàng Nhà Giàu",
+    "story_hook": "the girl who never raises her voice and never needs to",
+    "scent_family": "Floral",
+    "heart_notes": [
+      "lychee",
+      "rose"
+    ],
+    "mood_tags": [
+      "elegant",
+      "soft",
+      "refined"
+    ],
+    "review_note": null,
+    "bestseller_rank": 2,
+    "brand": "",
+    "price": 0,
+    "currency": "",
+    "size_ml": 0,
+    "style": "unisex",
+    "intensity": 3,
+    "top_notes": [],
+    "base_notes": [],
+    "sold_out": false,
+    "details_pending": true,
+    "story_vi": "Cô gái chẳng cần lớn tiếng để được lắng nghe."
+  },
+  {
+    "id": "P-010",
+    "name": "Afternoon Nap",
+    "name_vi": "Giấc Ngủ Trưa",
+    "story_hook": "sliced watermelon, the fan turning, everyone asleep but you",
+    "scent_family": "Fresh",
+    "heart_notes": [
+      "watermelon",
+      "bellflower"
+    ],
+    "mood_tags": [
+      "playful",
+      "fresh",
+      "bright"
+    ],
+    "review_note": "notes: bellflower comes from the name",
+    "bestseller_rank": null,
+    "brand": "",
+    "price": 0,
+    "currency": "",
+    "size_ml": 0,
+    "style": "unisex",
+    "intensity": 3,
+    "top_notes": [],
+    "base_notes": [],
+    "sold_out": false,
+    "details_pending": true,
+    "story_vi": "Dưa hấu cắt sẵn, quạt quay đều, cả nhà ngủ trưa."
+  },
+  {
+    "id": "P-011",
+    "name": "Funfair",
+    "name_vi": "Hội Chợ",
+    "story_hook": "holding hands badly, cotton candy melting, the date going well",
+    "scent_family": "Gourmand",
+    "heart_notes": [
+      "grape",
+      "cotton candy",
+      "gardenia"
+    ],
+    "mood_tags": [
+      "playful",
+      "dreamy",
+      "bright"
+    ],
+    "review_note": null,
+    "bestseller_rank": null,
+    "brand": "",
+    "price": 0,
+    "currency": "",
+    "size_ml": 0,
+    "style": "unisex",
+    "intensity": 3,
+    "top_notes": [],
+    "base_notes": [],
+    "sold_out": false,
+    "details_pending": true,
+    "story_vi": "Tay nắm còn vụng, kẹo bông đang tan, buổi hẹn lại rất vui."
+  },
+  {
+    "id": "P-012",
+    "name": "Evening Walk",
+    "name_vi": "Dạo Buổi Tối",
+    "story_hook": "jasmine from someone's gate, a phone call you take slowly",
+    "scent_family": "Floral",
+    "heart_notes": [
+      "jasmine"
+    ],
+    "mood_tags": [
+      "cool",
+      "dreamy",
+      "soft"
+    ],
+    "review_note": null,
+    "bestseller_rank": 9,
+    "brand": "",
+    "price": 0,
+    "currency": "",
+    "size_ml": 0,
+    "style": "unisex",
+    "intensity": 3,
+    "top_notes": [],
+    "base_notes": [],
+    "sold_out": false,
+    "details_pending": true,
+    "story_vi": "Hương nhài từ một cánh cổng, cuộc gọi bạn chẳng muốn kết thúc."
+  },
+  {
+    "id": "P-013",
+    "name": "Cold Shoulder",
+    "name_vi": "Lạnh Nhạt",
+    "story_hook": "still lovely, just not to you tonight",
+    "scent_family": "Floral",
+    "heart_notes": [
+      "rose",
+      "wood"
+    ],
+    "mood_tags": [
+      "cool",
+      "unusual",
+      "elegant"
+    ],
+    "review_note": null,
+    "bestseller_rank": null,
+    "brand": "",
+    "price": 0,
+    "currency": "",
+    "size_ml": 0,
+    "style": "unisex",
+    "intensity": 3,
+    "top_notes": [],
+    "base_notes": [],
+    "sold_out": false,
+    "details_pending": true,
+    "story_vi": "Vẫn dịu dàng. Chỉ là tối nay không dành cho bạn."
+  },
+  {
+    "id": "P-014",
+    "name": "Red Lipstick",
+    "name_vi": "Son Đỏ",
+    "story_hook": "the one you only wear when you have decided something",
+    "scent_family": "Floral",
+    "heart_notes": [
+      "rose"
+    ],
+    "mood_tags": [
+      "sensual",
+      "mysterious",
+      "elegant"
+    ],
+    "review_note": null,
+    "bestseller_rank": null,
+    "brand": "",
+    "price": 0,
+    "currency": "",
+    "size_ml": 0,
+    "style": "unisex",
+    "intensity": 3,
+    "top_notes": [],
+    "base_notes": [],
+    "sold_out": false,
+    "details_pending": true,
+    "story_vi": "Thỏi son chỉ lấy ra khi bạn đã quyết định điều gì."
+  },
+  {
+    "id": "P-015",
+    "name": "Pressed Flower",
+    "name_vi": "Hoa Ép Trong Sách",
+    "story_hook": "found in a book years later, from someone you forgot",
+    "scent_family": "Floral",
+    "heart_notes": [
+      "small flowers",
+      "paper",
+      "rain"
+    ],
+    "mood_tags": [
+      "romantic",
+      "soft",
+      "calm"
+    ],
+    "review_note": "notes: paper comes from the name",
+    "bestseller_rank": null,
+    "brand": "",
+    "price": 0,
+    "currency": "",
+    "size_ml": 0,
+    "style": "unisex",
+    "intensity": 3,
+    "top_notes": [],
+    "base_notes": [],
+    "sold_out": false,
+    "details_pending": true,
+    "story_vi": "Bông hoa trong sách, nhiều năm sau mới thấy lại."
+  },
+  {
+    "id": "P-016",
+    "name": "Picnic",
+    "name_vi": "Dã Ngoại",
+    "story_hook": "a blanket, too much food, nobody checking the time",
+    "scent_family": "Floral",
+    "heart_notes": [
+      "floral",
+      "fruit"
+    ],
+    "mood_tags": [
+      "playful",
+      "fresh",
+      "comforting"
+    ],
+    "review_note": "notes: the description is generic; please list the real notes",
+    "bestseller_rank": null,
+    "brand": "",
+    "price": 0,
+    "currency": "",
+    "size_ml": 0,
+    "style": "unisex",
+    "intensity": 3,
+    "top_notes": [],
+    "base_notes": [],
+    "sold_out": false,
+    "details_pending": true,
+    "story_vi": "Tấm thảm, quá nhiều đồ ăn, không ai nhìn đồng hồ."
+  },
+  {
+    "id": "P-017",
+    "name": "Wedding Guest",
+    "name_vi": "Khách Dự Đám Cưới",
+    "story_hook": "arriving late, in the right dress, at the wrong table",
+    "scent_family": "Floral",
+    "heart_notes": [
+      "tuberose",
+      "white flowers"
+    ],
+    "mood_tags": [
+      "elegant",
+      "romantic",
+      "radiant"
+    ],
+    "review_note": null,
+    "bestseller_rank": null,
+    "brand": "",
+    "price": 0,
+    "currency": "",
+    "size_ml": 0,
+    "style": "unisex",
+    "intensity": 3,
+    "top_notes": [],
+    "base_notes": [],
+    "sold_out": false,
+    "details_pending": true,
+    "story_vi": "Đến muộn, mặc đúng bộ, ngồi nhầm bàn."
+  },
+  {
+    "id": "P-018",
+    "name": "The Ex",
+    "name_vi": "Người Cũ",
+    "story_hook": "the rose you kept, sweet and a little sour, long after",
+    "scent_family": "Floral",
+    "heart_notes": [
+      "rose",
+      "wood"
+    ],
+    "mood_tags": [
+      "romantic",
+      "mysterious",
+      "serious"
+    ],
+    "review_note": null,
+    "bestseller_rank": null,
+    "brand": "",
+    "price": 0,
+    "currency": "",
+    "size_ml": 0,
+    "style": "unisex",
+    "intensity": 3,
+    "top_notes": [],
+    "base_notes": [],
+    "sold_out": false,
+    "details_pending": true,
+    "story_vi": "Đóa hồng giữ lại sau chia tay: ngọt, chua và một chút gỗ."
+  },
+  {
+    "id": "P-019",
+    "name": "Balcony",
+    "name_vi": "Ban Công",
+    "story_hook": "coffee at dawn, the neighbours' laundry, a quiet decision",
+    "scent_family": "Floral",
+    "heart_notes": [
+      "jasmine",
+      "pine",
+      "floral"
+    ],
+    "mood_tags": [
+      "fresh",
+      "bright",
+      "adventurous"
+    ],
+    "review_note": "notes: jasmine and pine come from the name",
+    "bestseller_rank": null,
+    "brand": "",
+    "price": 0,
+    "currency": "",
+    "size_ml": 0,
+    "style": "unisex",
+    "intensity": 3,
+    "top_notes": [],
+    "base_notes": [],
+    "sold_out": false,
+    "details_pending": true,
+    "story_vi": "Cà phê lúc bình minh, giàn áo nhà bên, một quyết định lặng lẽ."
+  },
+  {
+    "id": "P-020",
+    "name": "Pomelo",
+    "name_vi": "Bưởi",
+    "story_hook": "grandmother peeling it in one piece for the whole family",
+    "scent_family": "Citrus",
+    "heart_notes": [
+      "green mandarin",
+      "pomelo"
+    ],
+    "mood_tags": [
+      "bright",
+      "energetic",
+      "fresh"
+    ],
+    "review_note": null,
+    "bestseller_rank": 1,
+    "brand": "",
+    "price": 0,
+    "currency": "",
+    "size_ml": 0,
+    "style": "unisex",
+    "intensity": 3,
+    "top_notes": [],
+    "base_notes": [],
+    "sold_out": false,
+    "details_pending": true,
+    "story_vi": "Bà bóc vỏ bưởi liền một dải, chia cho cả nhà."
+  },
+  {
+    "id": "P-021",
+    "name": "Too Sour",
+    "name_vi": "Chua Quá",
+    "story_hook": "the first bite you shouldn't have taken, and take again",
+    "scent_family": "Fresh",
+    "heart_notes": [
+      "green apple",
+      "grass"
+    ],
+    "mood_tags": [
+      "playful",
+      "energetic",
+      "bright"
+    ],
+    "review_note": null,
+    "bestseller_rank": 6,
+    "brand": "",
+    "price": 0,
+    "currency": "",
+    "size_ml": 0,
+    "style": "unisex",
+    "intensity": 3,
+    "top_notes": [],
+    "base_notes": [],
+    "sold_out": false,
+    "details_pending": true,
+    "story_vi": "Miếng đầu chua đến nhăn mặt. Vậy mà vẫn cắn thêm."
+  },
+  {
+    "id": "P-022",
+    "name": "Breakfast",
+    "name_vi": "Bữa Sáng",
+    "story_hook": "orange juice in a rush, sun on the table, late for work",
+    "scent_family": "Citrus",
+    "heart_notes": [
+      "orange"
+    ],
+    "mood_tags": [
+      "playful",
+      "bright",
+      "radiant"
+    ],
+    "review_note": null,
+    "bestseller_rank": null,
+    "brand": "",
+    "price": 0,
+    "currency": "",
+    "size_ml": 0,
+    "style": "unisex",
+    "intensity": 3,
+    "top_notes": [],
+    "base_notes": [],
+    "sold_out": false,
+    "details_pending": true,
+    "story_vi": "Ly cam uống vội, nắng trên bàn, lại sắp trễ giờ."
+  },
+  {
+    "id": "P-023",
+    "name": "Fruit Plate",
+    "name_vi": "Đĩa Trái Cây",
+    "story_hook": "mother cuts the fruit and says: eat, you're too thin",
+    "scent_family": "Fresh",
+    "heart_notes": [
+      "green grape"
+    ],
+    "mood_tags": [
+      "fresh",
+      "cool",
+      "bright"
+    ],
+    "review_note": null,
+    "bestseller_rank": 8,
+    "brand": "",
+    "price": 0,
+    "currency": "",
+    "size_ml": 0,
+    "style": "unisex",
+    "intensity": 3,
+    "top_notes": [],
+    "base_notes": [],
+    "sold_out": false,
+    "details_pending": true,
+    "story_vi": "Mẹ gọt trái cây rồi giục ăn, bảo dạo này gầy quá."
+  },
+  {
+    "id": "P-024",
+    "name": "Soft Spot",
+    "name_vi": "Điểm Yếu Mềm",
+    "story_hook": "the one thing that makes you fold, every time",
+    "scent_family": "Gourmand",
+    "heart_notes": [
+      "fig",
+      "milk"
+    ],
+    "mood_tags": [
+      "sensual",
+      "soft",
+      "comforting"
+    ],
+    "review_note": null,
+    "bestseller_rank": null,
+    "brand": "",
+    "price": 0,
+    "currency": "",
+    "size_ml": 0,
+    "style": "unisex",
+    "intensity": 3,
+    "top_notes": [],
+    "base_notes": [],
+    "sold_out": false,
+    "details_pending": true,
+    "story_vi": "Điều duy nhất khiến bạn mềm lòng, lần nào cũng vậy."
+  },
+  {
+    "id": "P-025",
+    "name": "Strawberry Milk",
+    "name_vi": "Sữa Dâu",
+    "story_hook": "a childhood treat you still buy and never explain",
+    "scent_family": "Gourmand",
+    "heart_notes": [
+      "milk",
+      "strawberry"
+    ],
+    "mood_tags": [
+      "playful",
+      "comforting",
+      "soft"
+    ],
+    "review_note": null,
+    "bestseller_rank": null,
+    "brand": "",
+    "price": 0,
+    "currency": "",
+    "size_ml": 0,
+    "style": "unisex",
+    "intensity": 3,
+    "top_notes": [],
+    "base_notes": [],
+    "sold_out": false,
+    "details_pending": true,
+    "story_vi": "Món quà tuổi thơ bạn vẫn mua, chẳng cần giải thích."
+  },
+  {
+    "id": "P-026",
+    "name": "Before the Storm",
+    "name_vi": "Trước Cơn Bão",
+    "story_hook": "the sky going dark, windows shut, a held breath",
+    "scent_family": "Woody",
+    "heart_notes": [
+      "wood",
+      "medicinal herbs"
+    ],
+    "mood_tags": [
+      "mysterious",
+      "cool",
+      "serious"
+    ],
+    "review_note": null,
+    "bestseller_rank": 4,
+    "brand": "",
+    "price": 0,
+    "currency": "",
+    "size_ml": 0,
+    "style": "unisex",
+    "intensity": 3,
+    "top_notes": [],
+    "base_notes": [],
+    "sold_out": false,
+    "details_pending": true,
+    "story_vi": "Trời sầm xuống, cửa sổ khép lại, một nhịp thở chờ."
+  },
+  {
+    "id": "P-027",
+    "name": "Grandma's Wardrobe",
+    "name_vi": "Tủ Quần Áo Của Bà",
+    "story_hook": "opening the door: mothballs, sandalwood, a dress you have never seen",
+    "scent_family": "Woody",
+    "heart_notes": [
+      "sandalwood",
+      "wood"
+    ],
+    "mood_tags": [
+      "comforting",
+      "warm",
+      "grounded"
+    ],
+    "review_note": null,
+    "bestseller_rank": null,
+    "brand": "",
+    "price": 0,
+    "currency": "",
+    "size_ml": 0,
+    "style": "unisex",
+    "intensity": 3,
+    "top_notes": [],
+    "base_notes": [],
+    "sold_out": false,
+    "details_pending": true,
+    "story_vi": "Mở cánh tủ của bà: gỗ đàn hương và một bộ váy cũ."
+  },
+  {
+    "id": "P-028",
+    "name": "Pencil Case",
+    "name_vi": "Hộp Bút Chì",
+    "story_hook": "sharpening a pencil on the first day back at school",
+    "scent_family": "Woody",
+    "heart_notes": [
+      "cedar"
+    ],
+    "mood_tags": [
+      "clean",
+      "grounded",
+      "refined"
+    ],
+    "review_note": null,
+    "bestseller_rank": null,
+    "brand": "",
+    "price": 0,
+    "currency": "",
+    "size_ml": 0,
+    "style": "unisex",
+    "intensity": 3,
+    "top_notes": [],
+    "base_notes": [],
+    "sold_out": false,
+    "details_pending": true,
+    "story_vi": "Gọt bút chì trong ngày đầu trở lại lớp."
+  },
+  {
+    "id": "P-029",
+    "name": "Tile Floor",
+    "name_vi": "Nền Gạch Mát",
+    "story_hook": "lying flat on the cool floor in the heat of the afternoon",
+    "scent_family": "Woody",
+    "heart_notes": [
+      "vetiver"
+    ],
+    "mood_tags": [
+      "cool",
+      "grounded",
+      "serious"
+    ],
+    "review_note": "notes: vetiver is my guess from the name; please confirm",
+    "bestseller_rank": null,
+    "brand": "",
+    "price": 0,
+    "currency": "",
+    "size_ml": 0,
+    "style": "unisex",
+    "intensity": 3,
+    "top_notes": [],
+    "base_notes": [],
+    "sold_out": false,
+    "details_pending": true,
+    "story_vi": "Nằm trên nền gạch mát giữa buổi chiều nóng."
+  },
+  {
+    "id": "P-030",
+    "name": "Temple Visit",
+    "name_vi": "Đi Chùa",
+    "story_hook": "incense, a bitter smell, and a wish you don't say aloud",
+    "scent_family": "Oriental",
+    "heart_notes": [
+      "incense",
+      "medicinal herbs"
+    ],
+    "mood_tags": [
+      "mysterious",
+      "calm",
+      "serious"
+    ],
+    "review_note": null,
+    "bestseller_rank": null,
+    "brand": "",
+    "price": 0,
+    "currency": "",
+    "size_ml": 0,
+    "style": "unisex",
+    "intensity": 3,
+    "top_notes": [],
+    "base_notes": [],
+    "sold_out": false,
+    "details_pending": true,
+    "story_vi": "Mùi nhang hơi đắng, một điều ước giữ trong lòng."
+  },
+  {
+    "id": "P-031",
+    "name": "Old Medical Hall",
+    "name_vi": "Hiệu Thuốc Cũ",
+    "story_hook": "the shop of drawers and herbs where the old man knows everything",
+    "scent_family": "Woody",
+    "heart_notes": [
+      "medicinal herbs",
+      "wood"
+    ],
+    "mood_tags": [
+      "serious",
+      "unusual",
+      "grounded"
+    ],
+    "review_note": "name taken from your own examples",
+    "bestseller_rank": null,
+    "brand": "",
+    "price": 0,
+    "currency": "",
+    "size_ml": 0,
+    "style": "unisex",
+    "intensity": 3,
+    "top_notes": [],
+    "base_notes": [],
+    "sold_out": false,
+    "details_pending": true,
+    "story_vi": "Những ngăn kéo đầy thảo mộc, người chủ biết từng vị thuốc."
+  },
+  {
+    "id": "P-032",
+    "name": "A Drunk",
+    "name_vi": "Người Say",
+    "story_hook": "the man at the end of the bar with the best stories",
+    "scent_family": "Woody",
+    "heart_notes": [
+      "oud",
+      "ebony",
+      "wood"
+    ],
+    "mood_tags": [
+      "bold",
+      "intense",
+      "grounded"
+    ],
+    "review_note": "name taken from your own examples",
+    "bestseller_rank": null,
+    "brand": "",
+    "price": 0,
+    "currency": "",
+    "size_ml": 0,
+    "style": "unisex",
+    "intensity": 3,
+    "top_notes": [],
+    "base_notes": [],
+    "sold_out": false,
+    "details_pending": true,
+    "story_vi": "Người ở cuối quầy rượu luôn có chuyện hay để kể."
+  },
+  {
+    "id": "P-033",
+    "name": "Love Letter",
+    "name_vi": "Thư Tình",
+    "story_hook": "written, folded, kept in a drawer, never sent",
+    "scent_family": "Oriental",
+    "heart_notes": [
+      "lily",
+      "incense",
+      "medicinal herbs"
+    ],
+    "mood_tags": [
+      "romantic",
+      "mysterious",
+      "intense"
+    ],
+    "review_note": null,
+    "bestseller_rank": null,
+    "brand": "",
+    "price": 0,
+    "currency": "",
+    "size_ml": 0,
+    "style": "unisex",
+    "intensity": 3,
+    "top_notes": [],
+    "base_notes": [],
+    "sold_out": false,
+    "details_pending": true,
+    "story_vi": "Viết, gấp, cất vào ngăn kéo. Chưa bao giờ gửi."
+  },
+  {
+    "id": "P-034",
+    "name": "Sick Day",
+    "name_vi": "Ngày Ốm",
+    "story_hook": "rain at the window, medicine on the table, no one expects anything",
+    "scent_family": "Green",
+    "heart_notes": [
+      "wet earth",
+      "medicinal herbs"
+    ],
+    "mood_tags": [
+      "grounded",
+      "unusual",
+      "calm"
+    ],
+    "review_note": null,
+    "bestseller_rank": null,
+    "brand": "",
+    "price": 0,
+    "currency": "",
+    "size_ml": 0,
+    "style": "unisex",
+    "intensity": 3,
+    "top_notes": [],
+    "base_notes": [],
+    "sold_out": false,
+    "details_pending": true,
+    "story_vi": "Mưa ngoài cửa, thuốc trên bàn, hôm nay được phép nghỉ."
+  },
+  {
+    "id": "P-035",
+    "name": "Just Me",
+    "name_vi": "Chỉ Là Tôi",
+    "story_hook": "no perfume, just your own skin on a good day",
+    "scent_family": "Musk",
+    "heart_notes": [
+      "skin musk"
+    ],
+    "mood_tags": [
+      "sensual",
+      "unusual",
+      "soft"
+    ],
+    "review_note": "notes: musk is my guess; please confirm",
+    "bestseller_rank": null,
+    "brand": "",
+    "price": 0,
+    "currency": "",
+    "size_ml": 0,
+    "style": "unisex",
+    "intensity": 3,
+    "top_notes": [],
+    "base_notes": [],
+    "sold_out": false,
+    "details_pending": true,
+    "story_vi": "Không cần gây ấn tượng. Chỉ là mùi da quen thuộc của bạn."
+  },
+  {
+    "id": "P-036",
+    "name": "Watering Plants",
+    "name_vi": "Tưới Cây",
+    "story_hook": "dawn, a hose, wet soil, talking to the plants",
+    "scent_family": "Green",
+    "heart_notes": [
+      "green shoots",
+      "rotting wood",
+      "rain"
+    ],
+    "mood_tags": [
+      "grounded",
+      "fresh",
+      "calm"
+    ],
+    "review_note": "notes: wood and shoots come from the name",
+    "bestseller_rank": null,
+    "brand": "",
+    "price": 0,
+    "currency": "",
+    "size_ml": 0,
+    "style": "unisex",
+    "intensity": 3,
+    "top_notes": [],
+    "base_notes": [],
+    "sold_out": false,
+    "details_pending": true,
+    "story_vi": "Sáng sớm, đất ướt, vừa tưới vừa nói chuyện với cây."
+  },
+  {
+    "id": "P-037",
+    "name": "Football Field",
+    "name_vi": "Sân Bóng",
+    "story_hook": "cut grass, mint gum, the game before dinner",
+    "scent_family": "Green",
+    "heart_notes": [
+      "mint",
+      "grass"
+    ],
+    "mood_tags": [
+      "cool",
+      "playful",
+      "energetic"
+    ],
+    "review_note": null,
+    "bestseller_rank": 7,
+    "brand": "",
+    "price": 0,
+    "currency": "",
+    "size_ml": 0,
+    "style": "unisex",
+    "intensity": 3,
+    "top_notes": [],
+    "base_notes": [],
+    "sold_out": false,
+    "details_pending": true,
+    "story_vi": "Cỏ vừa cắt, kẹo bạc hà, trận bóng trước giờ cơm."
+  },
+  {
+    "id": "P-038",
+    "name": "Hotel Soap",
+    "name_vi": "Xà Phòng Khách Sạn",
+    "story_hook": "a stranger's bathroom, a new city, a fresh start",
+    "scent_family": "Musk",
+    "heart_notes": [
+      "soap"
+    ],
+    "mood_tags": [
+      "clean",
+      "refined",
+      "calm"
+    ],
+    "review_note": null,
+    "bestseller_rank": null,
+    "brand": "",
+    "price": 0,
+    "currency": "",
+    "size_ml": 0,
+    "style": "unisex",
+    "intensity": 3,
+    "top_notes": [],
+    "base_notes": [],
+    "sold_out": false,
+    "details_pending": true,
+    "story_vi": "Phòng tắm lạ, thành phố mới, bắt đầu lại."
+  },
+  {
+    "id": "P-039",
+    "name": "Baby Powder",
+    "name_vi": "Phấn Rôm",
+    "story_hook": "someone small asleep, and the quiet around them",
+    "scent_family": "Floral",
+    "heart_notes": [
+      "tuberose",
+      "gardenia",
+      "milk"
+    ],
+    "mood_tags": [
+      "soft",
+      "dreamy",
+      "comforting"
+    ],
+    "review_note": null,
+    "bestseller_rank": null,
+    "brand": "",
+    "price": 0,
+    "currency": "",
+    "size_ml": 0,
+    "style": "unisex",
+    "intensity": 3,
+    "top_notes": [],
+    "base_notes": [],
+    "sold_out": false,
+    "details_pending": true,
+    "story_vi": "Em bé đã ngủ. Cả căn phòng cũng dịu xuống."
+  },
+  {
+    "id": "P-040",
+    "name": "Beach Trip",
+    "name_vi": "Chuyến Đi Biển",
+    "story_hook": "salty skin, buttered corn, sand in the car",
+    "scent_family": "Fresh",
+    "heart_notes": [
+      "salted cream",
+      "sea salt",
+      "grass"
+    ],
+    "mood_tags": [
+      "comforting",
+      "unusual",
+      "soft"
+    ],
+    "review_note": null,
+    "bestseller_rank": null,
+    "brand": "",
+    "price": 0,
+    "currency": "",
+    "size_ml": 0,
+    "style": "unisex",
+    "intensity": 3,
+    "top_notes": [],
+    "base_notes": [],
+    "sold_out": false,
+    "details_pending": true,
+    "story_vi": "Da còn mặn, bắp nướng bơ, cát theo về trong xe."
+  }
+]

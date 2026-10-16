@@ -19,7 +19,7 @@ import { applyFilters } from "@/lib/match/filters";
 import { scorePerfume, shadowChart } from "@/lib/match/score";
 import { fallbackRitualId } from "@/config/scentMap";
 import { DateTime } from "luxon";
-import { perfumes, demoChart, cities } from "./seed";
+import { demoChart, cities } from "./seed";
 import { buildChart, natalLongitudes, toTransit } from "@/lib/astro/to-chart";
 import { dayFor, localNoon, weekFor } from "@/lib/astro/today";
 import { pickLine, quietBank, summaryBank, type BlockSlot } from "@/lib/astro/text-bank";
@@ -46,7 +46,8 @@ import type {
 } from "./types";
 import { firstRitualOfTheme, readingFor, ritualFor, ritualIds, topics } from "./astro-mock";
 export * from "./types";
-import { perfumes as samplePerfumes } from "./seed";
+import namedPerfumes from "./perfume-names.json";
+import { placementInterpretation, dailyInterpretation, chapterInterpretation } from "@/lib/astro/interpretation";
 const wait = <T>(value: T): Promise<T> =>
   new Promise((resolve) => setTimeout(() => resolve(structuredClone(value)), 600));
 let inventory: Perfume[] = [];
@@ -62,27 +63,16 @@ export async function getPerfumes(filters?: {
   } catch {
     rows = [];
   }
-  // Until a catalogue is uploaded, the sample catalogue keeps picks and shop filled.
-  if (!rows.length) {
-    inventory = structuredClone(samplePerfumes);
-    return inventory.filter(
-      (p) =>
-        (!filters?.family || p.scent_family === filters.family) &&
-        (!filters?.style || p.style === filters.style) &&
-        (!filters?.maxPrice || p.price <= filters.maxPrice),
-    );
-  }
-  inventory = rows.map(({ image_url, sample_price, ...p }) => ({
-    ...p,
-    style: p.style as Perfume["style"],
-    image_url: image_url ?? undefined,
-    sample_price: sample_price ?? undefined,
-  }));
+  inventory = namedPerfumes.map((entry) => {
+    const live = rows.find((r) => r.id === entry.id);
+    return { ...entry, ...live, name_vi: live?.name_vi ?? entry.name_vi, story_hook: live?.story_hook ?? entry.story_hook, story_vi: live?.story_vi ?? entry.story_vi, review_note: live?.review_note ?? entry.review_note ?? undefined, bestseller_rank: live?.bestseller_rank ?? entry.bestseller_rank ?? undefined, style: (live?.style ?? entry.style) as Perfume["style"], image_url: live?.image_url ?? undefined, sample_price: live?.sample_price ?? undefined };
+  });
+  inventory.sort((a,b) => (a.bestseller_rank ?? 99) - (b.bestseller_rank ?? 99) || a.id.localeCompare(b.id));
   return inventory.filter(
     (p) =>
       (!filters?.family || p.scent_family === filters.family) &&
-      (!filters?.style || p.style === filters.style) &&
-      (!filters?.maxPrice || p.price <= filters.maxPrice),
+        (!filters?.style || p.details_pending || p.style === filters.style) &&
+        (!filters?.maxPrice || p.details_pending || p.price <= filters.maxPrice),
   );
 }
 export async function getPerfume(id: string): Promise<Perfume | null> {
@@ -146,14 +136,14 @@ export async function computeChart(profile: BirthProfile): Promise<Chart> {
 }
 
 /** Keeps one chart in sessionStorage so a reload keeps it. Nothing else is stored. */
-export function storeChart(name: string, chart: Chart, prefs?: Prefs): ChartRecord {
+export function storeChart(name: string, chart: Chart, prefs?: Prefs, birthProfile?: BirthProfile): ChartRecord {
   const record: ChartRecord = {
     id: `c${Date.now().toString(36)}${Math.random().toString(36).slice(2, 8)}`,
     name,
     chart,
     prefs,
   };
-  sessionStorage.setItem(CHART_KEY, JSON.stringify(record));
+  sessionStorage.setItem(CHART_KEY, JSON.stringify({ ...record, birthProfile }));
   return record;
 }
 function readStored(): ChartRecord | null {
@@ -210,7 +200,7 @@ export async function getCart(): Promise<CartItem[]> {
 }
 export async function addToCart(id: string): Promise<CartItem[]> {
   const p = await getPerfume(id);
-  if (p && !p.sold_out) {
+  if (p && !p.sold_out && !p.details_pending) {
     const item = items.find((i) => i.perfume.id === id);
     if (item) item.quantity++;
     else items.push({ perfume: p, quantity: 1 });
@@ -297,12 +287,16 @@ export async function getReading(
     sectionKeys.map((s) => s.key),
     lang,
   );
-  reading.sections = reading.sections.map((s, i) => ({
-    ...s,
-    placement: sectionKeys[i].placement,
-    body: library.get(sectionKeys[i].key) ?? s.body,
-    fromLibrary: library.has(sectionKeys[i].key),
-  }));
+  reading.sections = Array.from({ length: 5 }, (_, i) => {
+    const section = sectionKeys[i % sectionKeys.length];
+    const s = reading.sections[i % reading.sections.length];
+    return {
+    ...s, id: `${topic}-chapter-${i}`,
+    placement: section.placement,
+    title: [dict(lang).chapterOrigin, dict(lang).chapterRelationship, dict(lang).chapterTrouble, dict(lang).chapterNeeds, dict(lang).chapterMission][i],
+    body: [library.get(section.key), chapterInterpretation(chart, section.placement?.body ?? "sun", i, lang)].filter(Boolean).join("\n\n"),
+    fromLibrary: library.has(section.key),
+  }; });
   if (topic === "luck") {
     const best = getWeekSync(chart)
       .filter((w): w is WeekEntry & { transit: Transit } => w.transit !== null)
@@ -342,7 +336,7 @@ export async function getToday(chartId: string, date: string, lang: "en" | "vi")
     a
       ? {
           transit: toTransit(a),
-          text: library.get(blockKey(slot, a)) ?? pickLine(lang, slot, a.theme, seed),
+          text: initialCapital(library.get(blockKey(slot, a)) ?? pickLine(lang, slot, a.theme, seed)),
           fromLibrary: library.has(blockKey(slot, a)),
         }
       : null;
@@ -351,7 +345,7 @@ export async function getToday(chartId: string, date: string, lang: "en" | "vi")
   const summaries = await resolveTexts("day_summary", [summaryKey], lang);
   return wait({
     date,
-    summary: summaries.get(summaryKey) ?? (lead ? summaryBank[lang][lead.theme] : quietBank[lang]),
+    summary: initialCapital(summaries.get(summaryKey) ?? (lead ? summaryBank[lang][lead.theme] : quietBank[lang])),
     summaryFromLibrary: summaries.has(summaryKey),
     tone: plan.tone,
     working: block("working", plan.working),
@@ -362,6 +356,7 @@ export async function getToday(chartId: string, date: string, lang: "en" | "vi")
   });
 }
 export const todayDate = () => DateTime.local().toISODate() ?? "";
+const initialCapital = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
 export async function getRevealTraits(chart: Chart, lang: "en" | "vi") {
   const keys = [
@@ -521,17 +516,37 @@ export async function saveRitual(id: string): Promise<string[]> {
   await cloud.saveRitualRecord({ data: { id } });
   return cloud.savedRitualIds();
 }
-export async function listSavedRituals(lang: "en" | "vi"): Promise<Ritual[]> {
+export async function listSavedRituals(lang: "en" | "vi"): Promise<(Ritual & { completedSteps: number })[]> {
   const {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) return [];
   const ids = await cloud.savedRitualIds();
-  return ids.map((id) => ritualFor(id, lang)).filter((r): r is Ritual => r !== null);
+  return Promise.all(ids.map(async (id) => { const r = ritualFor(id, lang); return r ? { ...r, completedSteps: await ritualProgress(id) } : null; })).then((rows) => rows.filter((r): r is Ritual & { completedSteps: number } => r !== null));
 }
 export async function loadSamplePerfumes() {
-  const { error } = await supabase.from("perfumes").upsert(perfumes);
-  if (error) throw new Error(error.message);
+  return getPerfumes();
+}
+export const inspectPlacement = placementInterpretation;
+export const interpretDaily = dailyInterpretation;
+
+export async function saveScentCapsule(chartId: string, ritualId: string, ids: string[]) {
+  await saveChart(chartId);
+  return cloud.saveCapsuleRecord({ data: { chartId, ritualId, perfumeIds: ids } });
+}
+export async function listSavedCapsules(lang: "en" | "vi") {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return [];
+  const [saved, catalogue] = await Promise.all([cloud.savedCapsuleRecords(), getPerfumes()]);
+  return saved.map((r) => ({ ...r, ritual: ritualFor(r.ritual_id, lang), perfumes: r.perfume_ids.map((id) => catalogue.find((p) => p.id === id)).filter((p): p is Perfume => !!p) }));
+}
+export async function ritualProgress(id: string) {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return 0;
+  return cloud.getRitualProgress({ data: { id } });
+}
+export async function setRitualProgress(id: string, completed: number) {
+  return cloud.setRitualProgress({ data: { id, completed } });
 }
 export async function submitFeedback(
   kind: "reading" | "today" | "ask" | "match",
@@ -541,4 +556,8 @@ export async function submitFeedback(
 ) {
   const { error } = await supabase.from("feedback").insert({ kind, ref, rating, lang });
   if (error) throw new Error(error.message);
+}
+
+export function currentBirthProfile(): BirthProfile | null {
+  try { const raw = sessionStorage.getItem(CHART_KEY); return raw ? (JSON.parse(raw).birthProfile ?? null) : null; } catch { return null; }
 }

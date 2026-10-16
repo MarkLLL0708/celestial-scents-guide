@@ -38,7 +38,7 @@ export function ChartLoading() {
     void (async () => {
       try {
         const chart = await api.computeChart(profile);
-        if (!cancelled) api.storeChart(profile.name, chart, prefs);
+        if (!cancelled) api.storeChart(profile.name, chart, prefs, profile);
       } catch {
         if (!cancelled) setFailed(true);
       }

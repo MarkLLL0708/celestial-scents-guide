@@ -29,6 +29,8 @@ import { StateMessage, ProductSkeletons } from "./shared";
 import * as Tabs from "@radix-ui/react-tabs";
 import { useYouChart, YouHeader, UpdatesPanel, ChartGrid } from "./you";
 import type { Perfume } from "@/data/types";
+import { PerfumePrice, PerfumeStory, perfumeName } from "@/components/scent/catalogue-details";
+import { SavedCapsules, BirthSettings } from "./sanctuary-controls";
 export function Landing({ state = "" }: { state?: string }) {
   const { t } = useLanguage();
   void state;
@@ -203,7 +205,7 @@ export function Shop({ state = "" }: { state?: string }) {
   );
 }
 export function ProductDetail({ id, state = "" }: { id: string; state?: string }) {
-  const { t, word } = useLanguage();
+  const { t, word, lang } = useLanguage();
   const { data } = useSuspenseQuery(productQuery(id));
   const [forced, setForced] = useState(state);
   useEffect(() => setForced(state), [id, state]);
@@ -240,17 +242,18 @@ export function ProductDetail({ id, state = "" }: { id: string; state?: string }
       </Button>
       <div className="detail-layout">
         <div className="product-image">
-          <Bottle family={p.scent_family} name={p.name} />
+          <Bottle family={p.scent_family} name={perfumeName(p, lang)} />
         </div>
         <div className="stack">
           <p className="label muted">{p.brand}</p>
-          <h1>{p.name}</h1>
+          <h1>{perfumeName(p, lang)}</h1>
           <p>
-            ${p.price} · {p.size_ml} ml
+            <PerfumePrice perfume={p} />
           </p>
           <p className="small muted">
             {word(p.scent_family)} / {word(p.style)}
           </p>
+          <PerfumeStory perfume={p} />
           <Notes perfume={p} />
           <div className="chips">
             {p.mood_tags.map((m) => (
@@ -501,7 +504,7 @@ function SavedRituals() {
       {q.data.map((r) => (
         <Link key={r.id} to="/rituals/$id" params={{ id: r.id }} className="plain-row">
           <span>{r.title}</span>
-          <span className="label muted">{t.minutes.replace("{n}", String(r.durationMin))}</span>
+          <span className="label muted">{t.progressCount.replace("{done}", String(r.completedSteps)).replace("{total}", String(r.steps.length))}</span>
         </Link>
       ))}
     </div>
@@ -556,6 +559,7 @@ export function YouPage({ state = "" }: { state?: string }) {
           </Button>
         </form>
       )}
+      <BirthSettings />
       <section className="section">
         <SectionHeader>{t.language}</SectionHeader>
         <LanguageToggle />
@@ -669,6 +673,7 @@ export function YouPage({ state = "" }: { state?: string }) {
             <SectionHeader>{t.savedRituals}</SectionHeader>
             <SavedRituals />
           </section>
+          <section className="section"><SectionHeader>{t.savedCapsules}</SectionHeader><SavedCapsules /></section>
         </Tabs.Content>
         <Tabs.Content value="settings" className="you-panel">
           {panels}
@@ -737,7 +742,7 @@ export function AdminPage({ state = "" }: { state?: string }) {
             }
           }}
         >
-          {t.loadSamples}
+          {t.shop}
         </Button>
         <Button variant="secondary" onClick={() => setUpload(true)}>
           {t.upload}

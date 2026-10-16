@@ -5,6 +5,8 @@ import { privateChartSchema, prefsSchema } from "./chart-privacy";
 import { parseCatalogue } from "@/lib/match/catalogue";
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "@/integrations/supabase/types";
+import { ritualFor } from "./astro-mock";
+import catalogueNames from "./perfume-names.json";
 
 export const publicPerfumes = createServerFn({ method: "GET" }).handler(async () => {
   const url = process.env["SUPABASE_URL"];
@@ -126,3 +128,33 @@ export const importCatalogue = createServerFn({ method: "POST" })
     }
     return { imported: parsed.perfumes.length, errors: [] };
   });
+
+export const capsuleSchema = z.object({ chartId: z.string().min(1).max(100), ritualId: z.string().min(1).max(100), perfumeIds: z.array(z.string().min(1).max(100)).min(3).max(5).refine((ids) => new Set(ids).size === ids.length) }).strict();
+export const saveCapsuleRecord = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth]).inputValidator(capsuleSchema)
+  .handler(async ({ data, context }) => {
+    if (!ritualFor(data.ritualId, "en")) throw new Error("Invalid ritual");
+    if (!data.perfumeIds.every((id) => catalogueNames.some((p) => p.id === id))) throw new Error("Invalid perfume");
+    const saved = await context.supabase.from("saved_charts").select("id").eq("id", data.chartId).eq("user_id", context.userId).maybeSingle();
+    if (saved.error || !saved.data) throw new Error("Chart unavailable");
+    const { error } = await context.supabase.from("saved_capsules").upsert({ user_id: context.userId, chart_id: data.chartId, ritual_id: data.ritualId, perfume_ids: data.perfumeIds }, { onConflict: "user_id,chart_id,ritual_id" });
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+export const savedCapsuleRecords = createServerFn({ method: "POST" }).middleware([requireSupabaseAuth]).handler(async ({ context }) => {
+  const { data, error } = await context.supabase.from("saved_capsules").select("*").order("created_at", { ascending: false });
+  if (error) throw new Error(error.message);
+  return data;
+});
+export const getRitualProgress = createServerFn({ method: "POST" }).middleware([requireSupabaseAuth]).inputValidator(z.object({ id: z.string().min(1).max(100) }).strict()).handler(async ({ data, context }) => {
+  const { data: row, error } = await context.supabase.from("saved_rituals").select("completed_steps").eq("ritual_id", data.id).maybeSingle();
+  if (error) throw new Error(error.message);
+  return row?.completed_steps ?? 0;
+});
+export const setRitualProgress = createServerFn({ method: "POST" }).middleware([requireSupabaseAuth]).inputValidator(z.object({ id: z.string().min(1).max(100), completed: z.number().int().min(0) }).strict()).handler(async ({ data, context }) => {
+  const ritual = ritualFor(data.id, "en");
+  if (!ritual || data.completed > ritual.steps.length) throw new Error("Invalid progress");
+  const { error } = await context.supabase.from("saved_rituals").upsert({ user_id: context.userId, ritual_id: data.id, completed_steps: data.completed });
+  if (error) throw new Error(error.message);
+  return { ok: true };
+});

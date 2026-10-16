@@ -15,4 +15,8 @@ describe("saved chart privacy", () => {
         .success,
     ).toBe(false);
   });
+  it("never includes editable browser-only birth inputs in a saved chart", () => {
+    const stored = chartForStorage(demoChart);
+    expect(privateChartSchema.safeParse({ ...stored, birthProfile: { hour: 12, city: "Hanoi" } }).success).toBe(false);
+  });
 });

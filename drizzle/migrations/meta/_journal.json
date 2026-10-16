@@ -36,6 +36,20 @@
       "when": 1792069083617,
       "tag": "0004_text_library_and_verified_owner",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1792128845576,
+      "tag": "0005_scent_archive_and_ritual_progress",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1792129874171,
+      "tag": "0006_include_capsules_in_privacy_deletion",
+      "breakpoints": true
     }
   ]
 }

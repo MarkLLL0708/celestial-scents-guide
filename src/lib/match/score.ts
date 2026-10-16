@@ -107,7 +107,7 @@ export function scorePerfume(p: Perfume, chart: MatchChart): ScoreBreakdown {
     (placements.reduce((a, x) => a + x.weight * x.signScore, 0) / totalWeight) * 100;
   const intensityTarget =
     placements.reduce((a, x) => a + x.weight * x.intensityTarget, 0) / totalWeight;
-  const intensityBonus = intensityBonusMax * (1 - Math.abs(p.intensity - intensityTarget) / 4);
+  const intensityBonus = p.details_pending ? 0 : intensityBonusMax * (1 - Math.abs(p.intensity - intensityTarget) / 4);
   return {
     perfumeId: p.id,
     placements,

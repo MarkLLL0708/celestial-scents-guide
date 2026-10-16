@@ -3052,3 +3052,29 @@ h3 {
   .wheel-row { font-size: 18px; }
   .wheel-row-active { font-size: 22px; }
 }
+
+.ask-engraving { width: 56px; height: 56px; }
+.ask-tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.ask-tab.nn-text { display: flex; flex-direction: column; gap: 10px; aspect-ratio: 1; min-width: 0; width: 100%; height: auto; border-color: var(--border); letter-spacing: 0; padding: 10px 4px; }
+.ask-tab-active.nn-text { background: var(--surface); border-color: var(--text); }
+.daily-reading { border-top: var(--rule) solid var(--border); padding-top: 24px; }
+.daily-reading > .stack-sm { gap: 16px; }
+.daily-pairing { display: grid; grid-template-columns: 100px minmax(0,1fr); align-items: start; gap: 20px; }
+.daily-pairing > svg { width: 100%; height: 160px; }
+.you-ground { gap: 20px; padding-block: 24px; }
+.day-pill.nn-text { padding: 0; flex-direction: column; text-decoration: none; }
+.grid-planet.nn-text { justify-content: flex-start; white-space: normal; font-size: 11px; }
+.saved-capsule { display: flex; flex-direction: column; gap: 16px; border-bottom: var(--rule) solid var(--border); padding-bottom: 24px; }
+.ritual-tracker { border-block: var(--rule) solid var(--border); padding-block: 24px; }
+.ritual-progress-steps { display: flex; flex-wrap: wrap; gap: 12px; }
+.ritual-progress-steps [aria-pressed="true"] { background: var(--text); color: var(--bg); }
+.capsule-save { margin-block: 24px; }
+.perfume-story { max-width: 50ch; }
+
+.planet-grid td:first-child { width: 32%; }
+.planet-grid td:nth-child(2) { width: 53%; }
+.planet-grid td:last-child { width: 15%; }
+.grid-planet.nn-text { display: grid; grid-template-columns: 18px minmax(0,1fr) auto; gap: 3px; text-decoration: none; overflow-wrap: normal; padding: 0; font-size: 10px; }
+.grid-planet .muted { font-size: 9px; }
+.grid-sign-col { width: 32%; } .grid-body-col { width: 53%; } .grid-house-col { width: 15%; }
+@media (max-width: 600px) { .grid-frame { grid-template-columns: 10px minmax(0,1fr) 10px; gap: 4px; } .planet-grid td { padding-inline: 5px; } }

@@ -19,7 +19,7 @@
 - Phones use a fixed bottom tab bar instead of a menu overlay; /saved permanently redirects to /you.
 - All routes use the same theme from themeFor(), applied to the document and shell during SSR; global font aliases share the navigation family so navigation cannot introduce theme or typography flashes.
 - Astrology maths lives in src/lib/astro (placements, aspects, chart, today; tested against fixed reference numbers) and runs only in the browser so birth details never leave the device; screens reach it only through api.ts.
-- The current chart is the only thing kept in sessionStorage (one record with its id); the demo id resolves to a real chart computed from a fixed birth.
+- sessionStorage keeps only the current chart record, including optional browser-only birth inputs for editing; Cloud projections omit those inputs, and the demo id resolves to a real fixed-birth chart.
 - Approved library text is resolved in api.ts through privacy-safe keys with placeholder fallback; library keys and validation are shared pure modules, while generation prompts and providers remain server-only.
 - Library generation requires server-validated admin roles and a durable single-flight lease with terminal pause reasons, preventing duplicate billing and unauthorized writes.
 - Soft-sell limits live in src/lib/sellRules.ts (tested); ProductCard hides itself on no-sell screens; the post-reading 3–5 perfume capsule comes from buildCapsule via api.getCapsule and the shared ScentCapsule, so every reading surface shows the same picks.
@@ -27,3 +27,7 @@
 - Shared back navigation lives in the root shell, with questionnaire and Ask controls kept in their own headers so every content page has a way back.
 - Cloud stores only explicit privacy-safe chart projections; birth inputs and location context remain browser-only, and saved charts use UTC as a neutral display context when reopened.
 - Shared React contexts are created with stableContext() so they keep the same identity across hot reloads; otherwise providers and consumers drift apart and the preview blanks.
+- Catalogue names and bilingual story hooks have a bundled source with Cloud overrides; incomplete commercial metadata disables purchase and does not influence price, style or intensity scoring, so unknown facts never become fabricated offers.
+- Outer-planet chart placements are computed separately from the established seven-body daily-transit model and remain optional on saved charts, preserving existing references and old records.
+- Saved scent capsules and ritual step progress use authenticated owner-scoped Cloud services; raw birth edits stay in the browser and only calculated charts may be saved.
+- Placement, daily and chapter interpretations are pure browser-safe astrology services reached through api.ts, keeping screens free of astrology logic.

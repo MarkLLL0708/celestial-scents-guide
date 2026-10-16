@@ -89,11 +89,13 @@ export function Wheel({
           aria-activedescendant={`${id}-${index}`}
           aria-disabled={disabled}
           onScroll={(e) => {
+            if (disabled) return;
             const el = e.currentTarget;
             if (timer.current) clearTimeout(timer.current);
             timer.current = setTimeout(() => pick(Math.round(el.scrollTop / ROW)), 90);
           }}
           onKeyDown={(e) => {
+            if (disabled) return;
             const step: Record<string, number> = {
               ArrowUp: -1,
               ArrowDown: 1,
@@ -188,7 +190,6 @@ export function TimePicker({
   answer?: boolean;
 }) {
   const { t } = useLanguage();
-  const id = useId();
   const unknown = profile.hour === null;
   return (
     <fieldset className={`stack ${answer ? "answer-fieldset" : ""}`} disabled={disabled}>
@@ -201,21 +202,9 @@ export function TimePicker({
           <Wheel label={t.minute} values={range(0, 59)} value={profile.minute ?? 0} onChange={(v) => onChange({ ...profile, minute: v })} disabled={disabled} />
         </div>
       )}
-      <label className="check-row" htmlFor={id}>
-        <input
-          id={id}
-          type="checkbox"
-          checked={unknown}
-          onChange={(e) =>
-            onChange({
-              ...profile,
-              hour: e.target.checked ? null : 12,
-              minute: e.target.checked ? null : 0,
-            })
-          }
-        />
-        {t.unknown}
-      </label>
+      <Button variant="text" disabled={disabled} onClick={() => onChange({ ...profile, hour: unknown ? 12 : null, minute: unknown ? 0 : null })}>
+        {unknown ? t.setExactTime : t.skipExactTime}
+      </Button>
       {unknown && <p className="small muted">{t.unknownNote}</p>}
     </fieldset>
   );
