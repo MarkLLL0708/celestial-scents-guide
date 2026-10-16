@@ -3038,7 +3038,7 @@ h3 {
 .grid-side { writing-mode: vertical-rl; text-orientation: upright; letter-spacing: 0.1em; align-self: start; }
 .grid-side-end { align-self: end; }
 .planet-grid { width: 100%; border-collapse: collapse; table-layout: fixed; }
-.planet-grid td { border: var(--rule) solid var(--border); padding: 0 12px; height: 52px; overflow-wrap: anywhere; }
+.planet-grid td { border: var(--rule) solid var(--border); padding: 0 12px; height: 52px; overflow-wrap: anywhere; vertical-align: middle; }
 .planet-grid td:first-child { width: 36%; }
 .planet-grid td:last-child { width: 18%; text-align: right; font-size: 24px; font-variant-numeric: tabular-nums; }
 .grid-planet { width: 100%; min-height: 48px; text-align: left; background: none; border: 0; color: inherit; font: inherit; cursor: pointer; padding: 0; }

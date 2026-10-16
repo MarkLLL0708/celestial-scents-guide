@@ -16,5 +16,6 @@
 
 - [x] Journey: 3–5 perfume capsule after chart/readings, ritual CTA, chart-gated tailored Ask
 - [x] Landing: NASA-grade headline, "three to five" promise, drifting starfield + meteors
+- [x] Drum wheel birth date/time; You page with Updates, Chart grid, Saved, Settings tabs
 - [ ] Step 09: live Ask AI with rate limits, approved-library routing, admin usage
 - [ ] Upload the real perfume catalogue on /admin/perfumes (samples still in use)
