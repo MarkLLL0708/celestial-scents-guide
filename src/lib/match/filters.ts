@@ -15,7 +15,7 @@ function quantile(sorted: number[], q: number): number {
 /** Lower and upper price tertiles of the non-sold-out catalogue. */
 export function priceTertiles(catalogue: Perfume[]): { low: number; mid: number } {
   const prices = catalogue
-    .filter((p) => !p.sold_out)
+    .filter((p) => !p.sold_out && !p.details_pending)
     .map((p) => p.price)
     .sort((a, b) => a - b);
   return { low: quantile(prices, 1 / 3), mid: quantile(prices, 2 / 3) };
@@ -35,10 +35,10 @@ export function exclusionFor(
   const text = searchText(p);
   const term = prefs.avoid.map((a) => a.trim().toLowerCase()).find((a) => a && text.includes(a));
   if (term) return { kind: "avoid", term };
-  if (prefs.style && prefs.style !== "any" && p.style !== prefs.style && p.style !== "unisex")
+  if (!p.details_pending && prefs.style && prefs.style !== "any" && p.style !== prefs.style && p.style !== "unisex")
     return { kind: "style" };
-  if (prefs.budget === "low" && p.price > tertiles.low) return { kind: "budget" };
-  if (prefs.budget === "mid" && p.price > tertiles.mid) return { kind: "budget" };
+  if (!p.details_pending && prefs.budget === "low" && p.price > tertiles.low) return { kind: "budget" };
+  if (!p.details_pending && prefs.budget === "mid" && p.price > tertiles.mid) return { kind: "budget" };
   return null;
 }
 
