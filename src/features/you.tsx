@@ -228,6 +228,7 @@ export function ChartGrid({ chart }: { chart: Chart }) {
           {t.youSigns}
         </span>
         <table className="planet-grid">
+          <colgroup><col className="grid-sign-col"/><col className="grid-body-col"/><col className="grid-house-col"/></colgroup>
           <thead className="sr-only">
             <tr>
               <th>{t.youSigns}</th>
@@ -246,7 +247,7 @@ export function ChartGrid({ chart }: { chart: Chart }) {
                     aria-pressed={r.p === sel?.p}
                     onClick={() => setActive(r.p)}
                   >
-                    <span aria-hidden="true">{glyphs[r.p]}</span> {t[planetKey(r.p)]}
+                    <span aria-hidden="true">{glyphs[r.p]}</span><span>{t[planetKey(r.p)]}</span>
                     {r.degree !== undefined && <span className="muted"> {Math.floor(r.degree)}°</span>}
                   </Button>
                 </td>

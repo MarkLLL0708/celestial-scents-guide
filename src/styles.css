@@ -3076,4 +3076,5 @@ h3 {
 .planet-grid td:last-child { width: 15%; }
 .grid-planet.nn-text { display: grid; grid-template-columns: 18px minmax(0,1fr) auto; gap: 3px; text-decoration: none; overflow-wrap: normal; padding: 0; font-size: 10px; }
 .grid-planet .muted { font-size: 9px; }
+.grid-sign-col { width: 32%; } .grid-body-col { width: 53%; } .grid-house-col { width: 15%; }
 @media (max-width: 600px) { .grid-frame { grid-template-columns: 10px minmax(0,1fr) 10px; gap: 4px; } .planet-grid td { padding-inline: 5px; } }
