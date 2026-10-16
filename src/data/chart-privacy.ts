@@ -18,6 +18,9 @@ export const privateChartSchema = z
     mercury: z.string(),
     jupiter: z.string(),
     saturn: z.string(),
+    uranus: z.string().optional(),
+    neptune: z.string().optional(),
+    pluto: z.string().optional(),
     degrees: z.record(z.string(), z.number()),
     elements: z
       .object({ fire: z.number(), earth: z.number(), air: z.number(), water: z.number() })
@@ -32,6 +35,9 @@ export const privateChartSchema = z
         mars: placement,
         jupiter: placement,
         saturn: placement,
+        uranus: placement.optional(),
+        neptune: placement.optional(),
+        pluto: placement.optional(),
         rising: placement.nullable(),
       })
       .strict(),
@@ -56,6 +62,7 @@ export function chartForStorage(chart: Chart) {
     mercury,
     jupiter,
     saturn,
+    uranus, neptune, pluto,
     degrees,
     elements,
     modalities,
@@ -72,6 +79,7 @@ export function chartForStorage(chart: Chart) {
     mercury,
     jupiter,
     saturn,
+    uranus, neptune, pluto,
     degrees,
     elements,
     modalities,

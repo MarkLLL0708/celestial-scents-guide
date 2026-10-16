@@ -21,6 +21,13 @@ export type Longitudes = Record<Body, number>;
 
 export const norm = (d: number) => ((d % 360) + 360) % 360;
 
+/** Outer placements are shown in the chart without changing the established daily-transit model. */
+export function outerLongitudes(utc: Date) {
+  const time = Astronomy.MakeTime(utc);
+  const longitude = (body: Astronomy.Body) => tropicalLongitude(Astronomy.GeoVector(body, time, true), time);
+  return { uranus: longitude(Astronomy.Body.Uranus), neptune: longitude(Astronomy.Body.Neptune), pluto: longitude(Astronomy.Body.Pluto) };
+}
+
 /** Geocentric, tropical (equinox of date) ecliptic longitude, in degrees. */
 function tropicalLongitude(v: Astronomy.Vector, time: Astronomy.AstroTime): number {
   const rot = Astronomy.Rotation_EQJ_ECT(time);

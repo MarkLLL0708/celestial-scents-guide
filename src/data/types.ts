@@ -15,6 +15,12 @@ export interface Perfume {
   sold_out: boolean;
   image_url?: string;
   sample_price?: number;
+  name_vi?: string;
+  story_hook?: string;
+  story_vi?: string;
+  review_note?: string;
+  bestseller_rank?: number;
+  details_pending?: boolean;
 }
 export interface BirthProfile {
   name: string;
@@ -53,10 +59,13 @@ export interface Chart {
   mercury: string;
   jupiter: string;
   saturn: string;
+  uranus?: string;
+  neptune?: string;
+  pluto?: string;
   degrees: Partial<Record<Planet, number>>;
   elements: { fire: number; earth: number; air: number; water: number };
   modalities: { cardinal: number; fixed: number; mutable: number };
-  details: Record<Body, PlacementDetail> & { rising: PlacementDetail | null };
+  details: Record<Body, PlacementDetail> & Partial<Record<OuterPlanet, PlacementDetail>> & { rising: PlacementDetail | null };
   moonAlternatives?: [string, string];
   birthTimeKnown: boolean;
   lat: number;
@@ -84,8 +93,8 @@ export interface CartItem {
   perfume: Perfume;
   quantity: number;
 }
-export type Planet =
-  "sun" | "moon" | "rising" | "venus" | "mars" | "mercury" | "jupiter" | "saturn";
+export type OuterPlanet = "uranus" | "neptune" | "pluto";
+export type Planet = Body | OuterPlanet | "rising";
 export type Aspect = "conjunct" | "sextile" | "square" | "trine" | "opposite";
 export type Theme = "self" | "love" | "work" | "luck";
 export type Topic = "you" | "love" | "work" | "luck";
