@@ -624,7 +624,7 @@ export function YouPage({ state = "" }: { state?: string }) {
     </div>
   );
   return (
-    <div className="you-page">
+    <div className="narrow you-page">
       <YouHeader
         chart={you.data?.chart ?? null}
         name={info.data?.profile.display_name || you.data?.name || ""}

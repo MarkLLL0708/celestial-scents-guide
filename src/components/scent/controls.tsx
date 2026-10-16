@@ -168,7 +168,6 @@ export function DatePicker({
         <Wheel label={t.month} values={range(1, 12)} value={month} onChange={(v) => set({ month: v })} format={monthName} disabled={disabled} />
         <Wheel label={t.year} values={range(1900, thisYear)} value={year} onChange={(v) => set({ year: v })} format={String} disabled={disabled} />
       </div>
-      <p className="small muted wheel-privacy">{t.wheelPrivacy}</p>
       {showError && error && (
         <p className="field-error" role="alert">
           {t[error]}
@@ -202,7 +201,6 @@ export function TimePicker({
           <Wheel label={t.minute} values={range(0, 59)} value={profile.minute ?? 0} onChange={(v) => onChange({ ...profile, minute: v })} disabled={disabled} />
         </div>
       )}
-      <p className="small muted wheel-privacy">{t.wheelPrivacy}</p>
       <label className="check-row" htmlFor={id}>
         <input
           id={id}

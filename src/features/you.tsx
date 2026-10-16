@@ -236,7 +236,7 @@ export function ChartGrid({ chart }: { chart: Chart }) {
                     onClick={() => setActive(r.p)}
                   >
                     <span aria-hidden="true">{glyphs[r.p]}</span> {t[planetKey(r.p)]}
-                    {r.degree !== undefined && <span className="muted"> {r.degree}°</span>}
+                    {r.degree !== undefined && <span className="muted"> {Math.floor(r.degree)}°</span>}
                   </button>
                 </td>
                 <td className="grid-house">{r.house ?? "—"}</td>
