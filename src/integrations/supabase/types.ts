@@ -88,57 +88,75 @@ export type Database = {
       perfumes: {
         Row: {
           base_notes: string[]
+          bestseller_rank: number | null
           brand: string
           currency: string
+          details_pending: boolean
           heart_notes: string[]
           id: string
           image_url: string | null
           intensity: number
           mood_tags: string[]
           name: string
+          name_vi: string | null
           price: number
+          review_note: string | null
           sample_price: number | null
           scent_family: string
           size_ml: number
           sold_out: boolean
+          story_hook: string | null
+          story_vi: string | null
           style: string
           top_notes: string[]
           updated_at: string
         }
         Insert: {
           base_notes?: string[]
+          bestseller_rank?: number | null
           brand?: string
           currency?: string
+          details_pending?: boolean
           heart_notes?: string[]
           id: string
           image_url?: string | null
           intensity: number
           mood_tags?: string[]
           name: string
+          name_vi?: string | null
           price: number
+          review_note?: string | null
           sample_price?: number | null
           scent_family: string
           size_ml: number
           sold_out?: boolean
+          story_hook?: string | null
+          story_vi?: string | null
           style: string
           top_notes?: string[]
           updated_at?: string
         }
         Update: {
           base_notes?: string[]
+          bestseller_rank?: number | null
           brand?: string
           currency?: string
+          details_pending?: boolean
           heart_notes?: string[]
           id?: string
           image_url?: string | null
           intensity?: number
           mood_tags?: string[]
           name?: string
+          name_vi?: string | null
           price?: number
+          review_note?: string | null
           sample_price?: number | null
           scent_family?: string
           size_ml?: number
           sold_out?: boolean
+          story_hook?: string | null
+          story_vi?: string | null
           style?: string
           top_notes?: string[]
           updated_at?: string
@@ -160,6 +178,33 @@ export type Database = {
           display_name?: string
           id?: string
           language?: string
+        }
+        Relationships: []
+      }
+      saved_capsules: {
+        Row: {
+          chart_id: string
+          created_at: string
+          id: string
+          perfume_ids: string[]
+          ritual_id: string
+          user_id: string
+        }
+        Insert: {
+          chart_id: string
+          created_at?: string
+          id?: string
+          perfume_ids: string[]
+          ritual_id: string
+          user_id: string
+        }
+        Update: {
+          chart_id?: string
+          created_at?: string
+          id?: string
+          perfume_ids?: string[]
+          ritual_id?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -200,16 +245,19 @@ export type Database = {
       }
       saved_rituals: {
         Row: {
+          completed_steps: number
           created_at: string
           ritual_id: string
           user_id: string
         }
         Insert: {
+          completed_steps?: number
           created_at?: string
           ritual_id: string
           user_id?: string
         }
         Update: {
+          completed_steps?: number
           created_at?: string
           ritual_id?: string
           user_id?: string
