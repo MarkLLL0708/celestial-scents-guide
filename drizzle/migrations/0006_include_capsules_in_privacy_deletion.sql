@@ -1,0 +1,3 @@
+CREATE OR REPLACE FUNCTION public.delete_my_natal_data() RETURNS void LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$ BEGIN IF auth.uid() IS NULL THEN RAISE EXCEPTION 'Unauthorized'; END IF; DELETE FROM public.saved_capsules WHERE user_id=auth.uid(); DELETE FROM public.saved_charts WHERE user_id=auth.uid(); DELETE FROM public.saved_rituals WHERE user_id=auth.uid(); DELETE FROM public.feedback WHERE user_id=auth.uid(); END; $$;
+REVOKE ALL ON FUNCTION public.delete_my_natal_data() FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.delete_my_natal_data() TO authenticated;
