@@ -21,5 +21,5 @@
 - [x] Complete brief: precise wheels/privacy/skip, engraved Ask categories, deeper chapter readings
 - [x] Complete You: daily scent pairing, outer planets, saved capsules/progress, birth edits
 - [x] Verify full visitor journey and signed-in saves on phone and desktop
-- [ ] Step 09: live Ask AI with rate limits, approved-library routing, admin usage
+- [x] Step 09: live Ask AI with rate limits, approved-library routing, admin usage
 - [ ] Owner confirmation needed: prices, currency, sizes, brand, strength and provisional notes before enabling purchase for the 40-name archive
