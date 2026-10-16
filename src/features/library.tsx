@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/i18n/provider";
 import { useAccount } from "@/data/auth";
 import * as cloud from "@/data/library.functions";
+import { askUsage } from "@/data/ask.functions";
 import { kinds, listKeys, type LibraryKind } from "@/lib/library/keys";
 import { ScentDialog } from "@/components/scent/dialog";
 import { StateMessage } from "./shared";
@@ -99,6 +100,7 @@ export function LibraryPage() {
   return (
     <div className="wide stack library-page">
       <h1 className="xl">{t.libraryTitle}</h1>
+      <AskUsage />
       <div className="overflow-x-auto">
         <table className="w-full text-left">
           <thead>
@@ -311,4 +313,31 @@ function questionText(key: string, t: import("@/i18n/en").Dictionary) {
   const k =
     `q${theme[0].toUpperCase() + theme.slice(1)}${theme === "work" && num <= 4 ? `${num}b` : num}` as keyof typeof t;
   return t[k] ?? key;
+}
+
+function AskUsage() {
+  const { t } = useLanguage();
+  const fn = useServerFn(askUsage);
+  const q = useQuery({ queryKey: ["ask-usage"], queryFn: () => fn() });
+  if (!q.data) return null;
+  const sources = ["ai", "library", "fallback", "limited"] as const;
+  return (
+    <section aria-labelledby="ask-usage-title">
+      <h2 id="ask-usage-title" className="label">{t.askUsageTitle}</h2>
+      <table className="small">
+        <thead>
+          <tr><th scope="col" />{sources.map((s) => <th scope="col" key={s}>{t[`askSrc_${s}`]}</th>)}</tr>
+        </thead>
+        <tbody>
+          {(["day", "week"] as const).map((p) => (
+            <tr key={p}>
+              <th scope="row">{p === "day" ? t.askUsageDay : t.askUsageWeek}</th>
+              {sources.map((s) => <td key={s}>{q.data[p][s] ?? 0}</td>)}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p className="small muted">{t.askUsageVisitors}: {q.data.visitors}</p>
+    </section>
+  );
 }

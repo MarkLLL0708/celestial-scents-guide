@@ -985,7 +985,9 @@ export function AskPage({ state = "" }: { state?: string }) {
                 <p className="label">{transitText(t, answer.transit).toUpperCase()}</p>
               </div>
               <Cell>
+                {answer.source === "ai" && <p className="label muted">{t.askLive}</p>}
                 <p>{answer.answer}</p>
+                {answer.source === "limited" && <p className="small muted">{t.askLimited}</p>}
               </Cell>
               <AskPairing chartId={chartId} ritualId={answer.ritualId} />
               <Cell>
