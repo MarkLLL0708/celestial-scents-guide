@@ -504,7 +504,7 @@ function SavedRituals() {
       {q.data.map((r) => (
         <Link key={r.id} to="/rituals/$id" params={{ id: r.id }} className="plain-row">
           <span>{r.title}</span>
-          <span className="label muted">{t.minutes.replace("{n}", String(r.durationMin))}</span>
+          <span className="label muted">{t.progressCount.replace("{done}", String(r.completedSteps)).replace("{total}", String(r.steps.length))}</span>
         </Link>
       ))}
     </div>

@@ -336,7 +336,7 @@ export async function getToday(chartId: string, date: string, lang: "en" | "vi")
     a
       ? {
           transit: toTransit(a),
-          text: library.get(blockKey(slot, a)) ?? pickLine(lang, slot, a.theme, seed),
+          text: initialCapital(library.get(blockKey(slot, a)) ?? pickLine(lang, slot, a.theme, seed)),
           fromLibrary: library.has(blockKey(slot, a)),
         }
       : null;
@@ -345,7 +345,7 @@ export async function getToday(chartId: string, date: string, lang: "en" | "vi")
   const summaries = await resolveTexts("day_summary", [summaryKey], lang);
   return wait({
     date,
-    summary: summaries.get(summaryKey) ?? (lead ? summaryBank[lang][lead.theme] : quietBank[lang]),
+    summary: initialCapital(summaries.get(summaryKey) ?? (lead ? summaryBank[lang][lead.theme] : quietBank[lang])),
     summaryFromLibrary: summaries.has(summaryKey),
     tone: plan.tone,
     working: block("working", plan.working),
@@ -356,6 +356,7 @@ export async function getToday(chartId: string, date: string, lang: "en" | "vi")
   });
 }
 export const todayDate = () => DateTime.local().toISODate() ?? "";
+const initialCapital = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
 export async function getRevealTraits(chart: Chart, lang: "en" | "vi") {
   const keys = [
@@ -521,7 +522,7 @@ export async function listSavedRituals(lang: "en" | "vi"): Promise<Ritual[]> {
   } = await supabase.auth.getUser();
   if (!user) return [];
   const ids = await cloud.savedRitualIds();
-  return ids.map((id) => ritualFor(id, lang)).filter((r): r is Ritual => r !== null);
+  return Promise.all(ids.map(async (id) => { const r = ritualFor(id, lang); return r ? { ...r, completedSteps: await ritualProgress(id) } : null; })).then((rows) => rows.filter((r): r is Ritual & { completedSteps: number } => r !== null));
 }
 export async function loadSamplePerfumes() {
   return getPerfumes();

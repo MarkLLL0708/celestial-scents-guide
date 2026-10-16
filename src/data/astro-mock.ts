@@ -556,5 +556,7 @@ export const ritualThemes: RitualTheme[] = ["calm", "love", "work", "luck", "sel
 export function ritualFor(id: string, lang: Lang): Ritual | null {
   const meta = ritualMeta[id];
   if (!meta) return null;
-  return { id, ...meta, ...ritualText[lang][id] };
+  const text = ritualText[lang][id];
+  const capital = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+  return { id, ...meta, ...text, title: capital(text.title), intention: capital(text.intention), timing: capital(text.timing), needs: text.needs.map(capital), steps: text.steps.map(capital), why: capital(text.why), reason: capital(text.reason) };
 }

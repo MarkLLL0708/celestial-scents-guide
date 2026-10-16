@@ -19,7 +19,7 @@
 - Phones use a fixed bottom tab bar instead of a menu overlay; /saved permanently redirects to /you.
 - All routes use the same theme from themeFor(), applied to the document and shell during SSR; global font aliases share the navigation family so navigation cannot introduce theme or typography flashes.
 - Astrology maths lives in src/lib/astro (placements, aspects, chart, today; tested against fixed reference numbers) and runs only in the browser so birth details never leave the device; screens reach it only through api.ts.
-- The current chart is the only thing kept in sessionStorage (one record with its id); the demo id resolves to a real chart computed from a fixed birth.
+- sessionStorage keeps only the current chart record, including optional browser-only birth inputs for editing; Cloud projections omit those inputs, and the demo id resolves to a real fixed-birth chart.
 - Approved library text is resolved in api.ts through privacy-safe keys with placeholder fallback; library keys and validation are shared pure modules, while generation prompts and providers remain server-only.
 - Library generation requires server-validated admin roles and a durable single-flight lease with terminal pause reasons, preventing duplicate billing and unauthorized writes.
 - Soft-sell limits live in src/lib/sellRules.ts (tested); ProductCard hides itself on no-sell screens; the post-reading 3–5 perfume capsule comes from buildCapsule via api.getCapsule and the shared ScentCapsule, so every reading surface shows the same picks.
