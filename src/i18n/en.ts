@@ -710,8 +710,6 @@ export const en = {
   "chapterNeedsBody": "Give this part of yourself a setting in which it does not need to prove anything. A clear boundary, a quiet hour or one honest request can be more useful than a dramatic change.",
   "chapterMissionBody": "Make this placement something you practise rather than a label you wear. Choose one concrete action in its house of life, and come back to it. Your scent and ritual below are reminders, not fixes.",
   "soap": "Soap",
-  "citrus": "Citrus",
-  "wood": "Wood",
   "green tea": "Green tea",
   "green mandarin": "Green mandarin",
   "spring water": "Spring water",

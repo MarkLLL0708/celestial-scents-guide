@@ -711,8 +711,6 @@ export const vi: Dictionary = {
   "chapterNeedsBody": "Dành cho phần này một nơi không phải chứng minh điều gì. Một ranh giới rõ, một giờ yên hoặc một lời nhờ chân thành đôi khi hữu ích hơn thay đổi thật lớn.",
   "chapterMissionBody": "Biến vị trí này thành điều bạn thực hành, không phải nhãn dán. Chọn một hành động nhỏ trong lĩnh vực của nhà ấy rồi quay lại với nó. Mùi hương và nghi thức bên dưới là lời nhắc, không phải cách chữa.",
   "soap": "Xà phòng",
-  "citrus": "Cam chanh",
-  "wood": "Gỗ",
   "green tea": "Trà xanh",
   "green mandarin": "Quýt xanh",
   "spring water": "Nước suối",
