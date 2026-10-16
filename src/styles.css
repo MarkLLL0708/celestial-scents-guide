@@ -3070,3 +3070,10 @@ h3 {
 .ritual-progress-steps [aria-pressed="true"] { background: var(--text); color: var(--bg); }
 .capsule-save { margin-block: 24px; }
 .perfume-story { max-width: 50ch; }
+
+.planet-grid td:first-child { width: 32%; }
+.planet-grid td:nth-child(2) { width: 53%; }
+.planet-grid td:last-child { width: 15%; }
+.grid-planet.nn-text { display: grid; grid-template-columns: 18px minmax(0,1fr) auto; gap: 3px; text-decoration: none; overflow-wrap: normal; padding: 0; font-size: 10px; }
+.grid-planet .muted { font-size: 9px; }
+@media (max-width: 600px) { .grid-frame { grid-template-columns: 10px minmax(0,1fr) 10px; gap: 4px; } .planet-grid td { padding-inline: 5px; } }
