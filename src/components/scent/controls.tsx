@@ -1,4 +1,4 @@
-import { useEffect, useId, useState, type InputHTMLAttributes } from "react";
+import { useEffect, useId, useRef, useState, type InputHTMLAttributes } from "react";
 import { Command } from "cmdk";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -41,6 +41,91 @@ export function UnderlineInput({
     </div>
   );
 }
+const ROW = 44;
+/** One drum column: scroll-snap list with keyboard support; the centred row is the value. */
+export function Wheel({
+  label,
+  values,
+  value,
+  onChange,
+  format = (v) => String(v).padStart(2, "0"),
+  disabled = false,
+}: {
+  label: string;
+  values: number[];
+  value: number;
+  onChange: (v: number) => void;
+  format?: (v: number) => string;
+  disabled?: boolean;
+}) {
+  const id = useId();
+  const ref = useRef<HTMLDivElement>(null);
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const index = Math.max(0, values.indexOf(value));
+  useEffect(() => {
+    const el = ref.current;
+    if (el && Math.abs(el.scrollTop - index * ROW) > 2) el.scrollTop = index * ROW;
+  }, [index]);
+  useEffect(() => () => {
+    if (timer.current) clearTimeout(timer.current);
+  }, []);
+  const pick = (i: number) => {
+    const next = values[Math.min(values.length - 1, Math.max(0, i))];
+    if (next !== undefined && next !== value) onChange(next);
+  };
+  return (
+    <div className="wheel">
+      <span className="label muted wheel-label" id={`${id}-label`}>
+        {label}
+      </span>
+      <div className="wheel-window">
+        <div className="wheel-highlight" aria-hidden="true" />
+        <div
+          ref={ref}
+          className="wheel-scroll"
+          role="listbox"
+          tabIndex={disabled ? -1 : 0}
+          aria-labelledby={`${id}-label`}
+          aria-activedescendant={`${id}-${index}`}
+          aria-disabled={disabled}
+          onScroll={(e) => {
+            const el = e.currentTarget;
+            if (timer.current) clearTimeout(timer.current);
+            timer.current = setTimeout(() => pick(Math.round(el.scrollTop / ROW)), 90);
+          }}
+          onKeyDown={(e) => {
+            const step: Record<string, number> = {
+              ArrowUp: -1,
+              ArrowDown: 1,
+              PageUp: -5,
+              PageDown: 5,
+              Home: -values.length,
+              End: values.length,
+            };
+            if (step[e.key] === undefined) return;
+            e.preventDefault();
+            pick(index + step[e.key]);
+          }}
+        >
+          {values.map((v, i) => (
+            <div
+              key={v}
+              id={`${id}-${i}`}
+              role="option"
+              aria-selected={i === index}
+              className={`wheel-row ${i === index ? "wheel-row-active" : ""}`}
+              onClick={() => !disabled && pick(i)}
+            >
+              {format(v)}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+const range = (a: number, b: number) => Array.from({ length: b - a + 1 }, (_, i) => a + i);
+const daysIn = (m: number, y: number) => new Date(y || 2000, m || 1, 0).getDate();
 export function DatePicker({
   profile,
   onChange,
@@ -54,40 +139,34 @@ export function DatePicker({
   disabled?: boolean;
   answer?: boolean;
 }) {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const error = validateBirthDate(profile.day, profile.month, profile.year);
+  const thisYear = new Date().getFullYear();
+  const month = profile.month || 1;
+  const year = profile.year || 1995;
+  const day = Math.min(profile.day || 1, daysIn(month, year));
+  useEffect(() => {
+    if (!profile.day || !profile.month || !profile.year) onChange({ ...profile, day, month, year });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  const set = (p: Partial<BirthProfile>) => {
+    const next = { ...profile, day, month, year, ...p };
+    next.day = Math.min(next.day, daysIn(next.month, next.year));
+    onChange(next);
+  };
+  const monthName = (m: number) =>
+    new Intl.DateTimeFormat(lang === "vi" ? "vi-VN" : "en-GB", { month: "short" })
+      .format(new Date(2000, m - 1, 1))
+      .toUpperCase();
   return (
     <fieldset className={`stack ${answer ? "answer-fieldset" : ""}`} disabled={disabled}>
       <legend className={answer ? "label muted answer-prompt" : "question mb-6"}>
         {t.dateQuestion}
       </legend>
-      <div className="number-fields">
-        {(["day", "month", "year"] as const).map((key) => (
-          <UnderlineInput
-            key={key}
-            label={t[key]}
-            question={false}
-            answer={answer}
-            type="number"
-            inputMode="numeric"
-            min={1}
-            max={key === "day" ? 31 : key === "month" ? 12 : 9999}
-            value={profile[key] || ""}
-            onChange={(e) => {
-              onChange({ ...profile, [key]: Number(e.target.value) });
-              const full = key === "year" ? 4 : 2;
-              if (key !== "year" && e.target.value.length >= full) {
-                const inputs = e.currentTarget
-                  .closest(".number-fields")
-                  ?.querySelectorAll<HTMLInputElement>("input");
-                const list = inputs ? Array.from(inputs) : [];
-                list[list.indexOf(e.currentTarget) + 1]?.focus();
-              }
-            }}
-            aria-label={t[key]}
-            aria-invalid={showError && !!error}
-          />
-        ))}
+      <div className="wheels">
+        <Wheel label={t.day} values={range(1, daysIn(month, year))} value={day} onChange={(v) => set({ day: v })} disabled={disabled} />
+        <Wheel label={t.month} values={range(1, 12)} value={month} onChange={(v) => set({ month: v })} format={monthName} disabled={disabled} />
+        <Wheel label={t.year} values={range(1900, thisYear)} value={year} onChange={(v) => set({ year: v })} format={String} disabled={disabled} />
       </div>
       {showError && error && (
         <p className="field-error" role="alert">
@@ -110,35 +189,23 @@ export function TimePicker({
 }) {
   const { t } = useLanguage();
   const id = useId();
+  const unknown = profile.hour === null;
   return (
     <fieldset className={`stack ${answer ? "answer-fieldset" : ""}`} disabled={disabled}>
       <legend className={answer ? "label muted answer-prompt" : "question mb-6"}>
         {t.timeQuestion}
       </legend>
-      <div className="number-fields time-fields">
-        {(["hour", "minute"] as const).map((k) => (
-          <UnderlineInput
-            key={k}
-            label={t[k]}
-            question={false}
-            answer={answer}
-            type="number"
-            inputMode="numeric"
-            min={0}
-            max={k === "hour" ? 23 : 59}
-            value={profile[k] ?? ""}
-            disabled={profile.hour === null || disabled}
-            onChange={(e) =>
-              onChange({ ...profile, [k]: e.target.value === "" ? null : Number(e.target.value) })
-            }
-          />
-        ))}
-      </div>
+      {!unknown && (
+        <div className="wheels wheels-time">
+          <Wheel label={t.hour} values={range(0, 23)} value={profile.hour ?? 12} onChange={(v) => onChange({ ...profile, hour: v, minute: profile.minute ?? 0 })} disabled={disabled} />
+          <Wheel label={t.minute} values={range(0, 59)} value={profile.minute ?? 0} onChange={(v) => onChange({ ...profile, minute: v })} disabled={disabled} />
+        </div>
+      )}
       <label className="check-row" htmlFor={id}>
         <input
           id={id}
           type="checkbox"
-          checked={profile.hour === null}
+          checked={unknown}
           onChange={(e) =>
             onChange({
               ...profile,
@@ -149,7 +216,7 @@ export function TimePicker({
         />
         {t.unknown}
       </label>
-      {profile.hour === null && <p className="small muted">{t.unknownNote}</p>}
+      {unknown && <p className="small muted">{t.unknownNote}</p>}
     </fieldset>
   );
 }

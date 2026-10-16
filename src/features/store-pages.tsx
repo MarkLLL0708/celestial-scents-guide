@@ -26,6 +26,8 @@ import { Bottle, ChartWheel } from "@/components/scent/artwork";
 import { UnderlineInput, Skeleton, SectionHeader } from "@/components/scent/controls";
 import { ScentDialog } from "@/components/scent/dialog";
 import { StateMessage, ProductSkeletons } from "./shared";
+import * as Tabs from "@radix-ui/react-tabs";
+import { useYouChart, YouHeader, UpdatesPanel, ChartGrid } from "./you";
 import type { Perfume } from "@/data/types";
 export function Landing({ state = "" }: { state?: string }) {
   const { t } = useLanguage();
@@ -522,9 +524,11 @@ export function YouPage({ state = "" }: { state?: string }) {
   useEffect(() => {
     if (info.data) setDisplayName(info.data.profile.display_name);
   }, [info.data]);
-  return (
+  const you = useYouChart();
+  const [tab, setTab] = useState(state ? "settings" : "updates");
+  const handle = account.user?.email?.split("@")[0];
+  const panels = (
     <div className="narrow">
-      <h1 className="xl">{t.youTitle}</h1>
       {user && (
         <form
           className="section stack"
@@ -552,14 +556,6 @@ export function YouPage({ state = "" }: { state?: string }) {
           </Button>
         </form>
       )}
-      <section className="section">
-        <SectionHeader>{t.myCharts}</SectionHeader>
-        <SavedList state={state} />
-      </section>
-      <section className="section">
-        <SectionHeader>{t.savedRituals}</SectionHeader>
-        <SavedRituals />
-      </section>
       <section className="section">
         <SectionHeader>{t.language}</SectionHeader>
         <LanguageToggle />
@@ -625,6 +621,59 @@ export function YouPage({ state = "" }: { state?: string }) {
           {t.deleteMyData}
         </Button>
       </ScentDialog>
+    </div>
+  );
+  return (
+    <div className="narrow you-page">
+      <YouHeader
+        chart={you.data?.chart ?? null}
+        name={info.data?.profile.display_name || you.data?.name || ""}
+        handle={handle}
+      />
+      {you.isDemo && (
+        <div className="you-demo">
+          <p className="small muted">{t.youDemoNote}</p>
+          <Link to="/chart/new" className="quiet-link">
+            {t.youReadMine}
+          </Link>
+        </div>
+      )}
+      <Tabs.Root value={tab} onValueChange={setTab}>
+        <Tabs.List className="you-tabs" aria-label={t.youTabs}>
+          <Tabs.Trigger value="updates" className="you-tab">{t.youTabUpdates}</Tabs.Trigger>
+          <Tabs.Trigger value="chart" className="you-tab">
+            <span className="tab-dot" aria-hidden="true" />
+            {t.youTabChart}
+          </Tabs.Trigger>
+          <Tabs.Trigger value="saved" className="you-tab">{t.youTabSaved}</Tabs.Trigger>
+          <Tabs.Trigger value="settings" className="you-tab">{t.youTabSettings}</Tabs.Trigger>
+        </Tabs.List>
+        <Tabs.Content value="updates" className="you-panel">
+          {you.id && <UpdatesPanel chartId={you.id} />}
+        </Tabs.Content>
+        <Tabs.Content value="chart" className="you-panel">
+          {you.isError ? (
+            <StateMessage message={t.youError} retry={() => you.refetch()} />
+          ) : you.data ? (
+            <ChartGrid chart={you.data.chart} />
+          ) : (
+            <Skeleton />
+          )}
+        </Tabs.Content>
+        <Tabs.Content value="saved" className="you-panel">
+          <section className="section">
+            <SectionHeader>{t.myCharts}</SectionHeader>
+            <SavedList state={state} />
+          </section>
+          <section className="section">
+            <SectionHeader>{t.savedRituals}</SectionHeader>
+            <SavedRituals />
+          </section>
+        </Tabs.Content>
+        <Tabs.Content value="settings" className="you-panel">
+          {panels}
+        </Tabs.Content>
+      </Tabs.Root>
     </div>
   );
 }
