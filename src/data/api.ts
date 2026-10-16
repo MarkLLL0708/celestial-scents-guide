@@ -433,7 +433,7 @@ export async function askNotes(
     return { transit, answer: line, ritualId, source: "fallback" };
   }
 }
-function transitLabel(t: typeof en, tr: Transit) {
+function transitLabel(t: ReturnType<typeof dict>, tr: Transit) {
   const w = t as unknown as Record<string, string>;
   return `${w[tr.transiting] ?? tr.transiting} ${tr.aspect} natal ${w[tr.natal] ?? tr.natal}`.slice(0, 80);
 }
@@ -443,8 +443,8 @@ export function suggestionNumber(question: string, theme: Theme, lang: "en" | "v
   const q = normaliseQuestion(question);
   const cap = theme[0].toUpperCase() + theme.slice(1);
   for (let i = 1; i <= 16; i++) {
-    const name = `q${cap}${theme === "work" && i <= 4 ? `${i}b` : i}`;
-    if (d[name] && normaliseQuestion(d[name]) === q) return i;
+    const names = [`q${cap}${theme === "work" && i <= 4 ? `${i}b` : i}`, ...(theme === "luck" ? [`qMood${i}`] : [])];
+    if (names.some((name) => d[name] && normaliseQuestion(d[name]) === q)) return i;
   }
   return null;
 }
