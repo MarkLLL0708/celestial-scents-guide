@@ -516,7 +516,7 @@ export async function saveRitual(id: string): Promise<string[]> {
   await cloud.saveRitualRecord({ data: { id } });
   return cloud.savedRitualIds();
 }
-export async function listSavedRituals(lang: "en" | "vi"): Promise<Ritual[]> {
+export async function listSavedRituals(lang: "en" | "vi"): Promise<(Ritual & { completedSteps: number })[]> {
   const {
     data: { user },
   } = await supabase.auth.getUser();

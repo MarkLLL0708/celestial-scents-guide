@@ -8,7 +8,7 @@ const planetName = (d: Dictionary, p: MatchPlacement) =>
   d[`planet${cap(p)}` as keyof Dictionary];
 const signName = (d: Dictionary, s: string) => d[s as keyof Dictionary] ?? s;
 const familyName = (d: Dictionary, f: string) => (d[f as keyof Dictionary] ?? f).toLowerCase();
-const noteName = (d: Dictionary, s: string) => d[`note${s.replace(/\b\w/g, (c) => c.toUpperCase()).replace(/[^a-zA-Z]/g, "")}` as keyof Dictionary] ?? d[s as keyof Dictionary] ?? s;
+const noteName = (d: Dictionary, s: string) => d[s.toLowerCase() as keyof Dictionary] ?? d[`note${s.replace(/\b\w/g, (c) => c.toUpperCase()).replace(/[^a-zA-Z]/g, "")}` as keyof Dictionary] ?? d[s as keyof Dictionary] ?? s;
 
 function list(d: Dictionary, xs: string[]): string {
   if (xs.length <= 1) return xs.join("");
