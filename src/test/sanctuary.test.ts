@@ -1,8 +1,6 @@
 import { describe, it, expect } from "vitest";
 import names from "@/data/perfume-names.json";
 import { outerLongitudes, signOf } from "@/lib/astro/placements";
-import { filterPerfumes } from "@/lib/match/filters";
-import type { Perfume } from "@/data/types";
 
 describe("sanctuary catalogue and chart rules", () => {
   it("uses exactly 40 unique bilingual names", () => {

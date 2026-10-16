@@ -294,8 +294,8 @@ export async function getReading(
     ...s, id: `${topic}-chapter-${i}`,
     placement: section.placement,
     title: [dict(lang).chapterOrigin, dict(lang).chapterRelationship, dict(lang).chapterTrouble, dict(lang).chapterNeeds, dict(lang).chapterMission][i],
-    body: chapterInterpretation(chart, section.placement?.body ?? "sun", i, lang),
-    fromLibrary: false,
+    body: [library.get(section.key), chapterInterpretation(chart, section.placement?.body ?? "sun", i, lang)].filter(Boolean).join("\n\n"),
+    fromLibrary: library.has(section.key),
   }; });
   if (topic === "luck") {
     const best = getWeekSync(chart)
