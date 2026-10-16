@@ -287,13 +287,16 @@ export async function getReading(
     sectionKeys.map((s) => s.key),
     lang,
   );
-  reading.sections = reading.sections.map((s, i) => ({
-    ...s,
-    placement: sectionKeys[i].placement,
+  reading.sections = Array.from({ length: 5 }, (_, i) => {
+    const section = sectionKeys[i % sectionKeys.length];
+    const s = reading.sections[i % reading.sections.length];
+    return {
+    ...s, id: `${topic}-chapter-${i}`,
+    placement: section.placement,
     title: [dict(lang).chapterOrigin, dict(lang).chapterRelationship, dict(lang).chapterTrouble, dict(lang).chapterNeeds, dict(lang).chapterMission][i],
-    body: library.get(sectionKeys[i].key) ?? chapterInterpretation(chart, sectionKeys[i].placement?.body ?? "sun", i, lang),
-    fromLibrary: library.has(sectionKeys[i].key),
-  }));
+    body: chapterInterpretation(chart, section.placement?.body ?? "sun", i, lang),
+    fromLibrary: false,
+  }; });
   if (topic === "luck") {
     const best = getWeekSync(chart)
       .filter((w): w is WeekEntry & { transit: Transit } => w.transit !== null)
