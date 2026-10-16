@@ -38,6 +38,9 @@ import {
 } from "@/components/scent/cosmos";
 import { StarField } from "@/components/scent/cosmos";
 import { StateMessage } from "./shared";
+import { AskEngraving } from "@/components/scent/ask-engraving";
+import { PerfumePrice, PerfumeStory, perfumeName } from "@/components/scent/catalogue-details";
+import { RitualTracker, CapsuleSave } from "./sanctuary-controls";
 
 export const glyphs: Record<Planet, string> = {
   sun: "☉",
@@ -48,6 +51,7 @@ export const glyphs: Record<Planet, string> = {
   mercury: "☿",
   jupiter: "♃",
   saturn: "♄",
+  uranus: "♅", neptune: "♆", pluto: "♇",
 };
 const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 const planetKey = (p: Planet) => `planet${cap(p)}` as keyof Dictionary;
@@ -296,19 +300,20 @@ export function ScentCapsule({
           {q.data.map((e, i) => (
             <li key={e.perfume.id} className={`capsule-card${compact ? " capsule-compact" : ""}`}>
               <div className="capsule-art">
-                <Bottle family={e.perfume.scent_family} name={e.perfume.name} />
+                <Bottle family={e.perfume.scent_family} name={perfumeName(e.perfume, lang)} />
               </div>
               <div className="capsule-body">
                 <p className="label muted">
                   0{i + 1} · {word(e.perfume.scent_family)}
                 </p>
-                <h3 className="question">{e.perfume.name}</h3>
+                <h3 className="question">{perfumeName(e.perfume, lang)}</h3>
                 <p className="label muted">{e.perfume.brand}</p>
                 <p className="small">{e.reason}</p>
+                <PerfumeStory perfume={e.perfume} />
                 {!compact && <Notes perfume={e.perfume} />}
                 {withPrice && (
                   <p className="label">
-                    ${e.perfume.price} · {e.perfume.size_ml} ml
+                    <PerfumePrice perfume={e.perfume} />
                   </p>
                 )}
                 <div className="capsule-actions">
@@ -324,13 +329,13 @@ export function ScentCapsule({
                   {withPrice && (
                     <Button
                       variant="secondary"
-                      disabled={e.perfume.sold_out}
+                      disabled={e.perfume.sold_out || e.perfume.details_pending}
                       onClick={async () => {
                         await add(e.perfume.id);
                         notify(t.added);
                       }}
                     >
-                      {e.perfume.sold_out ? t.soldOut : t.add}
+                      {e.perfume.details_pending ? t.detailsPending : e.perfume.sold_out ? t.soldOut : t.add}
                     </Button>
                   )}
                 </div>
@@ -339,6 +344,7 @@ export function ScentCapsule({
           ))}
         </ol>
       )}
+      {q.data && lead && q.data.length >= 3 && <CapsuleSave chartId={chartId} ritualId={lead} ids={q.data.map((e) => e.perfume.id)} />}
       {cta !== "none" && (
         <div className="capsule-cta">
           {cta === "both" && lead && (
@@ -591,10 +597,7 @@ export function ReadingPage({
                 </Accordion.Header>
                 <Accordion.Content className="reading-content">
                   {s.placement && <PlacementLine items={[s.placement]} />}
-                  <p data-text-source={s.fromLibrary ? "library" : "fallback"}>
-                    {s.body}
-                    <LibrarySource fromLibrary={s.fromLibrary} />
-                  </p>
+                  <div className="stack">{s.body.split("\n\n").map((text, i) => <p key={i} data-text-source={s.fromLibrary ? "library" : "editorial"}>{text}</p>)}<LibrarySource fromLibrary={s.fromLibrary} /></div>
                 </Accordion.Content>
               </Accordion.Item>
             ))}
@@ -787,7 +790,7 @@ const categories: { theme: Theme; key: keyof Dictionary; note: NoteName }[] = [
   { theme: "self", key: "catSelf", note: "bergamot" },
   { theme: "love", key: "catLove", note: "rose" },
   { theme: "work", key: "catWork", note: "vetiver" },
-  { theme: "luck", key: "catLuck", note: "amber" },
+  { theme: "luck", key: "catMood", note: "amber" },
 ];
 const questionKeys: Record<Theme, (keyof Dictionary)[]> = {
   self: [
@@ -844,24 +847,8 @@ const questionKeys: Record<Theme, (keyof Dictionary)[]> = {
     "qWork15",
     "qWork16",
   ],
-  luck: [
-    "qLuck1",
-    "qLuck2",
-    "qLuck3",
-    "qLuck4",
-    "qLuck5",
-    "qLuck6",
-    "qLuck7",
-    "qLuck8",
-    "qLuck9",
-    "qLuck10",
-    "qLuck11",
-    "qLuck12",
-    "qLuck13",
-    "qLuck14",
-    "qLuck15",
-    "qLuck16",
-  ],
+  luck: ["qMood1","qMood2","qMood3","qMood4","qMood5","qMood6","qMood7","qMood8","qMood9","qMood10","qMood11","qMood12","qMood13","qMood14","qMood15","qMood16"],
+
 };
 
 export function AspectGlyph({ aspect }: { aspect: Aspect }) {
@@ -965,7 +952,7 @@ export function AskPage({ state = "" }: { state?: string }) {
                 if (phase !== "loading") setPhase("idle");
               }}
             >
-              <NoteIcon name={c.note} label="" />
+              <AskEngraving kind={c.theme === "luck" ? "mood" : c.theme} />
               {t[c.key]}
             </Button>
           ))}
@@ -1156,7 +1143,7 @@ export function RitualsPage({ state = "" }: { state?: string }) {
 }
 
 function ScentThatFits({ perfume, reason }: { perfume: Perfume; reason: string }) {
-  const { t, word } = useLanguage();
+  const { t, word, lang } = useLanguage();
   const { add, notify } = useStore();
   const [busy, setBusy] = useState(false);
   return (
@@ -1164,14 +1151,14 @@ function ScentThatFits({ perfume, reason }: { perfume: Perfume; reason: string }
       <h2 className="label section-heading">{t.scentThatFits}</h2>
       <article className="fit-card">
         <div className="product-image">
-          <Bottle family={perfume.scent_family} name={perfume.name} />
+          <Bottle family={perfume.scent_family} name={perfumeName(perfume, lang)} />
         </div>
         <div className="fit-body">
           <p className="label muted">{word(perfume.scent_family)}</p>
-          <h3 className="question">{perfume.name}</h3>
+          <h3 className="question">{perfumeName(perfume, lang)}</h3>
           <p className="label muted">{perfume.brand}</p>
           <p>
-            ${perfume.price} · {perfume.size_ml} ml
+            <PerfumePrice perfume={perfume} />
           </p>
           <p className="fit-reason">{reason}</p>
           <Notes perfume={perfume} />
@@ -1181,7 +1168,7 @@ function ScentThatFits({ perfume, reason }: { perfume: Perfume; reason: string }
             </Link>
             <Button
               variant="secondary"
-              disabled={perfume.sold_out}
+              disabled={perfume.sold_out || perfume.details_pending}
               loading={busy}
               onClick={async () => {
                 setBusy(true);
@@ -1190,7 +1177,7 @@ function ScentThatFits({ perfume, reason }: { perfume: Perfume; reason: string }
                 setBusy(false);
               }}
             >
-              {perfume.sold_out ? t.soldOut : t.add}
+              {perfume.details_pending ? t.detailsPending : perfume.sold_out ? t.soldOut : t.add}
             </Button>
           </div>
         </div>
@@ -1279,6 +1266,7 @@ export function RitualPage({ id, state = "" }: { id: string; state?: string }) {
           <dd className="label">{r.needs.join(", ")}</dd>
         </div>
       </dl>
+      <RitualTracker ritual={r} />
       <ol className="ritual-steps">
         {r.steps.map((s, i) => (
           <li key={s}>
@@ -1406,11 +1394,11 @@ export function ShelfPage({ id, state = "" }: { id: string; state?: string }) {
                 </div>
                 <div className="shelf-body">
                   <div className="product-image">
-                    <Bottle family={e.perfume.scent_family} name={e.perfume.name} />
+                    <Bottle family={e.perfume.scent_family} name={perfumeName(e.perfume, lang)} />
                   </div>
                   <div className="stack">
                     <Link to="/shop/$id" params={{ id: e.perfume.id }} className="question">
-                      {e.perfume.name}
+                      {perfumeName(e.perfume, lang)}
                     </Link>
                     <p className="label muted">
                       {t.pairsWith}:{" "}
@@ -1420,7 +1408,7 @@ export function ShelfPage({ id, state = "" }: { id: string; state?: string }) {
                     </p>
                     <Notes perfume={e.perfume} />
                     <p>
-                      ${e.perfume.price} · {e.perfume.size_ml} ml
+                      <PerfumePrice perfume={e.perfume} />
                       {e.perfume.sample_price !== undefined &&
                         ` · ${t.samplePrice.replace("{price}", String(e.perfume.sample_price))}`}
                     </p>
@@ -1542,7 +1530,7 @@ export function ShareDialog({
 
 /** Names the ritual and the top perfume picked for this chart under an Ask answer. */
 function AskPairing({ chartId, ritualId }: { chartId: string; ritualId: string }) {
-  const { t, lang } = useLanguage();
+  const { t, lang, word } = useLanguage();
   const ritualQ = useQuery({
     queryKey: ["ritual", ritualId, lang],
     queryFn: () => api.getRitual(ritualId, lang),
@@ -1553,14 +1541,14 @@ function AskPairing({ chartId, ritualId }: { chartId: string; ritualId: string }
   });
   const pick = capsuleQ.data?.[0];
   if (!ritualQ.data || !pick) return null;
-  const notes = [...pick.perfume.top_notes, ...pick.perfume.heart_notes].slice(0, 3).join(", ");
+  const notes = [...pick.perfume.top_notes, ...pick.perfume.heart_notes].slice(0, 3).map(word).join(", ");
   return (
     <div className="cell ask-pairing">
       <p className="label muted">{t.askPairTitle}</p>
       <p>
         {t.askPairLine
           .replace("{ritual}", ritualQ.data.title)
-          .replace("{perfume}", pick.perfume.name)
+          .replace("{perfume}", perfumeName(pick.perfume, lang))
           .replace("{notes}", notes)}
       </p>
       <p className="small muted">{pick.reason}</p>
