@@ -1,3 +1,6 @@
+import { liveAsk, logLibraryAsk } from "./ask.functions";
+import { normaliseQuestion } from "@/lib/ask/live";
+import { aspectKind } from "@/lib/library/keys";
 import { en } from "@/i18n/en";
 import { resolveTexts } from "@/lib/library/resolve";
 import { sections as librarySections, aspectKind } from "@/lib/library/keys";
@@ -387,13 +390,64 @@ export async function askNotes(
   const theme = aspect?.theme ?? category;
   const slot: BlockSlot = aspect?.kind === "hard" ? "pushing" : "working";
   const line = pickLine(lang, slot, theme, seedOf(chart, date) + question.trim().length);
-  return wait({
-    transit: aspect
-      ? toTransit(aspect)
-      : { transiting: "moon", aspect: "conjunct", natal: "sun", orb: 0, theme, strength: 1 },
-    answer: line,
-    ritualId: ritualForTheme(plan.ritualTheme === "calm" ? "calm" : theme),
-  });
+  const transit: Transit = aspect
+    ? toTransit(aspect)
+    : { transiting: "moon", aspect: "conjunct", natal: "sun", orb: 0, theme, strength: 1 };
+  const ritualId = ritualForTheme(plan.ritualTheme === "calm" ? "calm" : theme);
+  const sky = aspect ? aspectKind(transit) : "quiet";
+  // 1. Approved library answer for a suggested question.
+  const n = suggestionNumber(question, category, lang);
+  if (n) {
+    const key = `${category}-${String(n).padStart(2, "0")}.${sky}`;
+    const body = (await resolveTexts("ask_answer", [key], lang)).get(key);
+    if (body) {
+      void logLibraryAsk({ data: { lang } }).catch(() => undefined);
+      return { transit, answer: body, ritualId, source: "library" };
+    }
+  }
+  // 2. Live answer from privacy-safe context only (signs, transit, ritual, perfume).
+  try {
+    const t = dict(lang);
+    const [ritual, capsule] = await Promise.all([
+      getRitual(ritualId, lang),
+      getCapsule(chartId, lang, ritualId).catch(() => []),
+    ]);
+    const pick = capsule[0]?.perfume;
+    const res = await liveAsk({
+      data: {
+        question: question.trim().slice(0, 300),
+        theme: category,
+        lang,
+        sun: chart.sun,
+        moon: chart.moon,
+        rising: chart.rising,
+        transit: transitLabel(t, transit),
+        sky,
+        ritual: ritual.title,
+        perfume: pick ? (lang === "vi" && pick.name_vi ? pick.name_vi : pick.name) : null,
+        notes: pick ? [...pick.top_notes, ...pick.heart_notes].slice(0, 3).join(", ") : "",
+      },
+    });
+    if (res.ok) return { transit, answer: res.answer, ritualId, source: "ai" };
+    return { transit, answer: line, ritualId, source: res.reason === "limited" ? "limited" : "fallback" };
+  } catch {
+    return { transit, answer: line, ritualId, source: "fallback" };
+  }
+}
+function transitLabel(t: typeof en, tr: Transit) {
+  const w = t as unknown as Record<string, string>;
+  return `${w[tr.transiting] ?? tr.transiting} ${tr.aspect} natal ${w[tr.natal] ?? tr.natal}`.slice(0, 80);
+}
+/** Which suggested question (1–16) this is, if any. */
+export function suggestionNumber(question: string, theme: Theme, lang: "en" | "vi"): number | null {
+  const d = dict(lang) as unknown as Record<string, string>;
+  const q = normaliseQuestion(question);
+  const cap = theme[0].toUpperCase() + theme.slice(1);
+  for (let i = 1; i <= 16; i++) {
+    const name = `q${cap}${theme === "work" && i <= 4 ? `${i}b` : i}`;
+    if (d[name] && normaliseQuestion(d[name]) === q) return i;
+  }
+  return null;
 }
 export async function listRituals(lang: "en" | "vi", theme?: RitualTheme): Promise<Ritual[]> {
   const all = ritualIds.map((id) => ritualFor(id, lang)).filter((r): r is Ritual => r !== null);
