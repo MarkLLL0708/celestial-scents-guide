@@ -109,7 +109,7 @@ function TensionIcon({ kind }: { kind: "power" | "pressure" | "trouble" }) {
 }
 
 export function UpdatesPanel({ chartId }: { chartId: string }) {
-  const { t, lang } = useLanguage();
+  const { t, lang, word } = useLanguage();
   const [days, setDays] = useState<{ iso: string; d: Date; offset: number }[]>([]);
   const [date, setDate] = useState("");
   useEffect(() => {
@@ -195,7 +195,7 @@ export function UpdatesPanel({ chartId }: { chartId: string }) {
           {ritual.data && (
             <div className="you-ground">
               <p className="label muted">{t.dailyScent}</p>
-              {pick && <div className="daily-pairing"><Bottle family={pick.perfume.scent_family} name={perfumeName(pick.perfume,lang)} /><div className="stack-sm"><h3 className="question">{perfumeName(pick.perfume,lang)}</h3><p>{t.dailyScentLine.replace("{perfume}",perfumeName(pick.perfume,lang)).replace("{ritual}",ritual.data.title).replace("{notes}",pick.perfume.heart_notes.slice(0,3).map((n) => (lang === "vi" ? n : n)).join(", "))}</p><p className="small muted">{pick.reason}</p></div></div>}
+              {pick && <div className="daily-pairing"><Bottle family={pick.perfume.scent_family} name={perfumeName(pick.perfume,lang)} /><div className="stack-sm"><h3 className="question">{perfumeName(pick.perfume,lang)}</h3><p>{t.dailyScentLine.replace("{perfume}",perfumeName(pick.perfume,lang)).replace("{ritual}",ritual.data.title).replace("{notes}",pick.perfume.heart_notes.slice(0,3).map(word).join(", "))}</p><p className="small muted">{pick.reason}</p></div></div>}
               {!pick && <p>{ritual.data.title}</p>}
               <Button asChild>
                 <Link to="/rituals/$id" params={{ id: ritual.data.id }}>
@@ -212,7 +212,7 @@ export function UpdatesPanel({ chartId }: { chartId: string }) {
 }
 
 export function ChartGrid({ chart }: { chart: Chart }) {
-  const { t, word } = useLanguage();
+  const { t, word, lang } = useLanguage();
   const [active, setActive] = useState<Planet>("sun");
   const rows = ORDER.flatMap((p) => {
     const sign = p === "rising" ? chart.rising : chart[p];
@@ -261,8 +261,8 @@ export function ChartGrid({ chart }: { chart: Chart }) {
       </div>
       {sel && (
         <section className="placement-card stack" aria-live="polite">
-          <h2 className="lg">{api.inspectPlacement(chart, sel.p, useLanguageValue).title}</h2>
-          {api.inspectPlacement(chart, sel.p, useLanguageValue).paragraphs.map((p,i) => <p key={i} className={i === 2 ? "muted" : ""}>{p}</p>)}
+          <h2 className="lg">{api.inspectPlacement(chart, sel.p, lang).title}</h2>
+          {api.inspectPlacement(chart, sel.p, lang).paragraphs.map((p,i) => <p key={i} className={i === 2 ? "muted" : ""}>{p}</p>)}
         </section>
       )}
     </div>
