@@ -143,6 +143,7 @@ export interface AstroAnswer {
   transit: Transit;
   answer: string;
   ritualId: string;
+  source?: "library" | "ai" | "fallback" | "limited";
 }
 export type RitualTheme = "calm" | "love" | "work" | "luck" | "self" | "evening";
 export interface Ritual {
