@@ -62,7 +62,7 @@ export function BirthSettings() {
   return <section className="section stack"><SectionHeader>{t.birthDate} / {t.birthTime}</SectionHeader><p className="small muted">{t.birthLocal}</p><Button variant="secondary" onClick={()=>setOpen(!open)} aria-expanded={open}>{t.editBirth}</Button>
     {open && <div className="stack"><DatePicker profile={profile} onChange={setProfile} showError/><TimePicker profile={profile} onChange={setProfile}/><CitySearch value={profile.city} onSelect={(c)=>setProfile({...profile,city:c?.city??"",country:c?.country??"",lat:c?.lat,lon:c?.lon,timezone:c?.timezone,region:c?.region})}/><Button disabled={!valid} loading={busy} onClick={async()=>{
       setBusy(true);
-      try {const chart=await api.computeChart(profile); const record=api.storeChart(profile.name || t.youTitle,chart,prefs);setResult({id:record.id,profile,chart,prefs,date:api.todayDate()});await client.invalidateQueries();setOpen(false);notify(t.saved);window.location.reload();}
+      try {const chart=await api.computeChart(profile); const record=api.storeChart(profile.name || t.youTitle,chart,prefs,profile);setResult({id:record.id,profile,chart,prefs,date:api.todayDate()});await client.invalidateQueries();setOpen(false);notify(t.saved);window.location.reload();}
       catch {notify(t.chartComputeError,"error");} finally {setBusy(false);}
     }}>{t.saveChanges}</Button></div>}
   </section>;

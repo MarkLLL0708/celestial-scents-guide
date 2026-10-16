@@ -1,4 +1,4 @@
-import { useContext, useState, type ReactNode } from "react";
+import { useContext, useEffect, useState, type ReactNode } from "react";
 import { stableContext } from "@/lib/stable-context";
 import * as api from "./api";
 import type { BirthProfile, Prefs, ChartResult, CartItem } from "./types";
@@ -39,6 +39,7 @@ export interface Journey {
 const Context = stableContext<Store | null>("NatalStore", null);
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [profile, setProfile] = useState(initialProfile);
+  useEffect(() => { const restored = api.currentBirthProfile(); if (restored) setProfile(restored); }, []);
   const [prefs, setPrefs] = useState(initialPrefs);
   const [result, setResult] = useState<ChartResult | null>(null);
   const { user: account } = useAccount();

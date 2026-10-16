@@ -19,7 +19,7 @@ import { applyFilters } from "@/lib/match/filters";
 import { scorePerfume, shadowChart } from "@/lib/match/score";
 import { fallbackRitualId } from "@/config/scentMap";
 import { DateTime } from "luxon";
-import { perfumes, demoChart, cities } from "./seed";
+import { demoChart, cities } from "./seed";
 import { buildChart, natalLongitudes, toTransit } from "@/lib/astro/to-chart";
 import { dayFor, localNoon, weekFor } from "@/lib/astro/today";
 import { pickLine, quietBank, summaryBank, type BlockSlot } from "@/lib/astro/text-bank";
@@ -46,7 +46,6 @@ import type {
 } from "./types";
 import { firstRitualOfTheme, readingFor, ritualFor, ritualIds, topics } from "./astro-mock";
 export * from "./types";
-import { perfumes as samplePerfumes } from "./seed";
 import namedPerfumes from "./perfume-names.json";
 import { placementInterpretation, dailyInterpretation, chapterInterpretation } from "@/lib/astro/interpretation";
 const wait = <T>(value: T): Promise<T> =>
@@ -137,14 +136,14 @@ export async function computeChart(profile: BirthProfile): Promise<Chart> {
 }
 
 /** Keeps one chart in sessionStorage so a reload keeps it. Nothing else is stored. */
-export function storeChart(name: string, chart: Chart, prefs?: Prefs): ChartRecord {
+export function storeChart(name: string, chart: Chart, prefs?: Prefs, birthProfile?: BirthProfile): ChartRecord {
   const record: ChartRecord = {
     id: `c${Date.now().toString(36)}${Math.random().toString(36).slice(2, 8)}`,
     name,
     chart,
     prefs,
   };
-  sessionStorage.setItem(CHART_KEY, JSON.stringify(record));
+  sessionStorage.setItem(CHART_KEY, JSON.stringify({ ...record, birthProfile }));
   return record;
 }
 function readStored(): ChartRecord | null {
@@ -553,4 +552,8 @@ export async function submitFeedback(
 ) {
   const { error } = await supabase.from("feedback").insert({ kind, ref, rating, lang });
   if (error) throw new Error(error.message);
+}
+
+export function currentBirthProfile(): BirthProfile | null {
+  try { const raw = sessionStorage.getItem(CHART_KEY); return raw ? (JSON.parse(raw).birthProfile ?? null) : null; } catch { return null; }
 }
