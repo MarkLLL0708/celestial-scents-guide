@@ -742,7 +742,7 @@ export function AdminPage({ state = "" }: { state?: string }) {
             }
           }}
         >
-          {t.shopArchive}
+          {t.shop}
         </Button>
         <Button variant="secondary" onClick={() => setUpload(true)}>
           {t.upload}
