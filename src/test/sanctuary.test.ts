@@ -4,6 +4,8 @@ import { outerLongitudes, signOf } from "@/lib/astro/placements";
 import { applyFilters, priceTertiles } from "@/lib/match/filters";
 import type { Perfume } from "@/data/types";
 import { capsuleSchema } from "@/data/cloud.functions";
+import { scorePerfume } from "@/lib/match/score";
+import { demoChart } from "@/data/seed";
 
 describe("sanctuary catalogue and chart rules", () => {
   it("uses exactly 40 unique bilingual names", () => {
@@ -18,6 +20,7 @@ describe("sanctuary catalogue and chart rules", () => {
     const p = names[0] as Perfume;
     expect(priceTertiles([p]).low).toBe(Infinity);
     expect(applyFilters([p], { avoid: [], budget: "low", style: "feminine" }).eligible).toHaveLength(1);
+    expect(scorePerfume(p, demoChart).intensityBonus).toBe(0);
   });
   it("accepts only three to five distinct perfumes in a saved capsule", () => {
     const make = (ids: string[]) => capsuleSchema.safeParse({ chartId: "chart", ritualId: "slow-evening", perfumeIds: ids }).success;
