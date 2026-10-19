@@ -375,7 +375,7 @@ export function ResultPage({ id, state = "" }: { id: string; state?: string }) {
   const queryClient = useQueryClient();
   const [shareOpen, setShareOpen] = useState(false);
   useEffect(() => markJourney("chartSeen"), [markJourney]);
-  const q = useQuery({ queryKey: ["chart", id], queryFn: () => api.getChartById(id) });
+  const q = useQuery({ queryKey: ["chart", id], queryFn: () => api.getChartById(id), retry: (n, e) => e.message !== "NOT_FOUND" && n < 2 });
   const [forced, setForced] = useState(state);
   useEffect(() => setForced(state), [state]);
 
