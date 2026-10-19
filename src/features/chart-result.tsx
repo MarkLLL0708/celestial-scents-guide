@@ -391,7 +391,7 @@ export function ResultPage({ id, state = "" }: { id: string; state?: string }) {
     return (
       <div className="narrow stack">
         <p>{t.chartFirst}</p>
-        <Link to="/chart/new" className="button">{t.chartFirstCta}</Link>
+        <Button asChild><Link to="/chart/new">{t.chartFirstCta}</Link></Button>
       </div>
     );
   if (forced === "error" || (!forced && q.isError))
