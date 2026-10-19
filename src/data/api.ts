@@ -51,7 +51,7 @@ export * from "./types";
 import namedPerfumes from "./perfume-names.json";
 import { placementInterpretation, dailyInterpretation, chapterInterpretation } from "@/lib/astro/interpretation";
 const wait = <T>(value: T): Promise<T> =>
-  new Promise((resolve) => setTimeout(() => resolve(structuredClone(value)), 600));
+  Promise.resolve(structuredClone(value));
 let inventory: Perfume[] = [];
 let items: CartItem[] = [];
 export async function getPerfumes(filters?: {
@@ -82,6 +82,35 @@ export async function getPerfume(id: string): Promise<Perfume | null> {
 }
 // ---------- real astrology engine (runs in the browser; birth details never leave it) ----------
 const CHART_KEY = "natal-notes:chart";
+/** Storage that never throws: session → local → in-memory (private mode, blocked storage). */
+const memoryStore = new Map<string, string>();
+export let storageEngine: "session" | "local" | "memory" = "session";
+export function safeGet(key: string): string | null {
+  if (typeof window === "undefined") return null;
+  for (const s of ["sessionStorage", "localStorage"] as const) {
+    try { const v = window[s].getItem(key); if (v !== null) return v; } catch { /* blocked */ }
+  }
+  return memoryStore.get(key) ?? null;
+}
+export function safeSet(key: string, value: string): void {
+  memoryStore.set(key, value);
+  if (typeof window === "undefined") return;
+  try { window.sessionStorage.setItem(key, value); storageEngine = "session"; return; } catch { /* blocked */ }
+  try { window.localStorage.setItem(key, value); storageEngine = "local"; return; } catch { /* blocked */ }
+  storageEngine = "memory";
+}
+export function safeRemove(key: string): void {
+  memoryStore.delete(key);
+  if (typeof window === "undefined") return;
+  for (const s of ["sessionStorage", "localStorage"] as const) {
+    try { window[s].removeItem(key); } catch { /* blocked */ }
+  }
+}
+export const debugLog: { at: string; msg: string }[] = [];
+export function logDebug(msg: string) {
+  debugLog.unshift({ at: new Date().toISOString().slice(11, 19), msg });
+  debugLog.length = Math.min(debugLog.length, 8);
+}
 export const DEMO_ID = "demo";
 
 export async function searchCities(query: string, lang: "en" | "vi"): Promise<CityHit[]> {
@@ -125,6 +154,10 @@ export async function computeChart(profile: BirthProfile): Promise<Chart> {
       ? { lat: profile.lat, lon: profile.lon, timezone: profile.timezone }
       : cities.find((x) => x.city === profile.city);
   if (!c) throw new Error("NO_PLACE");
+  const ok = (n: number, m: number) => Number.isFinite(n) && Math.abs(n) <= m;
+  if (!ok(c.lat, 90) || !ok(c.lon, 180)) throw new Error("BAD_PLACE");
+  let tz = c.timezone;
+  try { new Intl.DateTimeFormat("en", { timeZone: tz }); } catch { tz = "UTC"; }
   return buildChart({
     year: profile.year,
     month: profile.month,
@@ -133,7 +166,7 @@ export async function computeChart(profile: BirthProfile): Promise<Chart> {
     minute: profile.minute,
     lat: c.lat,
     lon: c.lon,
-    timezone: c.timezone,
+    timezone: tz,
   });
 }
 
@@ -145,13 +178,17 @@ export function storeChart(name: string, chart: Chart, prefs?: Prefs, birthProfi
     chart,
     prefs,
   };
-  sessionStorage.setItem(CHART_KEY, JSON.stringify({ ...record, birthProfile }));
+  safeSet(CHART_KEY, JSON.stringify({ ...record, birthProfile }));
   return record;
 }
 function readStored(): ChartRecord | null {
   if (typeof window === "undefined") return null;
-  const raw = sessionStorage.getItem(CHART_KEY);
-  return raw ? (JSON.parse(raw) as ChartRecord) : null;
+  try {
+    const raw = safeGet(CHART_KEY);
+    return raw ? (JSON.parse(raw) as ChartRecord) : null;
+  } catch {
+    return null;
+  }
 }
 /** Current chart id: the stored one if present, else the demo chart. */
 export function currentChartId(): string {
@@ -162,11 +199,7 @@ export function currentChartId(): string {
   }
 }
 export function clearChart(): void {
-  try {
-    sessionStorage.removeItem(CHART_KEY);
-  } catch {
-    /* storage unavailable: nothing to clear */
-  }
+  safeRemove(CHART_KEY);
 }
 const demoRecord = (): ChartRecord => ({ id: DEMO_ID, name: "An", chart: demoChart });
 function loadChart(id: string): ChartRecord {
@@ -243,7 +276,8 @@ export async function getChartById(id: string): Promise<ChartRecord> {
   try {
     return loadChart(id);
   } catch {
-    const rows = await cloud.savedCharts();
+    let rows: Awaited<ReturnType<typeof cloud.savedCharts>> = [];
+    try { rows = await cloud.savedCharts(); } catch { rows = []; }
     const row = rows.find((r) => r.id === id);
     if (!row) throw new Error("NOT_FOUND");
     return {
@@ -612,5 +646,5 @@ export async function submitFeedback(
 }
 
 export function currentBirthProfile(): BirthProfile | null {
-  try { const raw = sessionStorage.getItem(CHART_KEY); return raw ? (JSON.parse(raw).birthProfile ?? null) : null; } catch { return null; }
+  try { const raw = safeGet(CHART_KEY); return raw ? (JSON.parse(raw).birthProfile ?? null) : null; } catch { return null; }
 }

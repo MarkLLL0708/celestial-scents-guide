@@ -30,6 +30,7 @@ export function ChartLoading() {
   const [reduced, setReduced] = useState(false);
   const [failed, setFailed] = useState(false);
   const [attempt, setAttempt] = useState(0);
+  const [ready, setReady] = useState(false);
   const { profile, prefs } = useStore();
 
   useEffect(() => {
@@ -37,9 +38,14 @@ export function ChartLoading() {
     // Runs in the browser only; birth details never leave the device.
     void (async () => {
       try {
+        const started = performance.now();
         const chart = await api.computeChart(profile);
-        if (!cancelled) api.storeChart(profile.name, chart, prefs, profile);
-      } catch {
+        if (cancelled) return;
+        const rec = api.storeChart(profile.name, chart, prefs, profile);
+        api.logDebug(`chart ${rec.id} in ${Math.round(performance.now() - started)}ms (${api.storageEngine})`);
+        setReady(true);
+      } catch (e) {
+        api.logDebug(`compute failed: ${e instanceof Error ? e.message : "unknown"}`);
         if (!cancelled) setFailed(true);
       }
     })();
@@ -57,13 +63,18 @@ export function ChartLoading() {
       setLetters(0);
     }, 2000);
     const f = setInterval(() => setFact((i) => (i + 1) % 4), 4000);
-    const done = setTimeout(() => navigate({ to: "/chart/reveal" }), 3000);
     return () => {
       clearInterval(msg);
       clearInterval(f);
-      clearTimeout(done);
     };
-  }, [navigate, failed]);
+  }, [failed]);
+
+  // Advance once the chart is really ready, with a short minimum so the screen doesn't flash.
+  useEffect(() => {
+    if (!ready) return;
+    const done = setTimeout(() => navigate({ to: "/chart/reveal" }), 700);
+    return () => clearTimeout(done);
+  }, [ready, navigate]);
 
   useEffect(() => {
     if (reduced) return;

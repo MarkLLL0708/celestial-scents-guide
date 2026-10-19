@@ -377,6 +377,8 @@ export const en = {
   teaserLuck: "Luck that arrives through other people.",
   movingToday: "What's moving for you today",
   skyError: "Your sky didn't load. try again.",
+  chartFirst: "Let’s make your chart first. it takes a minute.",
+  chartFirstCta: "Make my chart",
   readingLabel: "READING: {topic}",
   readingThanks: "Thanks. we use this to improve your readings.",
   ritualForThis: "A small ritual for this",

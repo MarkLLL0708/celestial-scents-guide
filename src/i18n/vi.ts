@@ -378,6 +378,8 @@ export const vi: Dictionary = {
   teaserLuck: "May mắn đến qua người khác.",
   movingToday: "Hôm nay có gì đang chuyển động quanh bạn",
   skyError: "Bầu trời của bạn chưa tải được. thử lại.",
+  chartFirst: "Hãy lập bản đồ sao của bạn trước. chỉ mất một phút.",
+  chartFirstCta: "Lập bản đồ sao",
   readingLabel: "BÀI ĐỌC: {topic}",
   readingThanks: "Cảm ơn bạn. chúng tôi dùng điều này để cải thiện các bài đọc.",
   ritualForThis: "Một nghi thức nhỏ cho điều này",

@@ -375,7 +375,7 @@ export function ResultPage({ id, state = "" }: { id: string; state?: string }) {
   const queryClient = useQueryClient();
   const [shareOpen, setShareOpen] = useState(false);
   useEffect(() => markJourney("chartSeen"), [markJourney]);
-  const q = useQuery({ queryKey: ["chart", id], queryFn: () => api.getChartById(id) });
+  const q = useQuery({ queryKey: ["chart", id], queryFn: () => api.getChartById(id), retry: (n, e) => e.message !== "NOT_FOUND" && n < 2 });
   const [forced, setForced] = useState(state);
   useEffect(() => setForced(state), [state]);
 
@@ -385,6 +385,13 @@ export function ResultPage({ id, state = "" }: { id: string; state?: string }) {
         <Skeleton />
         <Skeleton />
         <Skeleton />
+      </div>
+    );
+  if (!forced && q.isError && q.error?.message === "NOT_FOUND")
+    return (
+      <div className="narrow stack">
+        <p>{t.chartFirst}</p>
+        <Button asChild><Link to="/chart/new">{t.chartFirstCta}</Link></Button>
       </div>
     );
   if (forced === "error" || (!forced && q.isError))
