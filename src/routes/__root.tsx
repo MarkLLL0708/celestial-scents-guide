@@ -15,7 +15,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { LanguageProvider, useLanguage } from "@/i18n/provider";
 import { StoreProvider } from "@/data/context";
-import { Header, Footer, Toast, TabBar, PageBack } from "@/components/scent/shell";
+import { Header, Footer, Toast, TabBar, PageBack, DebugPanel } from "@/components/scent/shell";
 import { Button } from "@/components/ui/button";
 import { StarField } from "@/components/scent/cosmos";
 import { themeFor, bareRoutes } from "@/lib/theme";
@@ -141,6 +141,7 @@ function RootComponent() {
               <main id="main-content">
                 <PageBack />
                 <Outlet />
+                <DebugPanel />
               </main>
               {!bare && <Footer />}
               {!bare && <TabBar />}

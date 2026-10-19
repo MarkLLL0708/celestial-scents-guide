@@ -1,6 +1,7 @@
 import { Link, useRouter, useRouterState } from "@tanstack/react-router";
 import { ArrowLeft, Flame, MessageCircle, Orbit, ShoppingBag, Sun, User, X } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import * as api from "@/data/api";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/i18n/provider";
 import { useStore } from "@/data/context";
@@ -155,4 +156,32 @@ export function Toast() {
       </div>
     </div>
   ) : null;
+}
+
+/** Diagnostics shown only with ?debug=1. Shows no birth details, only ids, timings and errors. */
+export function DebugPanel() {
+  const href = useRouterState({ select: (s) => s.location.href });
+  const [open, setOpen] = useState(false);
+  const [, tick] = useState(0);
+  const [start] = useState(() => (typeof performance === "undefined" ? 0 : performance.now()));
+  const [nav, setNav] = useState<string[]>([]);
+  useEffect(() => {
+    setOpen(new URLSearchParams(window.location.search).get("debug") === "1" || sessionStorageFlag());
+    setNav((n) => [`${Math.round(performance.now() - start)}ms ${window.location.pathname}`, ...n].slice(0, 6));
+    const id = setInterval(() => tick((n) => n + 1), 1000);
+    return () => clearInterval(id);
+  }, [href, start]);
+  if (!open) return null;
+  return (
+    <aside className="debug-panel small" aria-label="Debug">
+      <p>chart: {api.currentChartId()}</p>
+      <p>storage: {api.storageEngine}</p>
+      {nav.map((n) => <p key={n}>{n}</p>)}
+      {api.debugLog.map((l) => <p key={l.at + l.msg}>{l.at} {l.msg}</p>)}
+    </aside>
+  );
+}
+function sessionStorageFlag() {
+  if (new URLSearchParams(window.location.search).get("debug") === "1") api.safeSet("natal-notes:debug", "1");
+  return api.safeGet("natal-notes:debug") === "1";
 }

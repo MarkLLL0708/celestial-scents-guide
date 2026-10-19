@@ -3078,3 +3078,9 @@ h3 {
 .grid-planet .muted { font-size: 9px; }
 .grid-sign-col { width: 32%; } .grid-body-col { width: 53%; } .grid-house-col { width: 15%; }
 @media (max-width: 600px) { .grid-frame { grid-template-columns: 10px minmax(0,1fr) 10px; gap: 4px; } .planet-grid td { padding-inline: 5px; } }
+
+.debug-panel {
+  position: fixed; right: 0.5rem; bottom: 5rem; z-index: 60; max-width: 18rem;
+  padding: 0.5rem; border: 1px solid currentColor; background: var(--background);
+  font-family: var(--font-mono, monospace); font-size: 0.7rem; line-height: 1.4;
+}
