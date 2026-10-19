@@ -387,6 +387,13 @@ export function ResultPage({ id, state = "" }: { id: string; state?: string }) {
         <Skeleton />
       </div>
     );
+  if (!forced && q.isError && q.error?.message === "NOT_FOUND")
+    return (
+      <div className="narrow stack">
+        <p>{t.chartFirst}</p>
+        <Link to="/chart/new" className="button">{t.chartFirstCta}</Link>
+      </div>
+    );
   if (forced === "error" || (!forced && q.isError))
     return (
       <div className="narrow">
