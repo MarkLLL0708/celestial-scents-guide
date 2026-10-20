@@ -29,6 +29,7 @@ import { Route as RitualsIndexRouteImport } from './routes/rituals.index'
 import { Route as RitualsIdRouteImport } from './routes/rituals.$id'
 import { Route as ShopIndexRouteImport } from './routes/shop.index'
 import { Route as ShopIdRouteImport } from './routes/shop.$id'
+import { Route as ApiPublicWriteReadingRouteImport } from './routes/api/public/write-reading'
 import { Route as ChartResultIdRouteImport } from './routes/chart.result.$id'
 import { Route as ChartResultIdShelfRouteImport } from './routes/chart.result.$id_.shelf'
 import { Route as ChartResultIdReadTopicRouteImport } from './routes/chart.result.$id_.read.$topic'
@@ -133,6 +134,11 @@ const ShopIdRoute = ShopIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => ShopRoute,
 } as any)
+const ApiPublicWriteReadingRoute = ApiPublicWriteReadingRouteImport.update({
+  id: '/api/public/write-reading',
+  path: '/api/public/write-reading',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ChartResultIdRoute = ChartResultIdRouteImport.update({
   id: '/chart/result/$id',
   path: '/chart/result/$id',
@@ -170,6 +176,7 @@ export interface FileRoutesByFullPath {
   '/shop/$id': typeof ShopIdRoute
   '/rituals/': typeof RitualsIndexRoute
   '/shop/': typeof ShopIndexRoute
+  '/api/public/write-reading': typeof ApiPublicWriteReadingRoute
   '/chart/result/$id': typeof ChartResultIdRoute
   '/chart/result/$id/shelf': typeof ChartResultIdShelfRoute
   '/chart/result/$id/read/$topic': typeof ChartResultIdReadTopicRoute
@@ -194,6 +201,7 @@ export interface FileRoutesByTo {
   '/shop/$id': typeof ShopIdRoute
   '/rituals': typeof RitualsIndexRoute
   '/shop': typeof ShopIndexRoute
+  '/api/public/write-reading': typeof ApiPublicWriteReadingRoute
   '/chart/result/$id': typeof ChartResultIdRoute
   '/chart/result/$id/shelf': typeof ChartResultIdShelfRoute
   '/chart/result/$id/read/$topic': typeof ChartResultIdReadTopicRoute
@@ -220,6 +228,7 @@ export interface FileRoutesById {
   '/shop/$id': typeof ShopIdRoute
   '/rituals/': typeof RitualsIndexRoute
   '/shop/': typeof ShopIndexRoute
+  '/api/public/write-reading': typeof ApiPublicWriteReadingRoute
   '/chart/result/$id': typeof ChartResultIdRoute
   '/chart/result/$id_/shelf': typeof ChartResultIdShelfRoute
   '/chart/result/$id_/read/$topic': typeof ChartResultIdReadTopicRoute
@@ -247,6 +256,7 @@ export interface FileRouteTypes {
     | '/shop/$id'
     | '/rituals/'
     | '/shop/'
+    | '/api/public/write-reading'
     | '/chart/result/$id'
     | '/chart/result/$id/shelf'
     | '/chart/result/$id/read/$topic'
@@ -271,6 +281,7 @@ export interface FileRouteTypes {
     | '/shop/$id'
     | '/rituals'
     | '/shop'
+    | '/api/public/write-reading'
     | '/chart/result/$id'
     | '/chart/result/$id/shelf'
     | '/chart/result/$id/read/$topic'
@@ -296,6 +307,7 @@ export interface FileRouteTypes {
     | '/shop/$id'
     | '/rituals/'
     | '/shop/'
+    | '/api/public/write-reading'
     | '/chart/result/$id'
     | '/chart/result/$id_/shelf'
     | '/chart/result/$id_/read/$topic'
@@ -320,6 +332,7 @@ export interface RootRouteChildren {
   DevMatchRoute: typeof DevMatchRoute
   RitualsIdRoute: typeof RitualsIdRoute
   RitualsIndexRoute: typeof RitualsIndexRoute
+  ApiPublicWriteReadingRoute: typeof ApiPublicWriteReadingRoute
   ChartResultIdRoute: typeof ChartResultIdRoute
   ChartResultIdShelfRoute: typeof ChartResultIdShelfRoute
   ChartResultIdReadTopicRoute: typeof ChartResultIdReadTopicRoute
@@ -467,6 +480,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ShopIdRouteImport
       parentRoute: typeof ShopRoute
     }
+    '/api/public/write-reading': {
+      id: '/api/public/write-reading'
+      path: '/api/public/write-reading'
+      fullPath: '/api/public/write-reading'
+      preLoaderRoute: typeof ApiPublicWriteReadingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/chart/result/$id': {
       id: '/chart/result/$id'
       path: '/chart/result/$id'
@@ -522,6 +542,7 @@ const rootRouteChildren: RootRouteChildren = {
   DevMatchRoute: DevMatchRoute,
   RitualsIdRoute: RitualsIdRoute,
   RitualsIndexRoute: RitualsIndexRoute,
+  ApiPublicWriteReadingRoute: ApiPublicWriteReadingRoute,
   ChartResultIdRoute: ChartResultIdRoute,
   ChartResultIdShelfRoute: ChartResultIdShelfRoute,
   ChartResultIdReadTopicRoute: ChartResultIdReadTopicRoute,
