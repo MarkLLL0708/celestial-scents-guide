@@ -648,3 +648,15 @@ export async function submitFeedback(
 export function currentBirthProfile(): BirthProfile | null {
   try { const raw = safeGet(CHART_KEY); return raw ? (JSON.parse(raw).birthProfile ?? null) : null; } catch { return null; }
 }
+
+/** Truth, cost and scent for the topic's lead placement, paired with the first capsule pick. */
+export async function getPersonalReading(chartId: string, topic: Topic, lang: "en" | "vi") {
+  const { chart } = await getChartById(chartId);
+  const lead = { you: "sun", love: "venus", work: "mercury", luck: "jupiter" } as const;
+  const sign = chart.details[lead[topic]].sign;
+  let perfume: Perfume | null = null;
+  try { perfume = (await getCapsule(chartId, lang))[0]?.perfume ?? null; } catch { perfume = null; }
+  const d = dict(lang) as unknown as Record<string, string>;
+  const { personalReading } = await import("@/lib/astro/personal");
+  return { ...personalReading(sign, perfume, lang, (n) => d[n.toLowerCase()] ?? n.toLowerCase()), perfume };
+}
