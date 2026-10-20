@@ -1,4 +1,4 @@
-import { SIGNS } from "@/lib/astro/placements";
+import { SIGN_ORDER as SIGNS } from "@/config/scentMap";
 import { liveAsk, logLibraryAsk } from "./ask.functions";
 import { normaliseQuestion } from "@/lib/ask/live";
 import { en } from "@/i18n/en";
@@ -23,8 +23,10 @@ import { scorePerfume, shadowChart } from "@/lib/match/score";
 import { fallbackRitualId } from "@/config/scentMap";
 import { DateTime } from "luxon";
 import { demoChart, cities } from "./seed";
-import { buildChart, natalLongitudes, toTransit } from "@/lib/astro/to-chart";
-import { dayFor, localNoon, weekFor } from "@/lib/astro/today";
+import { natalLongitudes, toTransit } from "@/lib/astro/to-chart";
+/** Star maths (astronomy-engine) loads only when a chart, day or week is actually computed. */
+let enginePromise: Promise<typeof import("@/lib/astro/engine")> | null = null;
+const engine = () => (enginePromise ??= import("@/lib/astro/engine"));
 import { pickLine, quietBank, summaryBank, type BlockSlot } from "@/lib/astro/text-bank";
 import type {
   Perfume,
@@ -159,6 +161,7 @@ export async function computeChart(profile: BirthProfile): Promise<Chart> {
   if (!ok(c.lat, 90) || !ok(c.lon, 180)) throw new Error("BAD_PLACE");
   let tz = c.timezone;
   try { new Intl.DateTimeFormat("en", { timeZone: tz }); } catch { tz = "UTC"; }
+  const { buildChart } = await engine();
   return buildChart({
     year: profile.year,
     month: profile.month,
@@ -335,7 +338,7 @@ export async function getReading(
     fromLibrary: library.has(section.key),
   }; });
   if (topic === "luck") {
-    const best = getWeekSync(chart)
+    const best = (await getWeekSync(chart))
       .filter((w): w is WeekEntry & { transit: Transit } => w.transit !== null)
       .sort((a, b) => b.transit.strength - a.transit.strength || a.transit.orb - b.transit.orb)[0];
     reading.week = best ? { transit: best.transit, date: best.date } : null;
@@ -343,19 +346,21 @@ export async function getReading(
   return wait(reading);
 }
 
-function getWeekSync(chart: Chart): WeekEntry[] {
+async function getWeekSync(chart: Chart): Promise<WeekEntry[]> {
+  const { weekFor } = await engine();
   return weekFor(natalLongitudes(chart), skipFor(chart)).map((w) => ({
     date: w.date,
     transit: w.aspect ? toTransit(w.aspect) : null,
   }));
 }
 export async function getWeek(chartId: string): Promise<WeekEntry[]> {
-  return wait(getWeekSync((await getChartById(chartId)).chart));
+  return wait(await getWeekSync((await getChartById(chartId)).chart));
 }
 
 /** date is the visitor's local calendar day (YYYY-MM-DD); the instant used is local noon. */
 export async function getToday(chartId: string, date: string, lang: "en" | "vi"): Promise<Today> {
   const { chart } = await getChartById(chartId);
+  const { dayFor, localNoon } = await engine();
   const plan = dayFor(natalLongitudes(chart), localNoon(date), skipFor(chart));
   const seed = seedOf(chart, date);
   const blockKey = (slot: BlockSlot, a: typeof plan.working) =>
@@ -418,6 +423,7 @@ export async function askNotes(
   if (!question.trim()) throw new Error("EMPTY_QUESTION");
   const { chart } = await getChartById(chartId);
   const date = todayDate();
+  const { dayFor, localNoon } = await engine();
   const plan = dayFor(natalLongitudes(chart), localNoon(date), skipFor(chart));
   const hit = plan.aspects.find((a) => a.theme === category) ?? plan.aspects[0];
   const aspect = hit;
@@ -502,8 +508,9 @@ const matchRitual = (id: string, lang: "en" | "vi"): MatchRitual | null => {
 };
 const allMatchRituals = (lang: "en" | "vi") =>
   ritualIds.map((id) => matchRitual(id, lang)).filter((r): r is MatchRitual => r !== null);
-function todayRitualId(chart: Chart): string {
+async function todayRitualId(chart: Chart): Promise<string> {
   try {
+    const { dayFor, localNoon } = await engine();
     const plan = dayFor(natalLongitudes(chart), localNoon(todayDate()), skipFor(chart));
     return ritualForTheme(plan.ritualTheme);
   } catch {
@@ -532,7 +539,7 @@ export async function getShelf(
   const { chart, prefs } = await getChartById(chartId);
   await getPerfumes();
   const ritual =
-    matchRitual(ritualId ?? todayRitualId(chart), lang) ?? matchRitual(fallbackRitualId, lang);
+    matchRitual(ritualId ?? (await todayRitualId(chart)), lang) ?? matchRitual(fallbackRitualId, lang);
   if (!ritual) throw new Error("NO_RITUAL");
   const picks = buildShelf(inventory, chart, prefs, ritual);
   return wait({
@@ -546,7 +553,7 @@ export async function getCapsule(chartId: string, lang: "en" | "vi", ritualId?: 
   const { chart, prefs } = await getChartById(chartId);
   await getPerfumes();
   const ritual =
-    matchRitual(ritualId ?? todayRitualId(chart), lang) ?? matchRitual(fallbackRitualId, lang);
+    matchRitual(ritualId ?? (await todayRitualId(chart)), lang) ?? matchRitual(fallbackRitualId, lang);
   if (!ritual) throw new Error("NO_RITUAL");
   return wait(
     buildCapsule(inventory, chart, prefs, ritual)
