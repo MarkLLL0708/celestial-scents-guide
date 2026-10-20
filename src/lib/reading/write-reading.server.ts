@@ -53,22 +53,22 @@ async function pickPerfume(sb: any, sign: string, house: number) {
 }
 
 async function callModel(input: unknown, feedback?: string) {
-  const model = process.env["READING_MODEL"] || "claude-haiku-5-5";
-  const res = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    headers: {
-      "content-type": "application/json",
-      "x-api-key": process.env["ANTHROPIC_API_KEY"]!,
-      "anthropic-version": "2023-06-01",
-    },
-    body: JSON.stringify({
-      model, max_tokens: 500, system: SYSTEM_PROMPT,
-      messages: [{ role: "user", content: JSON.stringify(input) + (feedback ? `\n\nYour previous answer was rejected: ${feedback}. Fix it and answer with JSON only.` : "") }],
-    }),
+  // Lovable AI (Claude through the built-in gateway) instead of a private Anthropic key; prompt, limit and retry message unchanged.
+  const model = process.env["READING_MODEL"] || "anthropic/claude-haiku-4-5";
+  const { streamText } = await import("ai");
+  const { createAnthropic } = await import("@ai-sdk/anthropic");
+  const { createLovableAiGatewayRunIdFetch } = await import("@/lib/ai/gateway-helpers.server");
+  const anthropic = createAnthropic({
+    baseURL: "https://ai.gateway.lovable.dev/v1",
+    apiKey: process.env["LOVABLE_API_KEY"]!,
+    headers: { "X-Lovable-AIG-SDK": "vercel-ai-sdk" },
+    fetch: createLovableAiGatewayRunIdFetch(undefined).fetch,
   });
-  if (!res.ok) throw new Error("model " + res.status + " " + (await res.text()));
-  const j = await res.json();
-  const t = j.content?.[0]?.text || "";
+  const res = streamText({
+    model: anthropic(model), maxOutputTokens: 500, maxRetries: 0, system: SYSTEM_PROMPT,
+    messages: [{ role: "user", content: JSON.stringify(input) + (feedback ? `\n\nYour previous answer was rejected: ${feedback}. Fix it and answer with JSON only.` : "") }],
+  });
+  const t = (await res.text) || "";
   return { r: JSON.parse(t.replace(/```json|```/g, "").trim()), model };
 }
 
