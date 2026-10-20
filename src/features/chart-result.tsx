@@ -593,6 +593,7 @@ export function ReadingPage({
               )}
             </p>
           )}
+          <PersonalCard id={id} topic={topic} />
           <Accordion.Root type="multiple" defaultValue={["s0"]} className="reading-accordion">
             {q.data.sections.map((s, i) => (
               <Accordion.Item key={s.title} value={`s${i}`} className="reading-item">
@@ -1565,5 +1566,22 @@ function AskPairing({ chartId, ritualId }: { chartId: string; ritualId: string }
         {t.askPairBottle}
       </Link>
     </div>
+  );
+}
+
+function PersonalCard({ id, topic }: { id: string; topic: Topic }) {
+  const { t, lang } = useLanguage();
+  const q = useQuery({ queryKey: ["personal", id, topic, lang], queryFn: () => api.getPersonalReading(id, topic, lang) });
+  if (!q.data) return null;
+  const rows: [string, string][] = [[t.personalTruth, q.data.truth], [t.personalCost, q.data.cost], [t.personalScent, q.data.scent]];
+  return (
+    <section className="personal-card stack">
+      {rows.filter(([, v]) => v).map(([label, v]) => (
+        <div key={label}>
+          <p className="label muted">{label}</p>
+          <p>{v}</p>
+        </div>
+      ))}
+    </section>
   );
 }
