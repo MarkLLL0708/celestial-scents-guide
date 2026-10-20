@@ -1,3 +1,4 @@
+import { SIGNS } from "@/lib/astro/placements";
 import { liveAsk, logLibraryAsk } from "./ask.functions";
 import { normaliseQuestion } from "@/lib/ask/live";
 import { en } from "@/i18n/en";
