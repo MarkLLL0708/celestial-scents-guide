@@ -657,23 +657,16 @@ export function currentBirthProfile(): BirthProfile | null {
   try { const raw = safeGet(CHART_KEY); return raw ? (JSON.parse(raw).birthProfile ?? null) : null; } catch { return null; }
 }
 
-/** Truth, cost and scent written server-side; the perfume is picked here in code by smell tags. */
+/** Calls the write-reading server route; whole-sign houses from the rising sign, or from the Sun when the birth time is unknown. */
 export async function getPersonalReading(chartId: string, topic: Topic, lang: "en" | "vi") {
   const { chart } = await getChartById(chartId);
   const lead = { you: "sun", love: "venus", work: "mercury", luck: "jupiter" } as const;
-  const planet = lead[topic];
-  const sign = chart.details[planet].sign;
-  const house = chart.rising ? ((SIGNS.indexOf(sign as (typeof SIGNS)[number]) - SIGNS.indexOf(chart.rising as (typeof SIGNS)[number]) + 12) % 12) + 1 : null;
-  let pool: Perfume[] = [];
-  try { pool = (await getCapsule(chartId, lang)).map((e) => e.perfume); } catch { pool = []; }
-  const { pickBySmell, smellWords } = await import("@/lib/reading/rules");
-  const perfume = pickBySmell(sign, pool);
-  if (!perfume) return null;
-  const { writeReading } = await import("./reading.functions");
-  const res = await writeReading({ data: {
-    placement: { planet, sign, house },
-    language: lang,
-    perfume: { name: lang === "vi" ? perfume.name_vi || perfume.name : perfume.name, smell_words: smellWords(perfume), notes: [...perfume.top_notes, ...perfume.heart_notes, ...perfume.base_notes].slice(0, 12) },
-  } }).catch(() => ({ ok: false as const }));
-  return res.ok ? { ...res.reading, perfume } : null;
+  const body = lead[topic];
+  const sign = chart.details[body].sign;
+  const first = chart.rising ?? chart.sun;
+  const house = ((SIGNS.indexOf(sign as (typeof SIGNS)[number]) - SIGNS.indexOf(first as (typeof SIGNS)[number]) + 12) % 12) + 1;
+  const planet = body.charAt(0).toUpperCase() + body.slice(1);
+  const res = await fetch("/api/public/write-reading", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ planet, sign, house, language: lang }) });
+  if (!res.ok) throw new Error("READING_UNAVAILABLE");
+  return (await res.json()) as { truth: string; cost: string; scent: string; perfume: { id: string; name: string } };
 }

@@ -1573,15 +1573,21 @@ function PersonalCard({ id, topic }: { id: string; topic: Topic }) {
   const { t, lang } = useLanguage();
   const q = useQuery({ queryKey: ["personal", id, topic, lang], queryFn: () => api.getPersonalReading(id, topic, lang), staleTime: Infinity, retry: false });
   if (!q.data) return null;
-  const rows: [string, string][] = [[t.personalTruth, q.data.truth], [t.personalCost, q.data.cost], [t.personalScent, q.data.scent]];
   return (
     <section className="personal-card stack">
-      {rows.filter(([, v]) => v).map(([label, v]) => (
-        <div key={label}>
-          <p className="label muted">{label}</p>
-          <p>{v}</p>
-        </div>
-      ))}
+      <div>
+        <p className="label muted">{t.personalTruth}</p>
+        <p>{q.data.truth}</p>
+      </div>
+      <div>
+        <p className="label muted">{t.personalCost}</p>
+        <p>{q.data.cost}</p>
+      </div>
+      <article className="personal-perfume">
+        <p className="label muted">{t.personalScent}</p>
+        <Link to="/shop/$id" params={{ id: q.data.perfume.id }} className="product-name">{q.data.perfume.name}</Link>
+        <p>{q.data.scent}</p>
+      </article>
     </section>
   );
 }

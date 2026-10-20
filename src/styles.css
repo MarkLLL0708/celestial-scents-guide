@@ -3086,3 +3086,4 @@ h3 {
 }
 
 .personal-card { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding-block: 1.5rem; margin-block: 1.5rem; gap: 1rem; }
+.personal-perfume { border: 1px solid var(--border); padding: 1rem; display: grid; gap: 0.5rem; }
