@@ -658,5 +658,5 @@ export async function getPersonalReading(chartId: string, topic: Topic, lang: "e
   try { perfume = (await getCapsule(chartId, lang))[0]?.perfume ?? null; } catch { perfume = null; }
   const d = dict(lang) as unknown as Record<string, string>;
   const { personalReading } = await import("@/lib/astro/personal");
-  return { ...personalReading(sign, perfume, lang, (n) => d[n.toLowerCase()] ?? n.toLowerCase()), perfume };
+  return { ...personalReading(sign, perfume, lang, (n) => (d[n.toLowerCase()] ?? n).toLowerCase()), perfume };
 }
