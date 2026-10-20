@@ -1571,7 +1571,7 @@ function AskPairing({ chartId, ritualId }: { chartId: string; ritualId: string }
 
 function PersonalCard({ id, topic }: { id: string; topic: Topic }) {
   const { t, lang } = useLanguage();
-  const q = useQuery({ queryKey: ["personal", id, topic, lang], queryFn: () => api.getPersonalReading(id, topic, lang) });
+  const q = useQuery({ queryKey: ["personal", id, topic, lang], queryFn: () => api.getPersonalReading(id, topic, lang), staleTime: Infinity, retry: false });
   if (!q.data) return null;
   const rows: [string, string][] = [[t.personalTruth, q.data.truth], [t.personalCost, q.data.cost], [t.personalScent, q.data.scent]];
   return (
