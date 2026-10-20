@@ -128,6 +128,7 @@ export type Database = {
           sample_price: number | null
           scent_family: string
           size_ml: number
+          smell_words: string[] | null
           sold_out: boolean
           story_hook: string | null
           story_vi: string | null
@@ -153,6 +154,7 @@ export type Database = {
           sample_price?: number | null
           scent_family: string
           size_ml: number
+          smell_words?: string[] | null
           sold_out?: boolean
           story_hook?: string | null
           story_vi?: string | null
@@ -178,6 +180,7 @@ export type Database = {
           sample_price?: number | null
           scent_family?: string
           size_ml?: number
+          smell_words?: string[] | null
           sold_out?: boolean
           story_hook?: string | null
           story_vi?: string | null
@@ -202,6 +205,48 @@ export type Database = {
           display_name?: string
           id?: string
           language?: string
+        }
+        Relationships: []
+      }
+      readings: {
+        Row: {
+          cost: string
+          created_at: string | null
+          house: number
+          id: number
+          language: string
+          model: string | null
+          perfume_id: string
+          planet: string
+          scent: string
+          sign: string
+          truth: string
+        }
+        Insert: {
+          cost: string
+          created_at?: string | null
+          house: number
+          id?: number
+          language: string
+          model?: string | null
+          perfume_id: string
+          planet: string
+          scent: string
+          sign: string
+          truth: string
+        }
+        Update: {
+          cost?: string
+          created_at?: string | null
+          house?: number
+          id?: number
+          language?: string
+          model?: string | null
+          perfume_id?: string
+          planet?: string
+          scent?: string
+          sign?: string
+          truth?: string
         }
         Relationships: []
       }
