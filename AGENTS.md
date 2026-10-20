@@ -32,3 +32,4 @@
 - Saved scent capsules and ritual step progress use authenticated owner-scoped Cloud services; raw birth edits stay in the browser and only calculated charts may be saved.
 - Placement, daily and chapter interpretations are pure browser-safe astrology services reached through api.ts, keeping screens free of astrology logic.
 - Ask routes suggested questions to approved library answers first, then live AI with privacy-safe context (signs, transit, ritual, perfume) through a server function with per-visitor hashed rate limits logged in ask_usage; failures fall back to bundled lines so Ask never breaks.
+- Short readings (truth/cost/scent) are written only by the writeReading server function from prompts/reading.md, validated and retried via src/lib/reading/rules.ts; the perfume is picked in code by smell tags, never by the model or the frontend.
