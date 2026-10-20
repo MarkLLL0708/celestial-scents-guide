@@ -1,5 +1,5 @@
 import type { Perfume, Chart, CityHit } from "./types";
-import { buildChart } from "@/lib/astro/to-chart";
+import demoChartJson from "./demo-chart.json";
 const entries: [
   string,
   string,
@@ -161,16 +161,8 @@ export const perfumes: Perfume[] = entries.map((p, i) => ({
   sold_out: i === 9,
 }));
 // Demo chart: Hanoi, 14 Feb 1992, 08:30 local — computed by the real engine.
-export const demoChart: Chart = buildChart({
-  year: 1992,
-  month: 2,
-  day: 14,
-  hour: 8,
-  minute: 30,
-  lat: 21.0285,
-  lon: 105.8542,
-  timezone: "Asia/Bangkok",
-});
+/** Precomputed by the real engine (checked in tests) so pages never load the star maths just for the sample. */
+export const demoChart = demoChartJson as unknown as Chart;
 // Fallback list when the city search service cannot be reached.
 export const cities: CityHit[] = [
   {

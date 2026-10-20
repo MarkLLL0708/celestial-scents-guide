@@ -1,7 +1,7 @@
 import { en, type Dictionary } from "@/i18n/en";
 import { vi } from "@/i18n/vi";
 import type { Chart, Planet, Transit } from "@/data/types";
-import { SIGNS } from "./placements";
+import { SIGN_ORDER as SIGNS } from "@/config/scentMap";
 
 const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 const dictionary = (lang: "en" | "vi"): Dictionary => lang === "vi" ? vi : en;

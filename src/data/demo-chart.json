@@ -1,0 +1,98 @@
+{
+ "sun": "Aquarius",
+ "moon": "Gemini",
+ "rising": "Aries",
+ "venus": "Capricorn",
+ "mars": "Capricorn",
+ "mercury": "Aquarius",
+ "jupiter": "Virgo",
+ "saturn": "Aquarius",
+ "uranus": "Capricorn",
+ "neptune": "Capricorn",
+ "pluto": "Scorpio",
+ "degrees": {
+  "sun": 24,
+  "moon": 25,
+  "venus": 24,
+  "mars": 26,
+  "mercury": 25,
+  "jupiter": 11,
+  "saturn": 11,
+  "uranus": 16,
+  "neptune": 17,
+  "pluto": 22,
+  "rising": 2
+ },
+ "elements": {
+  "fire": 20,
+  "earth": 25,
+  "air": 55,
+  "water": 0
+ },
+ "modalities": {
+  "cardinal": 45,
+  "fixed": 30,
+  "mutable": 25
+ },
+ "details": {
+  "sun": {
+   "sign": "Aquarius",
+   "degree": 24.607307159295033,
+   "longitude": 324.60730715929503
+  },
+  "moon": {
+   "sign": "Gemini",
+   "degree": 25.203625595025358,
+   "longitude": 85.20362559502536
+  },
+  "mercury": {
+   "sign": "Aquarius",
+   "degree": 25.9393241747955,
+   "longitude": 325.9393241747955
+  },
+  "venus": {
+   "sign": "Capricorn",
+   "degree": 24.29138979127697,
+   "longitude": 294.29138979127697
+  },
+  "mars": {
+   "sign": "Capricorn",
+   "degree": 26.8450963090321,
+   "longitude": 296.8450963090321
+  },
+  "jupiter": {
+   "sign": "Virgo",
+   "degree": 11.590226479135936,
+   "longitude": 161.59022647913594
+  },
+  "saturn": {
+   "sign": "Aquarius",
+   "degree": 11.040048467565953,
+   "longitude": 311.04004846756595
+  },
+  "rising": {
+   "sign": "Aries",
+   "degree": 2.2169517758914026,
+   "longitude": 2.2169517758914026
+  },
+  "uranus": {
+   "sign": "Capricorn",
+   "degree": 16.17811581557521,
+   "longitude": 286.1781158155752
+  },
+  "neptune": {
+   "sign": "Capricorn",
+   "degree": 17.811221492004165,
+   "longitude": 287.81122149200417
+  },
+  "pluto": {
+   "sign": "Scorpio",
+   "degree": 22.922353271635075,
+   "longitude": 232.92235327163507
+  }
+ },
+ "birthTimeKnown": true,
+ "lat": 21.0285,
+ "lon": 105.8542,
+ "timezone": "Asia/Bangkok"
+}
