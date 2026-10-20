@@ -23,7 +23,7 @@ import { scorePerfume, shadowChart } from "@/lib/match/score";
 import { fallbackRitualId } from "@/config/scentMap";
 import { DateTime } from "luxon";
 import { demoChart, cities } from "./seed";
-import { natalLongitudes, toTransit } from "@/lib/astro/to-chart";
+import { natalLongitudes, toTransit } from "@/lib/astro/light";
 /** Star maths (astronomy-engine) loads only when a chart, day or week is actually computed. */
 let enginePromise: Promise<typeof import("@/lib/astro/engine")> | null = null;
 const engine = () => (enginePromise ??= import("@/lib/astro/engine"));
