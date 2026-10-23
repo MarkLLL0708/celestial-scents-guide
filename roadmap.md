@@ -1,5 +1,10 @@
 # Roadmap
 
+- [ ] Step 1: isolated hidden Gemini reading harness with exact supplied prompt/validator and eight bilingual fixtures
+- [ ] Step 1: private voice-bank UI and unapplied setup; saving blocked until owner approves applying the table
+- [ ] Step 1: verify admin generation, comparison, validator results and approval stop
+- [ ] Step 2: replace live reading flows only after owner writes "approved"
+
 - [x] Real astrology engine (placements, rising, aspects, today, week, ask) in the browser
 - [x] Live city search with fallback list
 - [x] Reference tests for charts A/B/C, transits, aspects, today
