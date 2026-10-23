@@ -25,6 +25,8 @@ import { Route as ChartNewRouteImport } from './routes/chart.new'
 import { Route as ChartRevealRouteImport } from './routes/chart.reveal'
 import { Route as DevChartRouteImport } from './routes/dev.chart'
 import { Route as DevMatchRouteImport } from './routes/dev.match'
+import { Route as DevReadingsTestRouteImport } from './routes/dev.readings-test'
+import { Route as DevVoiceRouteImport } from './routes/dev.voice'
 import { Route as RitualsIndexRouteImport } from './routes/rituals.index'
 import { Route as RitualsIdRouteImport } from './routes/rituals.$id'
 import { Route as ShopIndexRouteImport } from './routes/shop.index'
@@ -114,6 +116,16 @@ const DevMatchRoute = DevMatchRouteImport.update({
   path: '/dev/match',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DevReadingsTestRoute = DevReadingsTestRouteImport.update({
+  id: '/dev/readings-test',
+  path: '/dev/readings-test',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DevVoiceRoute = DevVoiceRouteImport.update({
+  id: '/dev/voice',
+  path: '/dev/voice',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RitualsIndexRoute = RitualsIndexRouteImport.update({
   id: '/rituals/',
   path: '/rituals/',
@@ -172,6 +184,8 @@ export interface FileRoutesByFullPath {
   '/chart/reveal': typeof ChartRevealRoute
   '/dev/chart': typeof DevChartRoute
   '/dev/match': typeof DevMatchRoute
+  '/dev/readings-test': typeof DevReadingsTestRoute
+  '/dev/voice': typeof DevVoiceRoute
   '/rituals/$id': typeof RitualsIdRoute
   '/shop/$id': typeof ShopIdRoute
   '/rituals/': typeof RitualsIndexRoute
@@ -197,6 +211,8 @@ export interface FileRoutesByTo {
   '/chart/reveal': typeof ChartRevealRoute
   '/dev/chart': typeof DevChartRoute
   '/dev/match': typeof DevMatchRoute
+  '/dev/readings-test': typeof DevReadingsTestRoute
+  '/dev/voice': typeof DevVoiceRoute
   '/rituals/$id': typeof RitualsIdRoute
   '/shop/$id': typeof ShopIdRoute
   '/rituals': typeof RitualsIndexRoute
@@ -224,6 +240,8 @@ export interface FileRoutesById {
   '/chart/reveal': typeof ChartRevealRoute
   '/dev/chart': typeof DevChartRoute
   '/dev/match': typeof DevMatchRoute
+  '/dev/readings-test': typeof DevReadingsTestRoute
+  '/dev/voice': typeof DevVoiceRoute
   '/rituals/$id': typeof RitualsIdRoute
   '/shop/$id': typeof ShopIdRoute
   '/rituals/': typeof RitualsIndexRoute
@@ -252,6 +270,8 @@ export interface FileRouteTypes {
     | '/chart/reveal'
     | '/dev/chart'
     | '/dev/match'
+    | '/dev/readings-test'
+    | '/dev/voice'
     | '/rituals/$id'
     | '/shop/$id'
     | '/rituals/'
@@ -277,6 +297,8 @@ export interface FileRouteTypes {
     | '/chart/reveal'
     | '/dev/chart'
     | '/dev/match'
+    | '/dev/readings-test'
+    | '/dev/voice'
     | '/rituals/$id'
     | '/shop/$id'
     | '/rituals'
@@ -303,6 +325,8 @@ export interface FileRouteTypes {
     | '/chart/reveal'
     | '/dev/chart'
     | '/dev/match'
+    | '/dev/readings-test'
+    | '/dev/voice'
     | '/rituals/$id'
     | '/shop/$id'
     | '/rituals/'
@@ -330,6 +354,8 @@ export interface RootRouteChildren {
   ChartRevealRoute: typeof ChartRevealRoute
   DevChartRoute: typeof DevChartRoute
   DevMatchRoute: typeof DevMatchRoute
+  DevReadingsTestRoute: typeof DevReadingsTestRoute
+  DevVoiceRoute: typeof DevVoiceRoute
   RitualsIdRoute: typeof RitualsIdRoute
   RitualsIndexRoute: typeof RitualsIndexRoute
   ApiPublicWriteReadingRoute: typeof ApiPublicWriteReadingRoute
@@ -452,6 +478,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DevMatchRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dev/readings-test': {
+      id: '/dev/readings-test'
+      path: '/dev/readings-test'
+      fullPath: '/dev/readings-test'
+      preLoaderRoute: typeof DevReadingsTestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dev/voice': {
+      id: '/dev/voice'
+      path: '/dev/voice'
+      fullPath: '/dev/voice'
+      preLoaderRoute: typeof DevVoiceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/rituals/': {
       id: '/rituals/'
       path: '/rituals'
@@ -540,6 +580,8 @@ const rootRouteChildren: RootRouteChildren = {
   ChartRevealRoute: ChartRevealRoute,
   DevChartRoute: DevChartRoute,
   DevMatchRoute: DevMatchRoute,
+  DevReadingsTestRoute: DevReadingsTestRoute,
+  DevVoiceRoute: DevVoiceRoute,
   RitualsIdRoute: RitualsIdRoute,
   RitualsIndexRoute: RitualsIndexRoute,
   ApiPublicWriteReadingRoute: ApiPublicWriteReadingRoute,
