@@ -10,6 +10,7 @@
 <!-- LOVABLE:END -->
 
 ## Natal Notes architecture
+- Keep reading-voice experiments isolated in hidden dev routes and authenticated admin-only test services; the staged voice-bank SQL is unapplied until approval, so tests never alter live reading flows.
 - Use TanStack file routes, including real leaf routes for every named screen, because the hosting bootstrap requires this router.
 - Keep screen-facing services in src/data/api.ts, Cloud operations in authenticated server functions, and browser-only state in its provider; screens must not implement persistence or astrology calculations.
 - Keep bilingual UI strings in the typed English/Vietnamese dictionaries and consume them through the language provider.
