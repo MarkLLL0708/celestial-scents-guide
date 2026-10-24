@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
+import { useQueryClient } from "@tanstack/react-query";
 import { useLanguage } from "@/i18n/provider";
 import { useStore } from "@/data/context";
 import * as api from "@/data/api";
@@ -32,6 +33,7 @@ export function ChartLoading() {
   const [attempt, setAttempt] = useState(0);
   const [ready, setReady] = useState(false);
   const { profile, prefs } = useStore();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     let cancelled = false;
@@ -43,6 +45,9 @@ export function ChartLoading() {
         if (cancelled) return;
         const rec = api.storeChart(profile.name, chart, prefs, profile);
         api.logDebug(`chart ${rec.id} in ${Math.round(performance.now() - started)}ms (${api.storageEngine})`);
+        // Drop any cached chart reads so every screen shows the new chart.
+        await queryClient.invalidateQueries({ queryKey: ["chart"] });
+        if (cancelled) return;
         setReady(true);
       } catch (e) {
         api.logDebug(`compute failed: ${e instanceof Error ? e.message : "unknown"}`);
@@ -52,7 +57,7 @@ export function ChartLoading() {
     return () => {
       cancelled = true;
     };
-  }, [profile, prefs, attempt]);
+  }, [profile, prefs, attempt, queryClient]);
 
   useEffect(() => {
     if (failed) return;

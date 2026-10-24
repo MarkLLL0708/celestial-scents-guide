@@ -11,6 +11,7 @@ import {
 } from "@/components/scent/controls";
 import { useLanguage } from "@/i18n/provider";
 import { useStore } from "@/data/context";
+import { clearChart } from "@/data/api";
 import { cityLabel } from "@/data/seed";
 import { validateBirthDate } from "@/data/validation";
 import type { BirthProfile, Prefs } from "@/data/types";
@@ -105,8 +106,11 @@ export function ChartFlow({ step: rawStep }: { step?: number }) {
       touch();
       return;
     }
-    if (step === TOTAL) navigate({ to: "/chart/loading" });
-    else go(step + 1);
+    if (step === TOTAL) {
+      // Drop the previous chart so a failed calculation can never show it.
+      clearChart();
+      navigate({ to: "/chart/loading" });
+    } else go(step + 1);
   };
 
   const place = profile.region

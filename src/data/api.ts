@@ -118,11 +118,32 @@ export function logDebug(msg: string) {
 }
 export const DEMO_ID = "demo";
 
+/** Folds diacritics so "Hồ Chí Minh" matches "ho chi minh" and "Hà Nội" matches "ha noi". */
+const fold = (s: string) =>
+  s
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/đ/g, "d");
+
+/** Common typed aliases → the name used in the fallback city list. */
+const CITY_ALIASES: Record<string, string> = {
+  saigon: "ho chi minh",
+  hcmc: "ho chi minh",
+  hcm: "ho chi minh",
+  "tp hcm": "ho chi minh",
+  hk: "hong kong",
+};
+
 export async function searchCities(query: string, lang: "en" | "vi"): Promise<CityHit[]> {
   const q = query.trim();
   if (!q) return [];
-  const fallback = () =>
-    cities.filter((c) => c.city.toLowerCase().includes(q.toLowerCase())).slice(0, 5);
+  const fallback = () => {
+    const needle = CITY_ALIASES[fold(q)] ?? fold(q);
+    return cities
+      .filter((c) => fold(`${c.city} ${c.region} ${c.country}`).includes(needle))
+      .slice(0, 5);
+  };
   try {
     const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(q)}&count=5&language=${lang}&format=json`;
     const res = await fetch(url);
