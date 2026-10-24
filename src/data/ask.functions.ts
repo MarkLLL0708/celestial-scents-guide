@@ -95,7 +95,9 @@ export const liveAsk = createServerFn({ method: "POST" })
         return { ok: false as const, reason: "invalid" as const, ...backup(hour) };
       }
       await log("ai");
-      return { ok: true as const, answer: body };
+      // Every answer carries the lip pick; add the code-written line if the model skipped it.
+      const withLip = body.includes(lip.line) ? body : `${body}\n\n${lipLine(data.lang, data.elements, lip)}`;
+      return { ok: true as const, answer: withLip };
     } catch {
       await log("fallback");
       return { ok: false as const, reason: "unavailable" as const, ...backup(hour) };
