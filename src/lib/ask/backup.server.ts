@@ -1,4 +1,4 @@
-import { chartBalance, ELEMENT_SMELLS, type ElementCounts, type Element } from "@/lib/reading/balance";
+import { chartBalance, variedRitual, ELEMENT_SMELLS, type ElementCounts, type Element } from "@/lib/reading/balance";
 
 type Lang = "en" | "vi";
 export interface AskBackupInput {
@@ -124,11 +124,11 @@ export function writeAskBackup(d: AskBackupInput, offset = 0) {
   const detail = tag ? SMELLS[tag][lang] : null;
   const scent = d.perfume
     ? lang === "en"
-      ? `${d.perfume}${d.notes ? ` lists ${d.notes}` : " is the selected scent"}.${detail ? ` Its ${detail}.` : " There aren't enough supplied smell details to explain its texture honestly."} ${matched ? `That suits practising the quieter ${names(weak)} side, as a reminder, not a fix.` : "This is a sensory preference, not evidence it corrects your chart."}`
+      ? `${d.perfume}${d.notes ? ` lists ${d.notes}` : " is the selected scent"}.${detail ? ` ${detail.charAt(0).toUpperCase() + detail.slice(1)}.` : " There aren't enough supplied smell details to explain its texture honestly."} ${matched ? `That suits practising the quieter ${names(weak)} side, as a reminder, not a fix.` : "This is a sensory preference, not evidence it corrects your chart."}`
       : `${d.perfume}${d.notes ? ` có các nốt ${d.notes}` : " là mùi được chọn"}.${detail ? ` Phần ${detail}.` : " Chưa đủ mô tả mùi để nói rõ hơn cho đúng."} ${matched ? `Dùng làm lời nhắc tập phần ${names(weak)} ít nổi bật, không phải để sửa bản đồ sao.` : "Đây là sở thích về mùi, không phải cách bù nguyên tố."}`
     : lang === "en" ? "No catalogue scent was available, so I'm not inventing a bottle or its ingredients. Use a perfume you already enjoy." : "Chưa có mùi phù hợp từ danh mục, nên không bịa chai hay nguyên liệu. Cứ dùng mùi mình đã thích.";
-  const action = offset % 2 === 0 ? (lang === "en" ? copy.enAction : copy.viAction)
-    : lang === "en" ? "Write the sentence you've been avoiding on paper. Read it once, cross out the excuses, and take one small step on it." : "Viết ra câu mình đang né. Đọc một lần, gạch phần bào chữa rồi làm một bước nhỏ theo câu đó.";
+  const extra = variedRitual(d.question, lang, offset, weakness);
+  const action = offset === 0 ? (lang === "en" ? copy.enAction : copy.viAction) : extra.action.replace(/you"ve/g, "you've").replace(/you"re/g, "you're").replace(/don"t/g, "don't").replace(/what"s/g, "what's").replace(/you"d/g, "you'd");
   const ritual = lang === "en" ? `If you own a scent, use a little as your cue; buying one isn't required. ${action}` : `Có nước hoa thì dùng ít làm dấu nhắc, không cần mua chai mới. ${action}`;
-  return { answer: `${honest}\n\n${chart}\n\n${scent}\n\n${ritual}`, ritualId: copy.ritualId };
+  return { answer: intent === "sensitive" ? honest : `${honest}\n\n${chart}\n\n${scent}\n\n${ritual}`, ritualId: offset === 0 ? copy.ritualId : extra.id };
 }

@@ -1,5 +1,5 @@
 import { SIGN_ORDER as SIGNS } from "@/config/scentMap";
-import { liveAsk, backupAsk, logLibraryAsk } from "./ask.functions";
+import { liveAsk, backupAsk } from "./ask.functions";
 import { normaliseQuestion } from "@/lib/ask/live";
 import { en } from "@/i18n/en";
 import { resolveTexts } from "@/lib/library/resolve";
@@ -27,7 +27,7 @@ import { natalLongitudes, toTransit } from "@/lib/astro/light";
 /** Star maths (astronomy-engine) loads only when a chart, day or week is actually computed. */
 let enginePromise: Promise<typeof import("@/lib/astro/engine")> | null = null;
 const engine = () => (enginePromise ??= import("@/lib/astro/engine"));
-import { pickLine, quietBank, summaryBank, type BlockSlot } from "@/lib/astro/text-bank";
+import { quietBank, summaryBank } from "@/lib/astro/text-bank";
 import type {
   Perfume,
   BirthProfile,

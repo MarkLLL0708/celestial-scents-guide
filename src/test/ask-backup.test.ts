@@ -42,7 +42,7 @@ describe("question-aware Ask backup", () => {
     expect(questionIntent("Mình có kén chọn quá không?")).toBe("standards");
   });
   it("asks for context rather than inventing an answer to an unknown question", () => {
-    expect(writeAskBackup({ ...input, question: "What about Tuesday?" }).answer).toContain("not enough".replace("not enough", "don't have enough context"));
+    expect(writeAskBackup({ ...input, question: "What about Tuesday?" }).answer).toContain("don't have enough context");
   });
   it("doesn't provide specialist advice through a chart", () => {
     expect(questionIntent("Should I stop medication?")).toBe("sensitive");
