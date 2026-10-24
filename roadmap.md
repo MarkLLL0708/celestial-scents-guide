@@ -1,6 +1,7 @@
 # Roadmap
 
 - [x] Manually compare 14 Ask backup questions in English/Vietnamese and report examples and issues
+- [x] Fix Ask backup issues: ritual text matches button, same perfume in answer and card, question-specific chart lines, first-date scent intent, paragraph spacing
 - [x] Repair all 24 generated ritual destinations; verify bilingual pages and Ask navigation
 - [x] Ask backups: question-specific bilingual answer, chart balance, verified perfume explanation and varied ritual; test and verify both languages
 
