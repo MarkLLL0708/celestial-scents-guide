@@ -73,3 +73,8 @@ describe("question-aware Ask backup", () => {
     expect(writeAskBackup({ ...input, question: "Should I stop medication?" }).answer).toContain("qualified support");
   });
 });
+import { questionIntent as qi } from "@/lib/ask/backup.server";
+describe("vietnamese sensitive boundaries", () => {
+  it("does not flag đầu tuần", () => { expect(qi("Đầu tuần mình nên mặc mùi gì?")).not.toBe("sensitive"); });
+  it("still flags đầu tư", () => { expect(qi("Mình có nên đầu tư không?")).toBe("sensitive"); });
+});
