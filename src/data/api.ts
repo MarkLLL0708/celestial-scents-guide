@@ -123,7 +123,7 @@ const fold = (s: string) =>
   s
     .toLowerCase()
     .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
+    .replace(/[\u0300-\u036f]/g, "")
     .replace(/đ/g, "d");
 
 /** Common typed aliases → the name used in the fallback city list. */
