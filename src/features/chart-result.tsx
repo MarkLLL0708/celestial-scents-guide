@@ -996,7 +996,7 @@ export function AskPage({ state = "" }: { state?: string }) {
               </div>
               <Cell>
                 {answer.source === "ai" && <p className="label muted">{t.askLive}</p>}
-                <div className="ask-body">{answer.answer.split("\n\n").map((paragraph, index) => <p key={index}>{paragraph}</p>)}</div>
+                <div className="ask-paragraphs">{answer.answer.split("\n\n").map((paragraph, index) => <p key={index}>{paragraph}</p>)}</div>
                 {answer.source === "limited" && <p className="small muted">{t.askLimited}</p>}
               </Cell>
               <AskPairing chartId={chartId} ritualId={answer.ritualId} perfumeId={answer.perfumeId} />
