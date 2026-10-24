@@ -34,10 +34,10 @@ describe("question-aware Ask backup", () => {
     expect(writeAskBackup({ ...input, perfume: null }).answer).toContain("not inventing a bottle");
   });
   it("varies repeat rituals without changing the answer to the question", () => {
-    const a = writeAskBackup(input, 0).answer.split("\n\n");
-    const b = writeAskBackup(input, 1).answer.split("\n\n");
-    expect(a[0]).toBe(b[0]);
-    expect(a[3]).not.toBe(b[3]);
+    const a = writeAskBackup(input, 0).answer.split("\n\n").reverse();
+    const b = writeAskBackup(input, 1).answer.split("\n\n").reverse();
+    expect(a.at(-1)).toBe(b.at(-1));
+    expect(a[0]).not.toBe(b[0]);
   });
   it("recognises English and native Vietnamese intents", () => {
     expect(questionIntent("Why can't I relax on weekends?")).toBe("rest");
@@ -49,8 +49,8 @@ describe("question-aware Ask backup", () => {
       const res = writeAskBackup({ ...input, lang, question });
       const page = readingRitualFor(res.ritualId, lang);
       expect(page).not.toBeNull();
-      expect(res.answer.split("\n\n")[3]).toContain(page!.steps[0]);
-      expect(res.answer.split("\n\n")[3]).toContain(page!.title);
+      expect(res.answer.split("\n\n").at(-1)).toContain(page!.steps[0]);
+      expect(res.answer.split("\n\n").at(-1)).toContain(page!.title);
     }
   });
   it("ties the chart paragraph to the question so it isn't repeated", () => {
