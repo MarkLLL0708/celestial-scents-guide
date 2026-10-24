@@ -139,3 +139,6 @@ export function writeFallback(d: FallbackInput) {
     : lang === "vi" ? "Trời yên, hôm nay chẳng có cớ gì đâu." : "Quiet sky, so no excuses today.";
   return { truth: `${area} ${habit} ${jab}${house}`, cost, scent: scentLine(lang, d.elements, d.perfume), ritual: d.ritual, sections, blocks, summary };
 }
+
+/** Short friend-voice line for one sign: 0 habit, 1 jab, 2 cost. */
+export function signLine(lang: Lang, sign: string, part: 0 | 1 | 2 = 0) { return SIGN[lang][signOf(sign)][part]; }

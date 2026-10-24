@@ -1,3 +1,4 @@
+import { signLine } from "@/lib/reading/fallback";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { keepPreviousData, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -411,15 +412,15 @@ export function ResultPage({ id, state = "" }: { id: string; state?: string }) {
   const chart = { ...record.chart, rising: unknownTime ? null : record.chart.rising };
   const deg = (p: Planet) => (chart.degrees[p] !== undefined ? ` ${chart.degrees[p]}°` : "");
   const rows: { p: Planet; sign: string; label: string; text: string; tag?: string }[] = [
-    { p: "venus", sign: chart.venus, label: t.venus, text: t.venusReading },
-    { p: "mars", sign: chart.mars, label: t.mars, text: t.marsReading },
-    { p: "mercury", sign: chart.mercury, label: t.mercury, text: t.mercuryReading },
-    { p: "jupiter", sign: chart.jupiter, label: t.jupiter, text: t.jupiterReading, tag: t.tagLuck },
+    { p: "venus", sign: chart.venus, label: t.venus, text: signLine(lang, chart.venus) },
+    { p: "mars", sign: chart.mars, label: t.mars, text: signLine(lang, chart.mars) },
+    { p: "mercury", sign: chart.mercury, label: t.mercury, text: signLine(lang, chart.mercury) },
+    { p: "jupiter", sign: chart.jupiter, label: t.jupiter, text: signLine(lang, chart.jupiter), tag: t.tagLuck },
     {
       p: "saturn",
       sign: chart.saturn,
       label: t.saturn,
-      text: t.saturnReading,
+      text: signLine(lang, chart.saturn),
       tag: t.tagDiscipline,
     },
   ];
