@@ -103,11 +103,13 @@ export interface FallbackInput {
 export function scentLine(lang: Lang, elements: ElementCounts, perfume: FallbackInput["perfume"]) {
   const b = chartBalance(elements);
   const el = b.least[0];
+  const st = b.strongest[0];
+  const lead = st && st !== el ? (lang === "vi" ? `${ELEMENT_NAME.vi[st]} đang gánh team, ` : `Your ${st} is doing the heavy lifting, `) : "";
   const first = !el
     ? lang === "vi" ? "Bản đồ sao cân bằng, chẳng thiếu nguyên tố nào, chai này chỉ hợp với thói quen trên thôi." : "Your chart is balanced, so no element is lacking; this one just suits the habit."
     : b.absent.includes(el)
-      ? lang === "vi" ? `Bản đồ sao không có chút ${ELEMENT_NAME.vi[el]} nào, nên ${NEED.vi[el]}.` : `Your chart has zero ${el}, so ${NEED.en[el]}.`
-      : lang === "vi" ? `Trong bản đồ sao, ${ELEMENT_NAME.vi[el]} ít nhất, nên ${NEED.vi[el]}.` : `Your chart has the least ${el} of the four elements, so ${NEED.en[el]}.`;
+      ? lang === "vi" ? `${lead}${lead ? "còn" : "Bản đồ sao"} không có chút ${ELEMENT_NAME.vi[el]} nào, nên ${NEED.vi[el]}.` : `${lead}${lead ? "but there's" : "Your chart has"} zero ${el}, so ${NEED.en[el]}.`
+      : lang === "vi" ? `${lead}${lead ? "còn" : "Trong bản đồ sao,"} ${ELEMENT_NAME.vi[el]} ít nhất, nên ${NEED.vi[el]}.` : `${lead}${lead ? "but you've got the" : "Your chart has the"} least ${el}, so ${NEED.en[el]}.`;
   const smells = perfume.smell_words.slice(0, 2).map((w) => lang === "vi" ? SMELL_VI[w] ?? w : w);
   const notes = perfume.notes.slice(0, 2);
   const second = lang === "vi"

@@ -34,7 +34,7 @@ async function generate(data: VoiceInput, signal: AbortSignal): Promise<VoiceRea
   const ranked = rankForBalance(eligible, data.elements);
   const perfume = ranked[0];
   if (!perfume) throw new Error("No matching perfume is available.");
-  const ritual = variedRitual(data.context || `${data.planet}.${data.sign}`, data.language);
+  const ritual = variedRitual(data.context || `${data.planet}.${data.sign}`, data.language, 0, chartBalance(data.elements).least[0]);
   const packet = { surface: data.surface, placement: { planet: data.planet, sign: data.sign, house: data.house }, language: data.language, balance: chartBalance(data.elements), perfume: { name: data.language === "vi" ? perfume.name_vi ?? perfume.name : perfume.name, smell_words: perfume.smell_words ?? [], notes: [...perfume.top_notes, ...perfume.heart_notes, ...perfume.base_notes].slice(0, 2) }, ritual: ritual.action, blocks: data.blocks };
   const meta = { perfume: { id: perfume.id, name: packet.perfume.name }, ritualId: ritual.id };
   const fallback = (): VoiceReading => ({ ...writeFallback({ ...data, perfume: packet.perfume, ritual: ritual.action }), ...meta });
