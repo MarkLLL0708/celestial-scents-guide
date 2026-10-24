@@ -2998,7 +2998,7 @@ h3 {
   -webkit-mask-image: linear-gradient(to bottom, transparent, var(--foreground) 35%, var(--foreground) 65%, transparent);
   mask-image: linear-gradient(to bottom, transparent, var(--foreground) 35%, var(--foreground) 65%, transparent); }
 .wheel-highlight { position: absolute; left: 0; right: 0; top: 88px; height: 44px; background: var(--surface); border-top: var(--rule) solid var(--border); border-bottom: var(--rule) solid var(--border); pointer-events: none; }
-.wheel-scroll { position: relative; height: 100%; overflow-y: auto; scroll-snap-type: y mandatory; padding: 88px 0; scrollbar-width: none; overscroll-behavior: contain; }
+.wheel-scroll { position: relative; height: 100%; overflow-y: auto; scroll-snap-type: y mandatory; padding: 88px 0; scrollbar-width: none; overscroll-behavior: contain; touch-action: pan-y; }
 .wheel-scroll::-webkit-scrollbar { display: none; }
 .wheel-scroll:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
 .wheel-scroll[aria-disabled="true"] { opacity: 0.4; pointer-events: none; }
