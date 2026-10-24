@@ -35,3 +35,4 @@
 - Ask uses the shared approved server voice with privacy-safe balance, selected perfume smells and a varied ritual; question-aware backups are composed only in backup.server.ts for limits or writer failure, so no client invents answers; hashed per-visitor limits remain in ask_usage.
 - The reading writer uses voice.server.ts and shared pure validation, selects perfume by actual smell_words and chart balance in code, and caches completed requests in memory; screens display the returned narrative without generating it.
 - astronomy-engine loads only through the lazy src/lib/astro/engine.ts import in api.ts, and the sample chart is a precomputed JSON checked by a test, so non-chart pages never download or run star maths.
+- Every generated ritual action resolves through the shared pure reading ritual catalogue used by ritualFor, so page links, perfume matching and Cloud validation recognize the same IDs and show the same action.

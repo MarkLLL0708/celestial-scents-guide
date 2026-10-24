@@ -1,4 +1,5 @@
 // Mock astrology content. A real engine replaces this file; the UI only sees api.ts.
+import { readingRitualFor, readingRitualIds } from "@/lib/reading/rituals";
 import type {
   AstroAnswer,
   Reading,
@@ -548,12 +549,14 @@ const ritualMeta: Record<string, { theme: RitualTheme; durationMin: number }> = 
   "mirror-inventory": { theme: "self", durationMin: 4 },
   "slow-evening": { theme: "evening", durationMin: 6 },
 };
-export const ritualIds = Object.keys(ritualMeta);
+export const ritualIds = [...new Set([...Object.keys(ritualMeta), ...readingRitualIds])];
 export const firstRitualOfTheme = (theme: RitualTheme): string =>
-  ritualIds.find((id) => ritualMeta[id].theme === theme) ?? ritualIds[0];
+  ritualIds.find((id) => ritualFor(id, "en")?.theme === theme) ?? "slow-evening";
 export const ritualThemes: RitualTheme[] = ["calm", "love", "work", "luck", "self", "evening"];
 
 export function ritualFor(id: string, lang: Lang): Ritual | null {
+  const readingRitual = readingRitualFor(id, lang);
+  if (readingRitual) return readingRitual;
   const meta = ritualMeta[id];
   if (!meta) return null;
   const text = ritualText[lang][id];
