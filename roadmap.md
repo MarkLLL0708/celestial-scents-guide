@@ -1,9 +1,13 @@
 # Roadmap
 
+- [ ] Approved live voice: update every consumer section and Ask suggestions in both languages
+- [ ] Approved live voice: shared server-generated readings, actual chart-element scent matching and varied rituals
+- [ ] Approved live voice: verify reading and Ask flows, matching rules and mobile/desktop pages
+
 - [ ] Step 1: isolated hidden Gemini reading harness with exact supplied prompt/validator and eight bilingual fixtures
 - [ ] Step 1: private voice-bank UI and unapplied setup; saving blocked until owner approves applying the table
 - [ ] Step 1: verify admin generation, comparison, validator results and approval stop
-- [ ] Step 2: replace live reading flows only after owner writes "approved"
+- [x] Step 2: owner authorized live voice rollout on 24 October 2026
 
 - [x] Real astrology engine (placements, rising, aspects, today, week, ask) in the browser
 - [x] Live city search with fallback list
