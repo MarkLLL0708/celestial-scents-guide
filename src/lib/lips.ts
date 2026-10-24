@@ -87,12 +87,12 @@ export function lipLine(lang: Lang, elements: ElementCounts, lip: LipProduct): s
     const why = weak && lip.element === weak
       ? `Màu ${colour} để bù phần ${w[weak]} đang thiếu: ${COLOUR_JOB[weak].vi}.`
       : `Màu ${colour}: ${COLOUR_JOB[lip.element].vi}.`;
-    return `Môi: ${name}. ${why} Còn ${finish}${backs && strong ? `, giữ đúng thế mạnh ${w[strong]} của mình` : ""}.`;
+    return `Đi kèm là son ${name}. ${why} Còn ${finish}${backs && strong ? `, giữ đúng thế mạnh ${w[strong]} của mình` : ""}.`;
   }
   const why = weak && lip.element === weak
     ? `It's ${colour}, there to build the ${w[weak]} you're short on: ${COLOUR_JOB[weak].en}.`
     : `It's ${colour}: ${COLOUR_JOB[lip.element].en}.`;
-  return `Lips: ${name}. ${why} And ${finish}${backs && strong ? `, which plays up the ${w[strong]} you already lead with` : ""}.`;
+  return `Pair it with ${name}. ${why} And ${finish}${backs && strong ? `, which plays up the ${w[strong]} you already lead with` : ""}.`;
 }
 
 /** Ties the lip and perfume into one pick so they read as a pair, not two add-ons. */
