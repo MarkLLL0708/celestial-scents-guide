@@ -15,7 +15,7 @@ const askInput = z
     rising: sign.nullable(),
     transit: z.string().max(80),
     sky: z.enum(["easy", "hard", "intense", "quiet"]),
-    ritual: z.string().max(80),
+    ritual: z.string().max(300),
     perfume: z.string().max(80).nullable(),
     notes: z.string().max(120),
     elements: z.object({ fire: z.number().min(0).max(100), earth: z.number().min(0).max(100), air: z.number().min(0).max(100), water: z.number().min(0).max(100) }),
