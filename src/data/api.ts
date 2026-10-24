@@ -1,5 +1,5 @@
 import { SIGN_ORDER as SIGNS } from "@/config/scentMap";
-import { liveAsk, logLibraryAsk } from "./ask.functions";
+import { liveAsk, backupAsk, logLibraryAsk } from "./ask.functions";
 import { normaliseQuestion } from "@/lib/ask/live";
 import { en } from "@/i18n/en";
 import { resolveTexts } from "@/lib/library/resolve";
@@ -392,43 +392,31 @@ export async function askNotes(
   const hit = plan.aspects.find((a) => a.theme === category) ?? plan.aspects[0];
   const aspect = hit;
   const theme = aspect?.theme ?? category;
-  const slot: BlockSlot = aspect?.kind === "hard" ? "pushing" : "working";
-  const line = pickLine(lang, slot, theme, seedOf(chart, date) + question.trim().length);
   const transit: Transit = aspect
     ? toTransit(aspect)
     : { transiting: "moon", aspect: "conjunct", natal: "sun", orb: 0, theme, strength: 1 };
   const selectedRitual = variedRitual(question.trim(), lang);
   const ritualId = selectedRitual.id;
   const sky = aspect ? aspectKind(transit) : "quiet";
-  // 2. Live answer from privacy-safe context only (signs, transit, ritual, perfume).
+  // Both live and backup prose are server-owned; only calculated context leaves the browser.
+  const t = dict(lang);
+  const capsule = await getCapsule(chartId, lang, ritualId).catch(() => []);
+  const pick = rankForBalance(capsule.map((p) => p.perfume), chart.elements)[0];
+  const data = {
+    question: question.trim().slice(0, 300), theme: category, lang,
+    sun: chart.sun, moon: chart.moon, rising: chart.rising,
+    transit: transitLabel(t, transit), sky, ritual: selectedRitual.action,
+    elements: chart.elements, smell_words: pick?.smell_words ?? [],
+    perfume: pick ? (lang === "vi" && pick.name_vi ? pick.name_vi : pick.name) : null,
+    notes: pick ? [...pick.top_notes, ...pick.heart_notes].slice(0, 2).join(", ") : "",
+  };
   try {
-    const t = dict(lang);
-    const [ritual, capsule] = await Promise.all([
-      getRitual(ritualId, lang),
-      getCapsule(chartId, lang, ritualId).catch(() => []),
-    ]);
-    const pick = rankForBalance(capsule.map((p) => p.perfume), chart.elements)[0];
-    const res = await liveAsk({
-      data: {
-        question: question.trim().slice(0, 300),
-        theme: category,
-        lang,
-        sun: chart.sun,
-        moon: chart.moon,
-        rising: chart.rising,
-        transit: transitLabel(t, transit),
-        sky,
-        ritual: selectedRitual.action,
-        elements: chart.elements,
-        smell_words: pick?.smell_words ?? [],
-        perfume: pick ? (lang === "vi" && pick.name_vi ? pick.name_vi : pick.name) : null,
-        notes: pick ? [...pick.top_notes, ...pick.heart_notes].slice(0, 2).join(", ") : "",
-      },
-    });
+    const res = await liveAsk({ data });
     if (res.ok) return { transit, answer: res.answer, ritualId, source: "ai" };
-    return { transit, answer: line, ritualId, source: res.reason === "limited" ? "limited" : "fallback" };
+    return { transit, answer: res.answer, ritualId: res.ritualId, source: res.reason === "limited" ? "limited" : "fallback" };
   } catch {
-    return { transit, answer: line, ritualId, source: "fallback" };
+    const backup = await backupAsk({ data });
+    return { transit, ...backup, source: "fallback" };
   }
 }
 function transitLabel(t: ReturnType<typeof dict>, tr: Transit) {

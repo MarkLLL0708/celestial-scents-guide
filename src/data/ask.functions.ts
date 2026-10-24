@@ -23,6 +23,13 @@ const askInput = z
   })
   .strict();
 
+export const backupAsk = createServerFn({ method: "POST" })
+  .inputValidator(askInput)
+  .handler(async ({ data }) => {
+    const { writeAskBackup } = await import("@/lib/ask/backup.server");
+    return writeAskBackup(data);
+  });
+
 async function subjectFor(): Promise<string> {
   const req = getRequest();
   const auth = req.headers.get("authorization") ?? "";
@@ -35,6 +42,8 @@ async function subjectFor(): Promise<string> {
 export const liveAsk = createServerFn({ method: "POST" })
   .inputValidator(askInput)
   .handler(async ({ data }) => {
+    const { writeAskBackup } = await import("@/lib/ask/backup.server");
+    const backup = (offset = 0) => writeAskBackup(data, offset);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const subject = await subjectFor();
     const now = Date.now();
@@ -50,10 +59,10 @@ export const liveAsk = createServerFn({ method: "POST" })
     const log = (source: string) => supabaseAdmin.from("ask_usage").insert({ subject, source, lang: data.lang });
     if (limit !== "ok") {
       await log("limited");
-      return { ok: false as const, reason: "limited" as const };
+      return { ok: false as const, reason: "limited" as const, ...backup(hour) };
     }
     const apiKey = process.env["LOVABLE_API_KEY"];
-    if (!apiKey) return { ok: false as const, reason: "unavailable" as const };
+    if (!apiKey) return { ok: false as const, reason: "unavailable" as const, ...backup(hour) };
     const { FRIEND_VOICE } = await import("@/lib/reading/voice.server");
     const { voiceIssue } = await import("@/lib/reading/validation");
     const { chartBalance } = await import("@/lib/reading/balance");
@@ -81,13 +90,13 @@ export const liveAsk = createServerFn({ method: "POST" })
       const body = text.trim();
       if (!body || validateLiveAnswer(body).length || voiceIssue([body], data.lang)) {
         await log("fallback");
-        return { ok: false as const, reason: "invalid" as const };
+        return { ok: false as const, reason: "invalid" as const, ...backup(hour) };
       }
       await log("ai");
       return { ok: true as const, answer: body };
     } catch {
       await log("fallback");
-      return { ok: false as const, reason: "unavailable" as const };
+      return { ok: false as const, reason: "unavailable" as const, ...backup(hour) };
     }
   });
 
