@@ -373,12 +373,9 @@ export async function getRevealTraits(chart: Chart, lang: "en" | "vi") {
     `moon.${chart.moon}`,
     chart.rising ? `rising.${chart.rising}` : `venus.${chart.venus}`,
   ];
-  const texts = await resolveTexts("trait_line", keys, lang);
-  const t = dict(lang);
-  return keys.map((key, i) => ({
-    text: texts.get(key) ?? [t.trait1, t.trait2, t.trait3][i],
-    fromLibrary: texts.has(key),
-  }));
+  // Older library trait lines use the retired voice, so reveal traits come from the friend-voice sign lines.
+  const { signLine } = await import("@/lib/reading/fallback");
+  return keys.map((key, i) => ({ text: signLine(lang, key.split(".")[1], i as 0 | 1 | 2), fromLibrary: false }));
 }
 
 export async function askNotes(
