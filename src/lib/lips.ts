@@ -87,10 +87,27 @@ export function lipLine(lang: Lang, elements: ElementCounts, lip: LipProduct): s
     const why = weak && lip.element === weak
       ? `Màu ${colour} để bù phần ${w[weak]} đang thiếu: ${COLOUR_JOB[weak].vi}.`
       : `Màu ${colour}: ${COLOUR_JOB[lip.element].vi}.`;
-    return `Môi: ${name}. ${why} Còn ${finish}${backs && strong ? `, giữ đúng thế mạnh ${w[strong]} của mình` : ""}.`;
+    return `Đi kèm là son ${name}. ${why} Còn ${finish}${backs && strong ? `, giữ đúng thế mạnh ${w[strong]} của mình` : ""}.`;
   }
   const why = weak && lip.element === weak
     ? `It's ${colour}, there to build the ${w[weak]} you're short on: ${COLOUR_JOB[weak].en}.`
     : `It's ${colour}: ${COLOUR_JOB[lip.element].en}.`;
-  return `Lips: ${name}. ${why} And ${finish}${backs && strong ? `, which plays up the ${w[strong]} you already lead with` : ""}.`;
+  return `Pair it with ${name}. ${why} And ${finish}${backs && strong ? `, which plays up the ${w[strong]} you already lead with` : ""}.`;
+}
+
+/** Ties the lip and perfume into one pick so they read as a pair, not two add-ons. */
+export function pairLine(lang: Lang, elements: ElementCounts, lip: LipProduct, perfume: string): string {
+  const b = chartBalance(elements);
+  const weak = b.balanced ? undefined : b.least[0];
+  const strong = b.strongest[0];
+  const w = ELEMENT_WORD[lang];
+  const name = lipName(lip);
+  if (lang === "vi") {
+    return weak && strong
+      ? `Đi chung thì ${perfume} lo phần ${w[strong]} mình vốn mạnh, còn ${name} kéo phần ${w[weak]} lên. Một cái giữ thế, một cái bù chỗ hụt, vậy là đủ một bộ.`
+      : `${perfume} với ${name} đi chung một bộ: không bù gì cả, chỉ để nhắc mình giữ nhịp đang ổn.`;
+  }
+  return weak && strong
+    ? `Worn together, ${perfume} handles the ${w[strong]} you already have and ${name} does the ${w[weak]} work. One keeps your edge, one covers the gap. That's the whole outfit.`
+    : `${perfume} and ${name} are one set here: nothing to fix, just a reminder to keep the balance you've got.`;
 }
