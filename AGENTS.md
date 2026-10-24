@@ -32,6 +32,6 @@
 - Outer-planet chart placements are computed separately from the established seven-body daily-transit model and remain optional on saved charts, preserving existing references and old records.
 - Saved scent capsules and ritual step progress use authenticated owner-scoped Cloud services; raw birth edits stay in the browser and only calculated charts may be saved.
 - Placement, daily and chapter narrative comes from the shared server reading writer through api.ts; the browser supplies calculated facts only so birth inputs stay private and screens never compose interpretations.
-- Ask uses the shared approved server voice with privacy-safe balance, selected perfume smells and a varied ritual; hashed per-visitor limits remain in ask_usage, and older library voice is not served during this rollout.
+- Ask uses the shared approved server voice with privacy-safe balance, selected perfume smells and a varied ritual; question-aware backups are composed only in backup.server.ts for limits or writer failure, so no client invents answers; hashed per-visitor limits remain in ask_usage.
 - The reading writer uses voice.server.ts and shared pure validation, selects perfume by actual smell_words and chart balance in code, and caches completed requests in memory; screens display the returned narrative without generating it.
 - astronomy-engine loads only through the lazy src/lib/astro/engine.ts import in api.ts, and the sample chart is a precomputed JSON checked by a test, so non-chart pages never download or run star maths.

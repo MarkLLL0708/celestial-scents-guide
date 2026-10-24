@@ -1,5 +1,7 @@
 # Roadmap
 
+- [x] Ask backups: question-specific bilingual answer, chart balance, verified perfume explanation and varied ritual; test and verify both languages
+
 - [ ] Approved live voice: update every consumer section and Ask suggestions in both languages
 - [ ] Approved live voice: shared server-generated readings, actual chart-element scent matching and varied rituals
 - [ ] Approved live voice: verify reading and Ask flows, matching rules and mobile/desktop pages
