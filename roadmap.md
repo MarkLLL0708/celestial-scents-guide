@@ -1,5 +1,6 @@
 # Roadmap
 
+- [ ] Repair every generated ritual link and verify readable English/Vietnamese pages, capsule and Ask navigation
 - [x] Ask backups: question-specific bilingual answer, chart balance, verified perfume explanation and varied ritual; test and verify both languages
 
 - [ ] Approved live voice: update every consumer section and Ask suggestions in both languages
