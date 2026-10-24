@@ -1,7 +1,7 @@
 # Roadmap
 
-- [ ] Manually compare different Ask backup questions in English/Vietnamese and report examples and issues
-- [ ] Repair every generated ritual link and verify readable English/Vietnamese pages, capsule and Ask navigation
+- [x] Manually compare 14 Ask backup questions in English/Vietnamese and report examples and issues
+- [x] Repair all 24 generated ritual destinations; verify bilingual pages and Ask navigation
 - [x] Ask backups: question-specific bilingual answer, chart balance, verified perfume explanation and varied ritual; test and verify both languages
 
 - [ ] Approved live voice: update every consumer section and Ask suggestions in both languages
