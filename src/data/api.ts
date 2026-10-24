@@ -71,7 +71,7 @@ export async function getPerfumes(filters?: {
   }
   inventory = namedPerfumes.map((entry) => {
     const live = rows.find((r) => r.id === entry.id);
-    return { ...entry, ...live, name_vi: live?.name_vi ?? entry.name_vi, story_hook: live?.story_hook ?? entry.story_hook, story_vi: live?.story_vi ?? entry.story_vi, review_note: live?.review_note ?? entry.review_note ?? undefined, bestseller_rank: live?.bestseller_rank ?? entry.bestseller_rank ?? undefined, style: (live?.style ?? entry.style) as Perfume["style"], image_url: live?.image_url ?? undefined, sample_price: live?.sample_price ?? undefined };
+    return { ...entry, ...live, smell_words: live?.smell_words ?? [], name_vi: live?.name_vi ?? entry.name_vi, story_hook: live?.story_hook ?? entry.story_hook, story_vi: live?.story_vi ?? entry.story_vi, review_note: live?.review_note ?? entry.review_note ?? undefined, bestseller_rank: live?.bestseller_rank ?? entry.bestseller_rank ?? undefined, style: (live?.style ?? entry.style) as Perfume["style"], image_url: live?.image_url ?? undefined, sample_price: live?.sample_price ?? undefined };
   });
   inventory.sort((a,b) => (a.bestseller_rank ?? 99) - (b.bestseller_rank ?? 99) || a.id.localeCompare(b.id));
   return inventory.filter(
