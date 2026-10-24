@@ -21,6 +21,7 @@ export interface Perfume {
   review_note?: string;
   bestseller_rank?: number;
   details_pending?: boolean;
+  smell_words?: string[];
 }
 export interface BirthProfile {
   name: string;
