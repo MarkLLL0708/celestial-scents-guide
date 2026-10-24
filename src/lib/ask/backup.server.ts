@@ -1,5 +1,6 @@
 import { chartBalance, variedRitual, ELEMENT_SMELLS, type ElementCounts, type Element } from "@/lib/reading/balance";
 import { vi } from "@/i18n/vi";
+import { readingRitualFor } from "@/lib/reading/rituals";
 
 type Lang = "en" | "vi";
 export interface AskBackupInput {
@@ -53,6 +54,11 @@ const COPY = {
     vi: "Phân tích cảm xúc chưa phải thừa nhận nó. Nói thẳng mình muốn gì trước đã, bài giải thích thông minh để sau.",
     ritualId: "warm-shower", enAction: "Name one feeling and one need out loud. Don't defend either, and don't turn them into a joke.", viAction: "Nói thành tiếng một cảm xúc và một điều mình cần. Khỏi bào chữa, cũng đừng chốt bằng câu đùa.",
   },
+  dateScent: {
+    en: "For a first date, wear something that sits close to your skin and that you'd still like three hours later. Two sprays, not a cloud; they should notice it when they lean in, not when you walk in.",
+    vi: "Buổi hẹn đầu thì chọn mùi nằm sát da, ba tiếng sau mình vẫn thấy thích. Hai lần xịt thôi, đừng tỏa cả phòng; người ta nên nhận ra khi ngồi gần, không phải lúc mình vừa bước vào.",
+    ritualId: "ask-a-question", enAction: "Spray once on the wrist and once behind the ear twenty minutes before leaving, then stop touching it.", viAction: "Xịt một lần lên cổ tay, một lần sau tai, hai mươi phút trước khi đi, rồi thôi đừng chỉnh nữa.",
+  },
   scent: {
     en: "Pick a smell you enjoy wearing, not one you hope will do your personality's homework. The chart gives a direction, not a dress code.",
     vi: "Chọn mùi mình thích dùng, đừng giao bài tập tính cách cho chai nước hoa. Bản đồ sao gợi một hướng, không ra đồng phục.",
@@ -65,6 +71,8 @@ export function questionIntent(question: string): Intent | "unknown" | "sensitiv
   if (/\b(suicid\w*|self.harm|medical|medication|diagnos\w*|pregnan\w*|lawsuit|invest\w*)\b|tu tu|tu hai|thuoc|benh|mang thai|kien tung|dau tu/.test(q)) return "sensitive";
   if (/\bex\b|nguoi cu|nyc/.test(q)) return "ex";
   if (/picky|standard|tieu chuan|ken chon/.test(q)) return "standards";
+  const scentWords = /scent|perfume|fragrance|wear|nuoc hoa|mui huong|xit|\bmui\b/;
+  if (/\bdate\b|hen dau|buoi hen|hen ho/.test(q) && scentWords.test(q)) return "dateScent";
   if (/first date|hen dau|buoi hen/.test(q)) return "date";
   if (/annoy|irritat|grudge|ghet|kho chiu|buc|tuc/.test(q)) return "conflict";
   if (/finish|starting|procrastinat|hoan thanh|bat dau|tri hoan|bo do/.test(q)) return "finish";
@@ -97,6 +105,23 @@ const SMELLS: Record<string, { en: string; vi: string }> = {
   "your skin but better": { en: "the skin-like smell stays intimate rather than showy", vi: "mùi gần với da gợi sự gần gũi, không phô trương" },
   garden: { en: "the garden smell gives it a gentle, green feel", vi: "mùi khu vườn gợi nét xanh, dịu" },
 };
+
+
+/** Ties the chart balance to the actual question, so the middle paragraph changes with what was asked. */
+const LINK: Record<Intent, { en: string; vi: string }> = {
+  ex: { en: "Your {strong} side is great at replaying the good bits. The {weak} side is the one that should be checking the receipts, and it's your quietest voice.", vi: "Phần {strong} giỏi tua lại đoạn đẹp. Phần {weak} mới là phần nên soi lại sự thật, mà nó lại nói nhỏ nhất." },
+  standards: { en: "Your {strong} side is sitting on the judging panel. The {weak} side is what you'd need to let someone in before the verdict.", vi: "Phần {strong} đang ngồi ghế giám khảo. Phần {weak} mới là thứ cần để cho người ta lại gần trước khi phán." },
+  date: { en: "Lean on your {strong} side; it's your best angle. The thin {weak} side is why you overthink everything before you even leave the house.", vi: "Cứ dựa vào phần {strong}, đó là góc đẹp nhất. Phần {weak} mỏng nên mới nghĩ mãi trước khi ra khỏi nhà." },
+  dateScent: { en: "Your {strong} side will show up on its own. Let the scent carry a bit of the {weak} side you're short on, so you come across rounder, not louder.", vi: "Phần {strong} tự khắc lộ ra. Để mùi hương mang thêm chút {weak} mình đang thiếu, cho mình tròn trịa hơn chứ không ồn hơn." },
+  conflict: { en: "Your {strong} side spots what's wrong in two seconds. The low {weak} side is why you skip checking your own part in it.", vi: "Phần {strong} thấy cái sai trong hai giây. Phần {weak} ít nên hay bỏ qua bước xem lại phần của mình." },
+  finish: { en: "Your {strong} side loves the shiny start. The {weak} side is the boring middle, and your chart doesn't hand you much of it.", vi: "Phần {strong} mê đoạn mở đầu. Phần {weak} là khúc giữa chán ngắt, mà lá số lại cho mình ít phần đó." },
+  rest: { en: "Your {strong} side keeps the engine running. The {weak} side is the off switch, and yours is hard to find.", vi: "Phần {strong} giữ máy luôn chạy. Phần {weak} là công tắc tắt, mà của mình thì khó tìm." },
+  work: { en: "Your {strong} side is what people rely on you for. The low {weak} side is why you assume they'll notice without being told.", vi: "Phần {strong} là lý do người ta dựa vào mình. Phần {weak} ít nên mình cứ nghĩ người ta tự thấy mà không cần nói." },
+  choice: { en: "Your {strong} side keeps producing options. The {weak} side is the part that commits, and it's underfed.", vi: "Phần {strong} cứ nghĩ thêm lựa chọn. Phần {weak} là phần chốt hạ, mà nó đang thiếu." },
+  feelings: { en: "Your {strong} side handles the explaining. The {weak} side is the actual feeling, and you keep sending it to voicemail.", vi: "Phần {strong} lo phần giải thích. Phần {weak} mới là cảm xúc thật, mà mình cứ để nó vào hộp thư thoại." },
+  scent: { en: "Wear the {strong} side you already have, and let the scent cover some of the {weak} side you don't.", vi: "Phần {strong} có sẵn thì cứ thể hiện, để mùi hương bù một chút phần {weak} còn thiếu." },
+};
+const hashOf = (text: string) => [...text].reduce((n, c) => (n * 31 + c.charCodeAt(0)) >>> 0, 0);
 
 /** Server-owned hand-written backup. Never infers missing facts or predicts outcomes. */
 export function writeAskBackup(d: AskBackupInput, offset = 0) {
