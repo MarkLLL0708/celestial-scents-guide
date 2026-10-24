@@ -6,13 +6,14 @@ export { validate } from "./validation";
 import { chartBalance, rankForBalance, variedRitual } from "./balance";
 import { LIVE_READING_PROMPT } from "./voice.server";
 import { writeFallback } from "./fallback";
+import { pickLip, lipLine, lipName } from "@/lib/lips";
 
 const CORS = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type" };
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers: { ...CORS, "content-type": "application/json" } });
 const placement = z.object({ planet: z.string().max(20), sign: z.enum(["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"]), house: z.number().int().min(1).max(12).nullable() });
 const inputSchema = placement.extend({ language: z.enum(["en", "vi"]), surface: z.enum(["reading", "placement", "daily"]).default("reading"), elements: z.object({ fire: z.number().min(0).max(100), earth: z.number().min(0).max(100), air: z.number().min(0).max(100), water: z.number().min(0).max(100) }), sections: z.array(placement.extend({ angle: z.string().max(60) })).max(5).optional(), blocks: z.array(z.object({ transiting: z.string().max(20), natal: z.string().max(20), aspect: z.string().max(20), kind: z.string().max(20).optional() })).max(3).optional(), context: z.string().max(120).default(""), allowedPerfumeIds: z.array(z.string().max(60)).min(1).max(40).optional() }).strict();
 export type VoiceInput = z.infer<typeof inputSchema>;
-export interface VoiceReading { truth: string; cost: string; scent: string; ritual: string; sections: string[]; blocks: string[]; summary: string; perfume: { id: string; name: string }; ritualId: string }
+export interface VoiceReading { truth: string; cost: string; scent: string; ritual: string; sections: string[]; blocks: string[]; summary: string; perfume: { id: string; name: string }; ritualId: string; lip: string; lipProduct: { id: string; name: string } }
 const output = z.object({ truth: z.string(), cost: z.string(), scent: z.string(), ritual: z.string().default(""), sections: z.array(z.string()).default([]), blocks: z.array(z.string()).default([]), summary: z.string().default("") });
 const cache = new Map<string, VoiceReading>();
 const pending = new Map<string, Promise<VoiceReading>>();
@@ -36,7 +37,9 @@ async function generate(data: VoiceInput, signal: AbortSignal): Promise<VoiceRea
   if (!perfume) throw new Error("No matching perfume is available.");
   const ritual = variedRitual(data.context || `${data.planet}.${data.sign}`, data.language, 0, chartBalance(data.elements).least[0]);
   const packet = { surface: data.surface, placement: { planet: data.planet, sign: data.sign, house: data.house }, language: data.language, balance: chartBalance(data.elements), perfume: { name: data.language === "vi" ? perfume.name_vi ?? perfume.name : perfume.name, smell_words: perfume.smell_words ?? [], notes: [...perfume.top_notes, ...perfume.heart_notes, ...perfume.base_notes].slice(0, 2) }, ritual: ritual.action, blocks: data.blocks };
-  const meta = { perfume: { id: perfume.id, name: packet.perfume.name }, ritualId: ritual.id };
+  // Lip pick is chosen in code from the chart balance; every reading carries one.
+  const lipPick = pickLip(data.elements, data.context || `${data.planet}.${data.sign}`);
+  const meta = { perfume: { id: perfume.id, name: packet.perfume.name }, ritualId: ritual.id, lip: lipLine(data.language, data.elements, lipPick), lipProduct: { id: lipPick.id, name: lipName(lipPick) } };
   const fallback = (): VoiceReading => ({ ...writeFallback({ ...data, perfume: packet.perfume, ritual: ritual.action }), ...meta });
   if (!apiKey || signal.aborted) return fallback();
   try { return await generateAi(); } catch { if (signal.aborted) throw new Error("Aborted"); return fallback(); }
@@ -71,7 +74,7 @@ async function generate(data: VoiceInput, signal: AbortSignal): Promise<VoiceRea
       if (sectionIssue) { feedback = sectionIssue; continue; }
     }
     if (parsed.data.blocks.length !== (data.blocks?.length ?? 0)) { feedback = "Return exactly one block per supplied transit."; continue; }
-    return { ...parsed.data, sections, perfume: { id: perfume.id, name: packet.perfume.name }, ritualId: ritual.id };
+    return { ...parsed.data, sections, ...meta };
   }
   throw new Error("We couldn't write a valid reading. Please try again.");
   }

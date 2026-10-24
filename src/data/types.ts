@@ -135,6 +135,9 @@ export interface VoiceReading {
   summary: string;
   perfume: { id: string; name: string };
   ritualId: string;
+  /** Lip pick explained by the chart; always present on new readings. */
+  lip?: string;
+  lipProduct?: { id: string; name: string };
 }
 export interface Reading {
   voice?: VoiceReading;
@@ -159,6 +162,7 @@ export interface AstroAnswer {
   ritualId: string;
   /** The bottle the answer names; the pairing card must show the same one. */
   perfumeId?: string;
+  lipId?: string;
   source?: "library" | "ai" | "fallback" | "limited";
 }
 export type RitualTheme = "calm" | "love" | "work" | "luck" | "self" | "evening";
