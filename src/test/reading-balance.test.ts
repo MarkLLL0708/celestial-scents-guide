@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { chartBalance, rankForBalance, variedRitual } from "@/lib/reading/balance";
+import { chartBalance, rankForBalance, variedRitual, RITUAL_ACTIONS } from "@/lib/reading/balance";
 
 describe("chart-based scent recommendations", () => {
   it("uses the actual least represented element, not the Sun sign", () => {
@@ -20,5 +20,9 @@ describe("chart-based scent recommendations", () => {
   it("varies practical rituals across successive reading contexts", () => {
     const ids = Array.from({ length: 6 }, (_, i) => variedRitual("same-chart", "en", i).id);
     expect(new Set(ids).size).toBe(6);
+  });
+  it("offers at least 24 distinct rituals and ties them to the weak element", () => {
+    expect(new Set(RITUAL_ACTIONS.map((r) => r.id)).size).toBeGreaterThanOrEqual(24);
+    for (let i = 0; i < 6; i++) expect(RITUAL_ACTIONS.find((r) => r.id === variedRitual("x", "en", i, "fire").id)?.element).toBe("fire");
   });
 });
