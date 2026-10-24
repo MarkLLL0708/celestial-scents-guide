@@ -550,6 +550,7 @@ export function ReadingPage({
   const q = useQuery({
     queryKey: ["reading", id, topic, lang],
     queryFn: () => api.getReading(id, topic, lang),
+    retry: false,
   });
   const [forced, setForced] = useState(state);
   useEffect(() => setForced(state), [state]);
@@ -1587,7 +1588,7 @@ export function PersonalCard({ value }: { value: api.VoiceReading }) {
         <p>{value.scent}</p>
       </article>
       <p>{value.ritual}</p>
-      <Button asChild><Link to="/rituals/$id" params={{ id: value.ritualId }}>{t.tryRitual}</Link></Button>
+      <Button asChild><Link to="/rituals/$id" params={{ id: value.ritualId }}>{t.beginRitual}</Link></Button>
     </section>
   );
 }

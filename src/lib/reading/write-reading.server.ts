@@ -73,6 +73,8 @@ async function generate(data: VoiceInput, signal: AbortSignal): Promise<VoiceRea
 export async function handleWriteReading(req: Request): Promise<Response> {
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
   try {
+    const origin = req.headers.get("origin");
+    if (origin && origin !== new URL(req.url).origin) return json({ error: "Forbidden" }, 403);
     const parsed = inputSchema.safeParse(await req.json());
     if (!parsed.success) return json({ error: "Invalid reading input." }, 400);
     const key = JSON.stringify(parsed.data);
