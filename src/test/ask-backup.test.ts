@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { questionIntent, writeAskBackup, type AskBackupInput } from "@/lib/ask/backup.server";
+import { readingRitualFor } from "@/lib/reading/rituals";
 
 const input: AskBackupInput = {
   question: "Should I text my ex back?", theme: "love", lang: "en", sun: "Capricorn", moon: "Gemini", rising: null,
@@ -11,16 +12,15 @@ describe("question-aware Ask backup", () => {
       const ex = writeAskBackup({ ...input, lang, question: lang === "en" ? input.question : "Có nên nhắn lại người cũ không?" });
       const work = writeAskBackup({ ...input, lang, question: lang === "en" ? "Why does everyone at work annoy me?" : "Sao ai ở chỗ làm cũng làm mình bực?" });
       expect(ex.answer.split("\n\n")[0]).not.toBe(work.answer.split("\n\n")[0]);
-      expect(ex.ritualId).not.toBe(work.ritualId);
       expect(ex.answer).toContain("Test scent");
       if (lang === "en") expect(ex.answer).toContain("iris, musk");
-      expect(ex.answer).toContain(lang === "en" ? "earth leads (8)" : "Đất mạnh nhất (8)");
-      expect(ex.answer).toContain(lang === "en" ? "water is absent (0)" : "Nước vắng mặt (0)");
+      expect(ex.answer).toContain(lang === "en" ? "Earth leads (8)" : "Đất mạnh nhất (8)");
+      expect(ex.answer).toContain(lang === "en" ? "Water is absent (0)" : "Nước vắng mặt (0)");
       expect(ex.answer).toContain(lang === "en" ? "Leave the message unsent" : "Khoan gửi tin nhắn");
     }
   });
   it("never calls a nonzero weak element absent", () => {
-    expect(writeAskBackup({ ...input, elements: { ...input.elements, water: 1 } }).answer).toContain("water is lowest (1)");
+    expect(writeAskBackup({ ...input, elements: { ...input.elements, water: 1 } }).answer).toContain("Water is lowest (1)");
   });
   it("uses Vietnamese ingredient names", () => {
     expect(writeAskBackup({ ...input, lang: "vi", notes: "tea, citrus" }).answer).toContain("Trà, Cam chanh");
@@ -43,6 +43,27 @@ describe("question-aware Ask backup", () => {
     expect(questionIntent("Why can't I relax on weekends?")).toBe("rest");
     expect(questionIntent("Sao mình cứ bắt đầu rồi bỏ dở?")).toBe("finish");
     expect(questionIntent("Mình có kén chọn quá không?")).toBe("standards");
+  });
+  it("the ritual written in the answer is the ritual the button opens", () => {
+    for (const lang of ["en", "vi"] as const) for (const question of ["Should I text my ex back?", "Why can't I relax on weekends?", "Mình có kén chọn quá không?"]) {
+      const res = writeAskBackup({ ...input, lang, question });
+      const page = readingRitualFor(res.ritualId, lang);
+      expect(page).not.toBeNull();
+      expect(res.answer.split("\n\n")[3]).toContain(page!.steps[0]);
+      expect(res.answer.split("\n\n")[3]).toContain(page!.title);
+    }
+  });
+  it("ties the chart paragraph to the question so it isn't repeated", () => {
+    const ex = writeAskBackup(input).answer.split("\n\n")[1];
+    const rest = writeAskBackup({ ...input, question: "Why can't I relax on weekends?" }).answer.split("\n\n")[1];
+    expect(ex).not.toBe(rest);
+    expect(rest).toContain("off switch");
+  });
+  it("answers first-date scent questions about scent, not dating in general", () => {
+    expect(questionIntent("What scent should I wear to a first date this week?")).toBe("dateScent");
+    expect(questionIntent("Buổi hẹn đầu nên xịt nước hoa gì?")).toBe("dateScent");
+    expect(writeAskBackup({ ...input, question: "What scent should I wear to a first date this week?" }).answer).toContain("Two sprays");
+    expect(questionIntent("How do I act on a first date?")).toBe("date");
   });
   it("asks for context rather than inventing an answer to an unknown question", () => {
     expect(writeAskBackup({ ...input, question: "What about Tuesday?" }).answer).toContain("don't have enough context");
