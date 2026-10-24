@@ -125,6 +125,7 @@ const fold = (s: string) =>
     .normalize("NFD")
     .replace(/[̀-ͯ]/g, "")
     .replace(/đ/g, "d");
+
 /** Common typed aliases → the name used in the fallback city list. */
 const CITY_ALIASES: Record<string, string> = {
   saigon: "ho chi minh",
