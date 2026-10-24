@@ -5,6 +5,7 @@ import { validate, voiceIssue } from "./validation";
 export { validate } from "./validation";
 import { chartBalance, rankForBalance, variedRitual } from "./balance";
 import { LIVE_READING_PROMPT } from "./voice.server";
+import { writeFallback } from "./fallback";
 
 const CORS = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type" };
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers: { ...CORS, "content-type": "application/json" } });
@@ -35,6 +36,11 @@ async function generate(data: VoiceInput, signal: AbortSignal): Promise<VoiceRea
   if (!perfume) throw new Error("No matching perfume is available.");
   const ritual = variedRitual(data.context || `${data.planet}.${data.sign}`, data.language);
   const packet = { surface: data.surface, placement: { planet: data.planet, sign: data.sign, house: data.house }, language: data.language, balance: chartBalance(data.elements), perfume: { name: data.language === "vi" ? perfume.name_vi ?? perfume.name : perfume.name, smell_words: perfume.smell_words ?? [], notes: [...perfume.top_notes, ...perfume.heart_notes, ...perfume.base_notes].slice(0, 2) }, ritual: ritual.action, blocks: data.blocks };
+  const meta = { perfume: { id: perfume.id, name: packet.perfume.name }, ritualId: ritual.id };
+  const fallback = (): VoiceReading => ({ ...writeFallback({ ...data, perfume: packet.perfume, ritual: ritual.action }), ...meta });
+  if (!apiKey || signal.aborted) return fallback();
+  try { return await generateAi(); } catch { if (signal.aborted) throw new Error("Aborted"); return fallback(); }
+  async function generateAi(): Promise<VoiceReading> {
   const { streamText } = await import("ai");
   const { createAnthropic } = await import("@ai-sdk/anthropic");
   const { createLovableAiGatewayRunIdFetch } = await import("@/lib/ai/gateway-helpers.server");
@@ -68,6 +74,7 @@ async function generate(data: VoiceInput, signal: AbortSignal): Promise<VoiceRea
     return { ...parsed.data, sections, perfume: { id: perfume.id, name: packet.perfume.name }, ritualId: ritual.id };
   }
   throw new Error("We couldn't write a valid reading. Please try again.");
+  }
 }
 export async function handleWriteReading(req: Request): Promise<Response> {
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
