@@ -13,7 +13,7 @@ describe("question-aware Ask backup", () => {
       expect(ex.answer.split("\n\n")[0]).not.toBe(work.answer.split("\n\n")[0]);
       expect(ex.ritualId).not.toBe(work.ritualId);
       expect(ex.answer).toContain("Test scent");
-      expect(ex.answer).toContain("iris, musk");
+      if (lang === "en") expect(ex.answer).toContain("iris, musk");
       expect(ex.answer).toContain(lang === "en" ? "earth leads (8)" : "Đất mạnh nhất (8)");
       expect(ex.answer).toContain(lang === "en" ? "water is absent (0)" : "Nước vắng mặt (0)");
       expect(ex.answer).toContain(lang === "en" ? "Leave the message unsent" : "Khoan gửi tin nhắn");
@@ -21,6 +21,9 @@ describe("question-aware Ask backup", () => {
   });
   it("never calls a nonzero weak element absent", () => {
     expect(writeAskBackup({ ...input, elements: { ...input.elements, water: 1 } }).answer).toContain("water is lowest (1)");
+  });
+  it("uses Vietnamese ingredient names", () => {
+    expect(writeAskBackup({ ...input, lang: "vi", notes: "tea, citrus" }).answer).toContain("Trà, Cam chanh");
   });
   it("doesn't invent a deficit for balanced charts", () => {
     expect(writeAskBackup({ ...input, elements: { fire: 4, earth: 4, air: 4, water: 4 } }).answer).toContain("no strongest or weakest");
