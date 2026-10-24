@@ -16,8 +16,7 @@ const output = z.object({ truth: z.string(), cost: z.string(), scent: z.string()
 const cache = new Map<string, VoiceReading>();
 const pending = new Map<string, Promise<VoiceReading>>();
 async function generate(data: VoiceInput, signal: AbortSignal): Promise<VoiceReading> {
-  const apiKey = process.env["LOVABLE_API_KEY"];
-  if (!apiKey) throw new Error("Reading service is not configured.");
+  const apiKey = process.env["LOVABLE_API_KEY"] ?? "";
   const url = process.env["SUPABASE_URL"];
   const key = process.env["SUPABASE_PUBLISHABLE_KEY"];
   if (!url || !key) throw new Error("Catalogue unavailable.");
