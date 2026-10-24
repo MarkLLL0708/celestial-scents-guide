@@ -37,3 +37,5 @@
 - [x] Verify full visitor journey and signed-in saves on phone and desktop
 - [x] Step 09: live Ask AI with rate limits, approved-library routing, admin usage
 - [ ] Owner confirmation needed: prices, currency, sizes, brand, strength and provisional notes before enabling purchase for the 40-name archive
+- [x] Lip pick (Dior/Armani/YSL) in every reading and Ask answer, explained by strong/weak elements
+- [ ] Owner to supply: full latest lip collections, confirmed shades, prices and sizes

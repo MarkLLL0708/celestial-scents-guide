@@ -36,3 +36,4 @@
 - The reading writer uses voice.server.ts and shared pure validation, selects perfume by actual smell_words and chart balance in code, and caches completed requests in memory; screens display the returned narrative without generating it.
 - astronomy-engine loads only through the lazy src/lib/astro/engine.ts import in api.ts, and the sample chart is a precomputed JSON checked by a test, so non-chart pages never download or run star maths.
 - Every generated ritual action resolves through the shared pure reading ritual catalogue used by ritualFor, so page links, perfume matching and Cloud validation recognize the same IDs and show the same action.
+- Lip picks come from the pure src/lib/lips.ts (deterministic by chart balance + context, shade builds weakest element, finish backs strongest) so reading text, Ask text and cards always name the same product.
