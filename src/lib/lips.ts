@@ -71,7 +71,7 @@ export function pickLip(elements: ElementCounts, context: string, shelf: LipProd
   return choices[hashOf(context) % choices.length];
 }
 
-export const lipName = (l: LipProduct) => `${l.brand} ${l.line} ${l.shade}`;
+export const lipName = (l: LipProduct) => `${l.line.startsWith(l.brand) ? "" : `${l.brand} `}${l.line} ${l.shade}`;
 
 /** One friend-voice paragraph explaining the lip by the chart's strong and weak elements. */
 export function lipLine(lang: Lang, elements: ElementCounts, lip: LipProduct): string {

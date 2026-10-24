@@ -1600,7 +1600,6 @@ export function PersonalCard({ value }: { value: api.VoiceReading }) {
       {value.lip && (
         <article className="personal-perfume">
           <p className="label muted">{t.personalLip}</p>
-          {value.lipProduct && <p className="product-name">{value.lipProduct.name}</p>}
           <p>{value.lip}</p>
         </article>
       )}
