@@ -1573,7 +1573,7 @@ function AskPairing({ chartId, ritualId, perfumeId, lipId }: { chartId: string; 
         <p>
           <span className="label muted">{t.personalLip}</span>
           <br />
-          {lipName(lip)} · {lip.colour[lang]} · {t.priceTbc}
+          {lipName(lip)} · {lip.colour[lang]} · {t.detailsPending}
         </p>
       )}
     </div>

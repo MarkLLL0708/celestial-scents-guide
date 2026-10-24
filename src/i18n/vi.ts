@@ -106,6 +106,7 @@ export const vi: Dictionary = {
   match: "ĐỘ HỢP",
   personalTruth: "Sự thật",
   personalCost: "Cái giá",
+  personalLip: "Son môi",
   personalScent: "Mùi hương của bạn",
   matchAria: "Độ hợp {score} phần trăm",
   top: "HƯƠNG ĐẦU",
