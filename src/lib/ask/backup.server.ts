@@ -128,35 +128,56 @@ export function writeAskBackup(d: AskBackupInput, offset = 0) {
   const intent = questionIntent(d.question);
   const balance = chartBalance(d.elements);
   const lang = d.lang;
-  const copy = intent === "unknown" || intent === "sensitive" ? COPY.feelings : COPY[intent];
-  const honest = intent === "sensitive"
-    ? lang === "en" ? "This needs qualified support, not a chart reading. I can't safely decide it for you; talk to someone trained for this situation." : "Chuyện này cần người có chuyên môn, không phải bản đồ sao. Không thể quyết hộ; hãy tìm người được đào tạo để hỗ trợ."
-    : intent === "unknown"
-      ? lang === "en" ? `About “${d.question.slice(0, 70).replace(/[.!?！]/g, "")}”: I don't have enough context to give a fair yes or no. Name the actual situation and what's at stake; a chart can't fill that gap.` : `Về “${d.question.slice(0, 55).replace(/[.!?！]/g, "")}”: chưa đủ ngữ cảnh để nói nên hay không. Kể rõ tình huống và điều đang phân vân; bản đồ sao không điền hộ được.`
-      : copy[lang];
-  const names = (es: Element[]) => es.map(e => lang === "vi" ? VI[e] : e).join(lang === "vi" ? " và " : " and ");
+  const en = lang === "en";
+  const key: Intent = intent === "unknown" || intent === "sensitive" ? "feelings" : intent;
+  const copy = COPY[key];
+  if (intent === "sensitive") {
+    const answer = en ? "This needs qualified support, not a chart reading. I can't safely decide it for you; talk to someone trained for this situation." : "Chuyện này cần người có chuyên môn, không phải bản đồ sao. Không thể quyết hộ; hãy tìm người được đào tạo để hỗ trợ.";
+    return { answer, ritualId: variedRitual(d.question, lang, offset).id };
+  }
+  const cap = (t: string) => t.charAt(0).toUpperCase() + t.slice(1);
+  const doThis = en ? copy.enAction : copy.viAction;
+  const honest = intent === "unknown"
+    ? en ? `About “${d.question.slice(0, 70).replace(/[.!?！]/g, "")}”: I don't have enough context to give a fair yes or no. Name the actual situation and what's at stake; a chart can't fill that gap.` : `Về “${d.question.slice(0, 55).replace(/[.!?！]/g, "")}”: chưa đủ ngữ cảnh để nói nên hay không. Kể rõ tình huống và điều đang phân vân; bản đồ sao không điền hộ được.`
+    : `${copy[lang]} ${en ? "Do this:" : "Làm ngay:"} ${doThis}`;
+  const name = (e: Element) => (en ? e : VI[e]);
+  const names = (es: Element[]) => es.map(name).join(en ? " and " : " và ");
   const strong = balance.strongest;
   const weak = balance.least;
   const strength = strong[0];
   const weakness = weak[0];
+  const counts = (es: Element[]) => es.map(e => d.elements[e]).join("/");
+  const absent = weak.every(e => d.elements[e] === 0);
+  const link = strength && weakness && intent !== "unknown" ? " " + LINK[key][lang].replace("{strong}", name(strength)).replace("{weak}", name(weakness)) : "";
   const chart = balance.balanced
-    ? lang === "en" ? "Your elements are equal here; there's no strongest or weakest one to blame. Use that range instead of inventing a missing piece." : "Các nguyên tố ở đây bằng nhau, không có bên mạnh nhất hay yếu nhất. Dùng sự cân bằng đó, đừng tự bịa một phần thiếu."
-    : lang === "en"
-      ? `${names(strong)} leads (${strong.map(e => d.elements[e]).join("/")}); ${strength ? ELEMENT_COPY[strength].en[0] : "you have something to work with"}. ${names(weak)} is ${weak.every(e => d.elements[e] === 0) ? "absent" : "lowest"} (${weak.map(e => d.elements[e]).join("/")}); ${weakness ? ELEMENT_COPY[weakness].en[1] : "use the quieter side too"}.`
-      : `${names(strong)} mạnh nhất (${strong.map(e => d.elements[e]).join("/")}); ${strength ? ELEMENT_COPY[strength].vi[0] : "có điểm mạnh để dùng"}. ${names(weak)} ${weak.every(e => d.elements[e] === 0) ? "vắng mặt" : "ít nhất"} (${weak.map(e => d.elements[e]).join("/")}); ${weakness ? ELEMENT_COPY[weakness].vi[1] : "dùng cả phần ít nổi bật"}.`;
+    ? en ? "Your elements are equal here; there's no strongest or weakest one to blame. Use that range instead of inventing a missing piece." : "Các nguyên tố ở đây bằng nhau, không có bên mạnh nhất hay yếu nhất. Dùng sự cân bằng đó, đừng tự bịa một phần thiếu."
+    : en
+      ? `${cap(names(strong))} leads (${counts(strong)}): ${strength ? ELEMENT_COPY[strength].en[0] : "you have something to work with"}. ${cap(names(weak))} is ${absent ? "absent" : "lowest"} (${counts(weak)}): ${weakness ? ELEMENT_COPY[weakness].en[1] : "use the quieter side too"}.${link}`
+      : `${names(strong)} mạnh nhất (${counts(strong)}): ${strength ? ELEMENT_COPY[strength].vi[0] : "có điểm mạnh để dùng"}. ${names(weak)} ${absent ? "vắng mặt" : "ít nhất"} (${counts(weak)}): ${weakness ? ELEMENT_COPY[weakness].vi[1] : "dùng cả phần ít nổi bật"}.${link}`;
   const weakTags = weak.flatMap(e => [...ELEMENT_SMELLS[e]]);
-  const matched = d.smell_words.find(tag => weakTags.includes(tag) && SMELLS[tag]);
-  const tag = matched ?? d.smell_words.find(tag => SMELLS[tag]);
-  const detail = tag ? SMELLS[tag][lang] : null;
+  const known = d.smell_words.filter(tag => SMELLS[tag]);
+  const matched = known.find(tag => weakTags.includes(tag));
+  const tags = matched ? [matched, ...known.filter(t => t !== matched)].slice(0, 2) : known.slice(0, 2);
+  const detail = tags.map(t => SMELLS[t][lang]).join(en ? ", and " : ", còn ");
   const noteDictionary = vi as unknown as Record<string, string>;
-  const notes = lang === "vi" ? d.notes.split(", ").map(note => noteDictionary[note.toLowerCase()] ?? note).join(", ") : d.notes;
+  const notes = en ? d.notes : d.notes.split(", ").map(note => noteDictionary[note.toLowerCase()] ?? note).join(", ");
+  const variant = hashOf(d.question) % 3;
+  const why = matched
+    ? en
+      ? [`That's the ${names(weak)} you're short on, in a bottle: a reminder to practise it, not a fix.`, `It brings in the ${names(weak)} your chart barely has, so you're wearing the bit you keep skipping.`, `Basically ${names(weak)} on skin, which is exactly the side you keep leaving out.`][variant]
+      : [`Đó là phần ${names(weak)} mình đang thiếu, đóng chai: để nhắc mình tập, không phải để sửa lá số.`, `Nó mang vào phần ${names(weak)} lá số gần như không có, tức là khoác lên đúng phần mình hay bỏ qua.`, `Nói gọn là ${names(weak)} trên da, đúng phần mình cứ để ra ngoài.`][variant]
+    : en ? "It's a smell preference, not evidence it corrects your chart." : "Đây là sở thích về mùi, không phải cách bù nguyên tố.";
   const scent = d.perfume
-    ? lang === "en"
-      ? `${d.perfume}${d.notes ? ` lists ${d.notes}` : " is the selected scent"}.${detail ? ` ${detail.charAt(0).toUpperCase() + detail.slice(1)}.` : " There aren't enough supplied smell details to explain its texture honestly."} ${matched ? `That suits practising the quieter ${names(weak)} side, as a reminder, not a fix.` : "This is a sensory preference, not evidence it corrects your chart."}`
-      : `${d.perfume}${notes ? ` có các nốt ${notes}` : " là mùi được chọn"}.${detail ? ` ${detail.charAt(0).toUpperCase() + detail.slice(1)}.` : " Chưa đủ mô tả mùi để nói rõ hơn cho đúng."} ${matched ? `Dùng làm lời nhắc tập phần ${names(weak)} ít nổi bật, không phải để sửa bản đồ sao.` : "Đây là sở thích về mùi, không phải cách bù nguyên tố."}`
-    : lang === "en" ? "No catalogue scent was available, so I'm not inventing a bottle or its ingredients. Use a perfume you already enjoy." : "Chưa có mùi phù hợp từ danh mục, nên không bịa chai hay nguyên liệu. Cứ dùng mùi mình đã thích.";
-  const extra = variedRitual(d.question, lang, offset, weakness);
-  const action = offset === 0 ? (lang === "en" ? copy.enAction : copy.viAction) : extra.action.replace(/you"ve/g, "you've").replace(/you"re/g, "you're").replace(/don"t/g, "don't").replace(/what"s/g, "what's").replace(/you"d/g, "you'd");
-  const ritual = lang === "en" ? `If you own a scent, use a little as your cue; buying one isn't required. ${action}` : `Có nước hoa thì dùng ít làm dấu nhắc, không cần mua chai mới. ${action}`;
-  return { answer: intent === "sensitive" ? honest : `${honest}\n\n${chart}\n\n${scent}\n\n${ritual}`, ritualId: offset === 0 ? copy.ritualId : extra.id };
+    ? en
+      ? `${[`Wear ${d.perfume}.`, `${d.perfume} is the one for this.`, `Reach for ${d.perfume}.`][variant]}${notes ? ` It opens with ${notes}.` : ""}${detail ? ` ${cap(detail)}.` : " There aren't enough supplied smell details to describe it honestly."} ${why}`
+      : `${[`Dùng ${d.perfume}.`, `${d.perfume} hợp với chuyện này.`, `Lấy ${d.perfume} ra.`][variant]}${notes ? ` Mở đầu bằng ${notes}.` : ""}${detail ? ` ${cap(detail)}.` : " Chưa đủ mô tả mùi để nói rõ hơn cho đúng."} ${why}`
+    : en ? "No catalogue scent was available, so I'm not inventing a bottle or its ingredients. Use a perfume you already enjoy." : "Chưa có mùi phù hợp từ danh mục, nên không bịa chai hay nguyên liệu. Cứ dùng mùi mình đã thích.";
+  // The ritual paragraph is exactly the ritual the button opens.
+  const picked = variedRitual(`${key}:${d.question}`, lang, offset, weakness);
+  const page = readingRitualFor(picked.id, lang);
+  const ritualText = page ? page.steps[0] : picked.action;
+  const ritual = en
+    ? `Ritual, “${page?.title ?? picked.id}”: ${ritualText} A little of the scent beforehand is your cue; buying one isn't required.`
+    : `Nghi thức “${page?.title ?? picked.id}”: ${ritualText} Xịt chút nước hoa trước đó làm dấu nhắc; không cần mua chai mới.`;
+  return { answer: `${honest}\n\n${chart}\n\n${scent}\n\n${ritual}`, ritualId: picked.id };
 }
