@@ -52,7 +52,8 @@ import type {
 import { firstRitualOfTheme, readingFor, ritualFor, ritualIds, topics } from "./astro-mock";
 export * from "./types";
 import namedPerfumes from "./perfume-names.json";
-import { placementInterpretation, dailyInterpretation, chapterInterpretation } from "@/lib/astro/interpretation";
+import { rankForBalance, variedRitual } from "@/lib/reading/balance";
+import type { Planet, VoiceReading } from "./types";
 const wait = <T>(value: T): Promise<T> =>
   Promise.resolve(structuredClone(value));
 let inventory: Perfume[] = [];
@@ -322,21 +323,16 @@ export async function getReading(
         : undefined,
     };
   });
-  const library = await resolveTexts(
-    "reading_section",
-    sectionKeys.map((s) => s.key),
-    lang,
-  );
-  reading.sections = Array.from({ length: 5 }, (_, i) => {
-    const section = sectionKeys[i % sectionKeys.length];
-    const s = reading.sections[i % reading.sections.length];
-    return {
-    ...s, id: `${topic}-chapter-${i}`,
-    placement: section.placement,
+  const lead = { you: "sun", love: "venus", work: "mercury", luck: "jupiter" } as const;
+  const voice = await requestVoice(chart, lead[topic], lang, `${topic}`, {
+    sections: sectionKeys.map((section, i) => ({ ...placementPacket(chart, section.placement?.body ?? "sun"), angle: librarySections[topic][i][0] })),
+  });
+  reading.voice = voice;
+  reading.sections = sectionKeys.map((section, i) => ({
     title: [dict(lang).chapterOrigin, dict(lang).chapterRelationship, dict(lang).chapterTrouble, dict(lang).chapterNeeds, dict(lang).chapterMission][i],
-    body: [library.get(section.key), chapterInterpretation(chart, section.placement?.body ?? "sun", i, lang)].filter(Boolean).join("\n\n"),
-    fromLibrary: library.has(section.key),
-  }; });
+    placement: section.placement,
+    body: voice.sections[i] ?? "",
+  }));
   if (topic === "luck") {
     const best = (await getWeekSync(chart))
       .filter((w): w is WeekEntry & { transit: Transit } => w.transit !== null)
@@ -362,40 +358,11 @@ export async function getToday(chartId: string, date: string, lang: "en" | "vi")
   const { chart } = await getChartById(chartId);
   const { dayFor, localNoon } = await engine();
   const plan = dayFor(natalLongitudes(chart), localNoon(date), skipFor(chart));
-  const seed = seedOf(chart, date);
-  const blockKey = (slot: BlockSlot, a: typeof plan.working) =>
-    a ? `${slot}.${a.transiting}.${a.aspect}.${a.natal}` : "";
-  const library = await resolveTexts(
-    "today_block",
-    [
-      blockKey("working", plan.working),
-      blockKey("pushing", plan.pushing),
-      blockKey("protect", plan.protect),
-    ].filter(Boolean),
-    lang,
-  );
-  const block = (slot: BlockSlot, a: typeof plan.working): Block | null =>
-    a
-      ? {
-          transit: toTransit(a),
-          text: initialCapital(library.get(blockKey(slot, a)) ?? pickLine(lang, slot, a.theme, seed)),
-          fromLibrary: library.has(blockKey(slot, a)),
-        }
-      : null;
-  const lead = plan.aspects[0];
-  const summaryKey = lead ? `${lead.theme}.${aspectKind(lead)}` : "quiet";
-  const summaries = await resolveTexts("day_summary", [summaryKey], lang);
-  return wait({
-    date,
-    summary: initialCapital(summaries.get(summaryKey) ?? (lead ? summaryBank[lang][lead.theme] : quietBank[lang])),
-    summaryFromLibrary: summaries.has(summaryKey),
-    tone: plan.tone,
-    working: block("working", plan.working),
-    pushing: block("pushing", plan.pushing),
-    protect: block("protect", plan.protect),
-    quiet: plan.aspects.length ? undefined : quietBank[lang],
-    ritualId: ritualForTheme(plan.ritualTheme),
-  });
+  const aspects = [plan.working, plan.pushing, plan.protect].filter((a): a is NonNullable<typeof a> => !!a);
+  const voice = await requestVoice(chart, "sun", lang, `daily:${date}`, { surface: "daily", blocks: aspects.map((a) => ({ transiting: a.transiting, natal: a.natal, aspect: a.aspect, kind: a.kind })) });
+  const block = (a: typeof plan.working): Block | null => a ? { transit: toTransit(a), text: voice.blocks[aspects.indexOf(a)] ?? "" } : null;
+  return { date, summary: voice.summary, tone: plan.tone, working: block(plan.working), pushing: block(plan.pushing), protect: block(plan.protect), quiet: plan.aspects.length ? undefined : voice.truth, ritualId: voice.ritualId, voice };
+
 }
 export const todayDate = () => DateTime.local().toISODate() ?? "";
 const initialCapital = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
@@ -433,18 +400,9 @@ export async function askNotes(
   const transit: Transit = aspect
     ? toTransit(aspect)
     : { transiting: "moon", aspect: "conjunct", natal: "sun", orb: 0, theme, strength: 1 };
-  const ritualId = ritualForTheme(plan.ritualTheme === "calm" ? "calm" : theme);
+  const selectedRitual = variedRitual(question.trim(), lang);
+  const ritualId = selectedRitual.id;
   const sky = aspect ? aspectKind(transit) : "quiet";
-  // 1. Approved library answer for a suggested question.
-  const n = suggestionNumber(question, category, lang);
-  if (n) {
-    const key = `${category}-${String(n).padStart(2, "0")}.${sky}`;
-    const body = (await resolveTexts("ask_answer", [key], lang)).get(key);
-    if (body) {
-      void logLibraryAsk({ data: { lang } }).catch(() => undefined);
-      return { transit, answer: body, ritualId, source: "library" };
-    }
-  }
   // 2. Live answer from privacy-safe context only (signs, transit, ritual, perfume).
   try {
     const t = dict(lang);
@@ -452,7 +410,7 @@ export async function askNotes(
       getRitual(ritualId, lang),
       getCapsule(chartId, lang, ritualId).catch(() => []),
     ]);
-    const pick = capsule[0]?.perfume;
+    const pick = rankForBalance(capsule.map((p) => p.perfume), chart.elements)[0];
     const res = await liveAsk({
       data: {
         question: question.trim().slice(0, 300),
@@ -463,9 +421,11 @@ export async function askNotes(
         rising: chart.rising,
         transit: transitLabel(t, transit),
         sky,
-        ritual: ritual.title,
+        ritual: selectedRitual.action,
+        elements: chart.elements,
+        smell_words: pick?.smell_words ?? [],
         perfume: pick ? (lang === "vi" && pick.name_vi ? pick.name_vi : pick.name) : null,
-        notes: pick ? [...pick.top_notes, ...pick.heart_notes].slice(0, 3).join(", ") : "",
+        notes: pick ? [...pick.top_notes, ...pick.heart_notes].slice(0, 2).join(", ") : "",
       },
     });
     if (res.ok) return { transit, answer: res.answer, ritualId, source: "ai" };
@@ -556,8 +516,8 @@ export async function getCapsule(chartId: string, lang: "en" | "vi", ritualId?: 
     matchRitual(ritualId ?? (await todayRitualId(chart)), lang) ?? matchRitual(fallbackRitualId, lang);
   if (!ritual) throw new Error("NO_RITUAL");
   return wait(
-    buildCapsule(inventory, chart, prefs, ritual)
-      .map((p) => toEntry(p, lang))
+    rankForBalance(buildCapsule(inventory, chart, prefs, ritual).map((p) => ({ ...p, id: p.perfume.id, smell_words: p.perfume.smell_words })), chart.elements)
+      .map((p, i) => { const entry = toEntry(p, lang); const action = variedRitual(chart.sun + chart.moon, lang, i); return entry ? { ...entry, ritualId: action.id, ritualTitle: ritualFor(action.id, lang)?.title ?? "" } : null; })
       .filter((e): e is NonNullable<typeof e> => e !== null),
   );
 }
@@ -622,8 +582,9 @@ export async function listSavedRituals(lang: "en" | "vi"): Promise<(Ritual & { c
 export async function loadSamplePerfumes() {
   return getPerfumes();
 }
-export const inspectPlacement = placementInterpretation;
-export const interpretDaily = dailyInterpretation;
+export async function inspectPlacement(chart: Chart, body: Planet, lang: "en" | "vi") {
+  return requestVoice(chart, body, lang, `placement:${body}`, { surface: "placement" });
+}
 
 export async function saveScentCapsule(chartId: string, ritualId: string, ids: string[]) {
   await saveChart(chartId);
@@ -657,16 +618,20 @@ export function currentBirthProfile(): BirthProfile | null {
   try { const raw = safeGet(CHART_KEY); return raw ? (JSON.parse(raw).birthProfile ?? null) : null; } catch { return null; }
 }
 
-/** Calls the write-reading server route; whole-sign houses from the rising sign, or from the Sun when the birth time is unknown. */
+/** Only calculated placements and balance leave the browser, never birth inputs. */
+function placementPacket(chart: Chart, body: Planet) {
+  const detail = chart.details[body];
+  if (!detail) throw new Error("NO_PLACEMENT");
+  const sign = detail.sign;
+  const house = chart.rising ? ((SIGNS.indexOf(sign as (typeof SIGNS)[number]) - SIGNS.indexOf(chart.rising as (typeof SIGNS)[number]) + 12) % 12) + 1 : null;
+  return { planet: body, sign, house };
+}
+async function requestVoice(chart: Chart, body: Planet, lang: "en" | "vi", context: string, extra: Record<string, unknown> = {}): Promise<VoiceReading> {
+  const res = await fetch("/api/public/write-reading", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ ...placementPacket(chart, body), language: lang, elements: chart.elements, context, ...extra }) });
+  if (!res.ok) throw new Error("READING_UNAVAILABLE");
+  return await res.json() as VoiceReading;
+}
 export async function getPersonalReading(chartId: string, topic: Topic, lang: "en" | "vi") {
   const { chart } = await getChartById(chartId);
-  const lead = { you: "sun", love: "venus", work: "mercury", luck: "jupiter" } as const;
-  const body = lead[topic];
-  const sign = chart.details[body].sign;
-  const first = chart.rising ?? chart.sun;
-  const house = ((SIGNS.indexOf(sign as (typeof SIGNS)[number]) - SIGNS.indexOf(first as (typeof SIGNS)[number]) + 12) % 12) + 1;
-  const planet = body.charAt(0).toUpperCase() + body.slice(1);
-  const res = await fetch("/api/public/write-reading", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ planet, sign, house, language: lang }) });
-  if (!res.ok) throw new Error("READING_UNAVAILABLE");
-  return (await res.json()) as { truth: string; cost: string; scent: string; perfume: { id: string; name: string } };
+  return requestVoice(chart, { you: "sun", love: "venus", work: "mercury", luck: "jupiter" }[topic] as Planet, lang, topic);
 }

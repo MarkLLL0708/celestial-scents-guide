@@ -9,7 +9,7 @@ import { signs } from "@/lib/library/keys";
 import type { Block, Chart, Planet } from "@/data/types";
 import { Bottle } from "@/components/scent/artwork";
 import { perfumeName } from "@/components/scent/catalogue-details";
-import { glyphs, transitText, FeedbackRow } from "./chart-result";
+import { glyphs, transitText, FeedbackRow, PersonalCard } from "./chart-result";
 import { StateMessage } from "./shared";
 import { Skeleton } from "@/components/scent/controls";
 
@@ -189,10 +189,11 @@ export function UpdatesPanel({ chartId }: { chartId: string }) {
           {chart.data && <section className="daily-reading stack">
             <h3 className="label muted">{t.youDailyReading}</h3>
             {rows.flatMap((r) => r.block ? [r.block] : []).map((block) => <div className="stack-sm" key={transitText(t,block.transit)}>
-              {api.interpretDaily(chart.data.chart, block.transit, lang).map((text,i) => <p key={i} className={i === 0 ? "small muted" : ""}>{text}</p>)}
+              <p>{block.text}</p>
             </div>)}
           </section>}
-          {ritual.data && (
+          {today.data.voice && <PersonalCard value={today.data.voice} />}
+          {ritual.data && !today.data.voice && (
             <div className="you-ground">
               <p className="label muted">{t.dailyScent}</p>
               {pick && <div className="daily-pairing"><Bottle family={pick.perfume.scent_family} name={perfumeName(pick.perfume,lang)} /><div className="stack-sm"><h3 className="question">{perfumeName(pick.perfume,lang)}</h3><p>{t.dailyScentLine.replace("{perfume}",perfumeName(pick.perfume,lang)).replace("{ritual}",ritual.data.title).replace("{notes}",pick.perfume.heart_notes.slice(0,3).map(word).join(", "))}</p><p className="small muted">{pick.reason}</p></div></div>}
@@ -221,6 +222,7 @@ export function ChartGrid({ chart }: { chart: Chart }) {
     return [{ p, sign, degree, house: wholeSignHouse(sign, chart.rising) }];
   });
   const sel = rows.find((r) => r.p === active) ?? rows[0];
+  const reading = useQuery({ queryKey: ["placement-voice", chart, sel?.p, lang], queryFn: () => { if (!sel) throw new Error("NO_PLACEMENT"); return api.inspectPlacement(chart, sel.p, lang); }, enabled: !!sel, staleTime: Infinity, retry: false });
   return (
     <div className="stack">
       <div className="grid-frame">
@@ -262,8 +264,8 @@ export function ChartGrid({ chart }: { chart: Chart }) {
       </div>
       {sel && (
         <section className="placement-card stack" aria-live="polite">
-          <h2 className="lg">{api.inspectPlacement(chart, sel.p, lang).title}</h2>
-          {api.inspectPlacement(chart, sel.p, lang).paragraphs.map((p,i) => <p key={i} className={i === 2 ? "muted" : ""}>{p}</p>)}
+          <h2 className="lg">{t.youInSign.replace("{planet}", t[planetKey(sel.p)]).replace("{sign}", word(sel.sign))}</h2>
+          {reading.isPending ? <Skeleton /> : reading.data ? <PersonalCard value={reading.data} /> : <p className="small muted">{t.disclaimer}</p>}
         </section>
       )}
     </div>
