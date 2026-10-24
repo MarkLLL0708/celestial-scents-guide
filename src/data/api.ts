@@ -401,7 +401,10 @@ export async function askNotes(
   // Both live and backup prose are server-owned; only calculated context leaves the browser.
   const t = dict(lang);
   const capsule = await getCapsule(chartId, lang, ritualId).catch(() => []);
-  const pick = rankForBalance(capsule.map((p) => p.perfume), chart.elements)[0];
+  // Rotate among the best few balance matches so different questions don't all name the same bottle.
+  const ranked = rankForBalance(capsule.map((p) => p.perfume), chart.elements);
+  const spread = [...question.trim().toLowerCase()].reduce((n, c) => (n * 31 + c.charCodeAt(0)) >>> 0, 0);
+  const pick = ranked[spread % Math.max(1, Math.min(3, ranked.length))];
   const data = {
     question: question.trim().slice(0, 300), theme: category, lang,
     sun: chart.sun, moon: chart.moon, rising: chart.rising,
@@ -412,11 +415,11 @@ export async function askNotes(
   };
   try {
     const res = await liveAsk({ data });
-    if (res.ok) return { transit, answer: res.answer, ritualId, source: "ai" };
-    return { transit, answer: res.answer, ritualId: res.ritualId, source: res.reason === "limited" ? "limited" : "fallback" };
+    if (res.ok) return { transit, answer: res.answer, ritualId, perfumeId: pick?.id, source: "ai" };
+    return { transit, answer: res.answer, ritualId: res.ritualId, perfumeId: pick?.id, source: res.reason === "limited" ? "limited" : "fallback" };
   } catch {
     const backup = await backupAsk({ data });
-    return { transit, ...backup, source: "fallback" };
+    return { transit, ...backup, perfumeId: pick?.id, source: "fallback" };
   }
 }
 function transitLabel(t: ReturnType<typeof dict>, tr: Transit) {

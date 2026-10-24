@@ -996,10 +996,10 @@ export function AskPage({ state = "" }: { state?: string }) {
               </div>
               <Cell>
                 {answer.source === "ai" && <p className="label muted">{t.askLive}</p>}
-                {answer.answer.split("\n\n").map((paragraph, index) => <p key={index}>{paragraph}</p>)}
+                <div className="ask-body">{answer.answer.split("\n\n").map((paragraph, index) => <p key={index}>{paragraph}</p>)}</div>
                 {answer.source === "limited" && <p className="small muted">{t.askLimited}</p>}
               </Cell>
-              <AskPairing chartId={chartId} ritualId={answer.ritualId} />
+              <AskPairing chartId={chartId} ritualId={answer.ritualId} perfumeId={answer.perfumeId} />
               <Cell>
                 <FeedbackRow thanks={t.readingThanks} />
                 <Disclaimer />
@@ -1541,7 +1541,7 @@ export function ShareDialog({
 }
 
 /** Names the ritual and the top perfume picked for this chart under an Ask answer. */
-function AskPairing({ chartId, ritualId }: { chartId: string; ritualId: string }) {
+function AskPairing({ chartId, ritualId, perfumeId }: { chartId: string; ritualId: string; perfumeId?: string }) {
   const { t, lang, word } = useLanguage();
   const ritualQ = useQuery({
     queryKey: ["ritual", ritualId, lang],
@@ -1551,7 +1551,7 @@ function AskPairing({ chartId, ritualId }: { chartId: string; ritualId: string }
     queryKey: ["capsule", chartId, ritualId, lang],
     queryFn: () => api.getCapsule(chartId, lang, ritualId),
   });
-  const pick = capsuleQ.data?.[0];
+  const pick = capsuleQ.data?.find((entry) => entry.perfume.id === perfumeId) ?? capsuleQ.data?.[0];
   if (!ritualQ.data || !pick) return null;
   const notes = [...pick.perfume.top_notes, ...pick.perfume.heart_notes].slice(0, 3).map(word).join(", ");
   return (

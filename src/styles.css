@@ -2847,6 +2847,7 @@ h3 {
 .ask-answer { text-align: left; }
 .ask-answer .question { font-size: 18px; line-height: 28px; text-align: center; }
 .ask-answer p { line-height: 26px; }
+.ask-body { display: flex; flex-direction: column; gap: 20px; }
 .ask-bar { padding: 16px var(--page-pad) calc(16px + env(safe-area-inset-bottom)); gap: 12px; justify-content: center; }
 .ask-input { min-height: 52px; font-size: 15px; padding: 0 16px; flex: 1; max-width: 600px; border: var(--rule) solid var(--border); }
 .ask-submit { min-height: 52px; padding: 0 24px; }

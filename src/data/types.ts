@@ -157,6 +157,8 @@ export interface AstroAnswer {
   transit: Transit;
   answer: string;
   ritualId: string;
+  /** The bottle the answer names; the pairing card must show the same one. */
+  perfumeId?: string;
   source?: "library" | "ai" | "fallback" | "limited";
 }
 export type RitualTheme = "calm" | "love" | "work" | "luck" | "self" | "evening";
