@@ -57,7 +57,7 @@ export function ChartLoading() {
     return () => {
       cancelled = true;
     };
-  }, [profile, prefs, attempt]);
+  }, [profile, prefs, attempt, queryClient]);
 
   useEffect(() => {
     if (failed) return;
