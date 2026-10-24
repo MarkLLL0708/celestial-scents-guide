@@ -61,17 +61,26 @@ export function Wheel({
   const id = useId();
   const ref = useRef<HTMLDivElement>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // True when the last value change came from the user's own scroll, so the
+  // sync effect below must not write scrollTop back (that would fight the
+  // gesture and snap the drum back to the old value).
+  const fromScroll = useRef(false);
   const index = Math.max(0, values.indexOf(value));
   useEffect(() => {
     const el = ref.current;
-    if (el && Math.abs(el.scrollTop - index * ROW) > 2) el.scrollTop = index * ROW;
+    const skip = fromScroll.current;
+    fromScroll.current = false;
+    if (el && !skip && Math.abs(el.scrollTop - index * ROW) > 2) el.scrollTop = index * ROW;
   }, [index]);
   useEffect(() => () => {
     if (timer.current) clearTimeout(timer.current);
   }, []);
-  const pick = (i: number) => {
+  const pick = (i: number, scroll = false) => {
     const next = values[Math.min(values.length - 1, Math.max(0, i))];
-    if (next !== undefined && next !== value) onChange(next);
+    if (next !== undefined && next !== value) {
+      if (scroll) fromScroll.current = true;
+      onChange(next);
+    }
   };
   return (
     <div className="wheel">
@@ -92,7 +101,7 @@ export function Wheel({
             if (disabled) return;
             const el = e.currentTarget;
             if (timer.current) clearTimeout(timer.current);
-            timer.current = setTimeout(() => pick(Math.round(el.scrollTop / ROW)), 90);
+            timer.current = setTimeout(() => pick(Math.round(el.scrollTop / ROW), true), 90);
           }}
           onKeyDown={(e) => {
             if (disabled) return;
