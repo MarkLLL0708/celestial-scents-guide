@@ -1596,13 +1596,8 @@ export function PersonalCard({ value }: { value: api.VoiceReading }) {
         <p className="label muted">{t.personalScent}</p>
         <Link to="/shop/$id" params={{ id: value.perfume.id }} className="product-name">{value.perfume.name}</Link>
         <p>{value.scent}</p>
+        {value.lip && <p>{value.lip}</p>}
       </article>
-      {value.lip && (
-        <article className="personal-perfume">
-          <p className="label muted">{t.personalLip}</p>
-          <p>{value.lip}</p>
-        </article>
-      )}
       <p>{value.ritual}</p>
       <Button asChild><Link to="/rituals/$id" params={{ id: value.ritualId }}>{t.beginRitual}</Link></Button>
     </section>

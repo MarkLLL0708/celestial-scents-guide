@@ -6,7 +6,7 @@ export { validate } from "./validation";
 import { chartBalance, rankForBalance, variedRitual } from "./balance";
 import { LIVE_READING_PROMPT } from "./voice.server";
 import { writeFallback } from "./fallback";
-import { pickLip, lipLine, lipName } from "@/lib/lips";
+import { pickLip, lipLine, lipName, pairLine } from "@/lib/lips";
 
 const CORS = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type" };
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers: { ...CORS, "content-type": "application/json" } });
@@ -39,7 +39,7 @@ async function generate(data: VoiceInput, signal: AbortSignal): Promise<VoiceRea
   const packet = { surface: data.surface, placement: { planet: data.planet, sign: data.sign, house: data.house }, language: data.language, balance: chartBalance(data.elements), perfume: { name: data.language === "vi" ? perfume.name_vi ?? perfume.name : perfume.name, smell_words: perfume.smell_words ?? [], notes: [...perfume.top_notes, ...perfume.heart_notes, ...perfume.base_notes].slice(0, 2) }, ritual: ritual.action, blocks: data.blocks };
   // Lip pick is chosen in code from the chart balance; every reading carries one.
   const lipPick = pickLip(data.elements, data.context || `${data.planet}.${data.sign}`);
-  const meta = { perfume: { id: perfume.id, name: packet.perfume.name }, ritualId: ritual.id, lip: lipLine(data.language, data.elements, lipPick), lipProduct: { id: lipPick.id, name: lipName(lipPick) } };
+  const meta = { perfume: { id: perfume.id, name: packet.perfume.name }, ritualId: ritual.id, lip: `${lipLine(data.language, data.elements, lipPick)} ${pairLine(data.language, data.elements, lipPick, packet.perfume.name)}`, lipProduct: { id: lipPick.id, name: lipName(lipPick) } };
   const fallback = (): VoiceReading => ({ ...writeFallback({ ...data, perfume: packet.perfume, ritual: ritual.action }), ...meta });
   if (!apiKey || signal.aborted) return fallback();
   try { return await generateAi(); } catch { if (signal.aborted) throw new Error("Aborted"); return fallback(); }
