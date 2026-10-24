@@ -1,3 +1,4 @@
+import { LIP_PRODUCTS, lipName } from "@/lib/lips";
 import { signLine } from "@/lib/reading/fallback";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
@@ -999,7 +1000,7 @@ export function AskPage({ state = "" }: { state?: string }) {
                 <div className="ask-paragraphs">{answer.answer.split("\n\n").map((paragraph, index) => <p key={index}>{paragraph}</p>)}</div>
                 {answer.source === "limited" && <p className="small muted">{t.askLimited}</p>}
               </Cell>
-              <AskPairing chartId={chartId} ritualId={answer.ritualId} perfumeId={answer.perfumeId} />
+              <AskPairing chartId={chartId} ritualId={answer.ritualId} perfumeId={answer.perfumeId} lipId={answer.lipId} />
               <Cell>
                 <FeedbackRow thanks={t.readingThanks} />
                 <Disclaimer />
@@ -1541,7 +1542,8 @@ export function ShareDialog({
 }
 
 /** Names the ritual and the top perfume picked for this chart under an Ask answer. */
-function AskPairing({ chartId, ritualId, perfumeId }: { chartId: string; ritualId: string; perfumeId?: string }) {
+function AskPairing({ chartId, ritualId, perfumeId, lipId }: { chartId: string; ritualId: string; perfumeId?: string; lipId?: string }) {
+  const lip = LIP_PRODUCTS.find((item) => item.id === lipId);
   const { t, lang, word } = useLanguage();
   const ritualQ = useQuery({
     queryKey: ["ritual", ritualId, lang],
@@ -1567,6 +1569,13 @@ function AskPairing({ chartId, ritualId, perfumeId }: { chartId: string; ritualI
       <Link to="/shop/$id" params={{ id: pick.perfume.id }} className="label">
         {t.askPairBottle}
       </Link>
+      {lip && (
+        <p>
+          <span className="label muted">{t.personalLip}</span>
+          <br />
+          {lipName(lip)} · {lip.colour[lang]} · {t.detailsPending}
+        </p>
+      )}
     </div>
   );
 }
@@ -1588,6 +1597,12 @@ export function PersonalCard({ value }: { value: api.VoiceReading }) {
         <Link to="/shop/$id" params={{ id: value.perfume.id }} className="product-name">{value.perfume.name}</Link>
         <p>{value.scent}</p>
       </article>
+      {value.lip && (
+        <article className="personal-perfume">
+          <p className="label muted">{t.personalLip}</p>
+          <p>{value.lip}</p>
+        </article>
+      )}
       <p>{value.ritual}</p>
       <Button asChild><Link to="/rituals/$id" params={{ id: value.ritualId }}>{t.beginRitual}</Link></Button>
     </section>

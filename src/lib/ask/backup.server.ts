@@ -1,6 +1,7 @@
 import { chartBalance, variedRitual, ELEMENT_SMELLS, type ElementCounts, type Element } from "@/lib/reading/balance";
 import { vi } from "@/i18n/vi";
 import { readingRitualFor } from "@/lib/reading/rituals";
+import { pickLip, lipLine } from "@/lib/lips";
 
 type Lang = "en" | "vi";
 export interface AskBackupInput {
@@ -172,12 +173,13 @@ export function writeAskBackup(d: AskBackupInput, offset = 0) {
       ? `${[`Wear ${d.perfume}.`, `${d.perfume} is the one for this.`, `Reach for ${d.perfume}.`][variant]}${notes ? ` It opens with ${notes}.` : ""}${detail ? ` ${cap(detail)}.` : " There aren't enough supplied smell details to describe it honestly."} ${why}`
       : `${[`Dùng ${d.perfume}.`, `${d.perfume} hợp với chuyện này.`, `Lấy ${d.perfume} ra.`][variant]}${notes ? ` Mở đầu bằng ${notes}.` : ""}${detail ? ` ${cap(detail)}.` : " Chưa đủ mô tả mùi để nói rõ hơn cho đúng."} ${why}`
     : en ? "No catalogue scent was available, so I'm not inventing a bottle or its ingredients. Use a perfume you already enjoy." : "Chưa có mùi phù hợp từ danh mục, nên không bịa chai hay nguyên liệu. Cứ dùng mùi mình đã thích.";
+  const lip = lipLine(lang, d.elements, pickLip(d.elements, d.question));
   // The ritual paragraph is exactly the ritual the button opens.
   const picked = variedRitual(`${key}:${d.question}`, lang, offset, weakness);
   const page = readingRitualFor(picked.id, lang);
   const ritualText = page ? page.steps[0] : picked.action;
   const ritual = en
-    ? `Ritual, “${page?.title ?? picked.id}”: ${ritualText} A little of the scent beforehand is your cue; buying one isn't required.`
-    : `Nghi thức “${page?.title ?? picked.id}”: ${ritualText} Xịt chút nước hoa trước đó làm dấu nhắc; không cần mua chai mới.`;
-  return { answer: `${honest}\n\n${chart}\n\n${scent}\n\n${ritual}`, ritualId: picked.id };
+    ? `Ritual, “${page?.title ?? picked.id}”: ${ritualText} Put the lip colour on and a little scent beforehand as your cue; buying either isn't required.`
+    : `Nghi thức “${page?.title ?? picked.id}”: ${ritualText} Tô son và xịt chút nước hoa trước đó làm dấu nhắc; không cần mua mới.`;
+  return { answer: `${honest}\n\n${chart}\n\n${scent}\n\n${lip}\n\n${ritual}`, ritualId: picked.id };
 }

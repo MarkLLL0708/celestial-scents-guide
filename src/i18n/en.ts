@@ -104,6 +104,7 @@ export const en = {
   match: "MATCH",
   personalTruth: "Truth",
   personalCost: "The cost",
+  personalLip: "Your lips",
   personalScent: "Your scent",
   matchAria: "Match {score} percent",
   top: "TOP",

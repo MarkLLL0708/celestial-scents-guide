@@ -53,6 +53,7 @@ import { firstRitualOfTheme, readingFor, ritualFor, ritualIds, topics } from "./
 export * from "./types";
 import namedPerfumes from "./perfume-names.json";
 import { rankForBalance, variedRitual } from "@/lib/reading/balance";
+import { pickLip } from "@/lib/lips";
 import type { Planet, VoiceReading } from "./types";
 const wait = <T>(value: T): Promise<T> =>
   Promise.resolve(structuredClone(value));
@@ -413,13 +414,14 @@ export async function askNotes(
     perfume: pick ? (lang === "vi" && pick.name_vi ? pick.name_vi : pick.name) : null,
     notes: pick ? [...pick.top_notes, ...pick.heart_notes].slice(0, 2).join(", ") : "",
   };
+  const lipId = pickLip(chart.elements, data.question).id;
   try {
     const res = await liveAsk({ data });
-    if (res.ok) return { transit, answer: res.answer, ritualId, perfumeId: pick?.id, source: "ai" };
-    return { transit, answer: res.answer, ritualId: res.ritualId, perfumeId: pick?.id, source: res.reason === "limited" ? "limited" : "fallback" };
+    if (res.ok) return { transit, answer: res.answer, ritualId, perfumeId: pick?.id, lipId, source: "ai" };
+    return { transit, answer: res.answer, ritualId: res.ritualId, perfumeId: pick?.id, lipId, source: res.reason === "limited" ? "limited" : "fallback" };
   } catch {
     const backup = await backupAsk({ data });
-    return { transit, ...backup, perfumeId: pick?.id, source: "fallback" };
+    return { transit, ...backup, perfumeId: pick?.id, lipId, source: "fallback" };
   }
 }
 function transitLabel(t: ReturnType<typeof dict>, tr: Transit) {
