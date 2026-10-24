@@ -125,6 +125,7 @@ export interface Today {
   ritualId: string;
 }
 export interface Reading {
+  voice?: VoiceReading;
   topic: Topic;
   title: string;
   sections: {
