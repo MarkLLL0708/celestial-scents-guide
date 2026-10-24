@@ -1,4 +1,4 @@
-// PLACEHOLDER TEXT BANK — to be replaced by AI-written text later.
+// Friend-voice fallback lines for Ask when the live writer is unavailable.
 // Lines are chosen by theme (and a chart/date seed) so two different charts do not read the same.
 import type { AspectTheme } from "./aspects";
 
@@ -9,136 +9,136 @@ export const textBank: Record<Lang, Record<BlockSlot, Record<AspectTheme, string
   en: {
     working: {
       self: [
-        "you are easier to be around today, including for yourself. start the thing you keep describing.",
-        "your own pace fits the day. finish one task before anyone asks how it is going.",
-        "you know what you want this morning. write it down before the afternoon edits it.",
+        "You've described this plan to three people already. Start it before you describe it to a fourth.",
+        "You actually know what you want today. Write it down before you talk yourself out of it.",
+        "Your pace is fine today. Stop checking if everyone else approves of it.",
       ],
       love: [
-        "warmth reads clearly today. one plain sentence does more than a clever one.",
-        "people are softer with you than usual. let one of them be kind without arguing.",
-        "a small gesture lands today. send the photo, keep the message short.",
+        "Say the plain thing. The clever version just makes them work harder to like you.",
+        "Someone's being nice to you today. Let them, without arguing about whether you deserve it.",
+        "Send the photo, keep the message short, and don't stare at the screen afterwards.",
       ],
       work: [
-        "your head is clear for the boring part. clear the oldest item on the list.",
-        "a good day to put a date on something. vague plans get done when they have one.",
-        "you explain well today. use it on the email you have been avoiding.",
+        "Your head's clear enough for the boring task. Do the oldest thing on the list first.",
+        "That vague plan needs a date. Plans without dates are just wishes with spreadsheets.",
+        "You explain things well today. Use it on the email you've been dodging all week.",
       ],
       luck: [
-        "say yes to the slightly unfamiliar room. leave after an hour if you like.",
-        "a door opens through someone you helped before. reply to them today.",
-        "the easy option is also the right one today. take it without apologising.",
+        "Go to the slightly awkward thing. You can leave after an hour, nobody's locking the door.",
+        "Reply to the person who helped you last time. That's where the good stuff comes from.",
+        "The easy option is the right one today. Take it and skip the guilt.",
       ],
     },
     pushing: {
       self: [
-        "you will want to explain small choices. make the choice, skip the paragraph.",
-        "your mood shifts before lunch. eat first, decide after.",
-        "you are tired of being the reasonable one. take an hour where nobody gets your opinion.",
+        "You're about to over-explain a tiny choice. Make it, skip the essay.",
+        "Your mood will flip before lunch. Eat something before you decide anything.",
+        "You're tired of being the reasonable one. Take an hour off from having opinions.",
       ],
       love: [
-        "a small irritation wants to become a speech. say it in one line, or let it go.",
-        "expectations are louder than the person today. listen to the person.",
-        "you may read distance into a slow reply. it is usually just a slow reply.",
+        "A small annoyance wants to become a speech. One line, or let it go.",
+        "A slow reply is usually just a slow reply. Stop writing the sad movie in your head.",
+        "You're arguing with what you expected, not with the actual person. Listen to them.",
       ],
       work: [
-        "patience runs short after lunch. write the reply, then wait an hour before sending.",
-        "someone pushes on a deadline. agree to the date, not the tone.",
-        "too many tabs, too many promises. close three before opening one.",
+        "Your patience dies after lunch. Write the reply, then wait an hour before sending it.",
+        "Agree to the deadline, not the tone. You don't have to absorb someone else's panic.",
+        "Too many tabs, too many promises. Close three before you open another.",
       ],
       luck: [
-        "a good offer arrives with a catch in small print. read it twice.",
-        "the urge to overcommit is strong today. say maybe, then sleep on it.",
-        "more is not better today. pick the smaller version of the plan.",
+        "The good offer has fine print. Read it twice before you get excited.",
+        "You want to say yes to everything. Say maybe and sleep on it.",
+        "Bigger isn't better today. Do the smaller version and actually finish it.",
       ],
     },
     protect: {
       self: [
-        "your energy. say no to one thing before noon.",
-        "your evening. keep one hour that nobody can book.",
-        "your sleep. stop the screen earlier than you think you need to.",
+        "Say no to one thing before noon. The world will survive without your yes.",
+        "Keep one hour this evening that nobody can book, including you.",
+        "Put the phone down earlier than you think. Scrolling isn't resting.",
       ],
       love: [
-        "your softness. not everyone has earned the long version today.",
-        "the quiet between you and one person. do not fill it with plans.",
-        "your patience with someone close. leave the old argument where it is.",
+        "Not everyone's earned the long version of your feelings today. Give the short one.",
+        "Leave the old argument where it is. Digging it up never ends the way you want.",
+        "Don't fill every quiet moment with plans. Silence isn't a problem to solve.",
       ],
       work: [
-        "your focus. one task, one window, until it is done.",
-        "your time. a meeting that could be a message should be a message.",
-        "your standards. finish properly rather than finish first.",
+        "One task, one window, until it's done. Multitasking is just failing at several things.",
+        "If the meeting could be a message, make it a message.",
+        "Finish it properly instead of finishing it first. Nobody remembers who was fastest.",
       ],
       luck: [
-        "your money. wait a day before the purchase that feels urgent.",
-        "your good mood. do not spend it on people who are not listening.",
-        "your yes. keep it for the thing you would do anyway.",
+        "Wait a day before buying the thing that feels urgent. It won't be tomorrow.",
+        "Don't waste a good mood on people who aren't listening.",
+        "Save your yes for things you'd actually still do next week.",
       ],
     },
   },
   vi: {
     working: {
       self: [
-        "hôm nay bạn dễ gần hơn, kể cả với chính mình. hãy bắt đầu việc bạn cứ mãi kể.",
-        "nhịp của bạn hợp với ngày hôm nay. làm xong một việc trước khi ai hỏi.",
-        "sáng nay bạn biết mình muốn gì. viết ra trước khi buổi chiều sửa nó.",
+        "Kể kế hoạch này cho ba người rồi đấy. Bắt tay làm trước khi kể cho người thứ tư.",
+        "Hôm nay biết rõ mình muốn gì. Ghi lại trước khi tự thuyết phục mình bỏ.",
+        "Nhịp của mình hôm nay ổn mà. Thôi đi hỏi xem ai có duyệt không.",
       ],
       love: [
-        "sự ấm áp dễ đọc hôm nay. một câu đơn giản hơn một câu khéo.",
-        "mọi người dịu dàng với bạn hơn thường lệ. để họ tử tế mà không cãi lại.",
-        "một cử chỉ nhỏ có tác dụng hôm nay. gửi tấm ảnh, tin nhắn ngắn thôi.",
+        "Nói thẳng câu đơn giản thôi. Bản khéo léo chỉ làm người ta mệt hơn.",
+        "Hôm nay có người tử tế với mình. Cứ nhận đi, đừng cãi xem mình có xứng không.",
+        "Gửi tấm ảnh, nhắn ngắn thôi, rồi đừng ngồi nhìn màn hình nữa.",
       ],
       work: [
-        "đầu óc bạn rõ ràng cho phần nhàm chán. xử lý việc cũ nhất trong danh sách.",
-        "ngày tốt để đặt hạn cho một việc. kế hoạch mơ hồ sẽ xong khi có ngày cụ thể.",
-        "hôm nay bạn giải thích tốt. dùng nó cho email bạn vẫn né.",
+        "Đầu óc đủ tỉnh để làm việc chán rồi. Làm cái cũ nhất trong danh sách trước.",
+        "Kế hoạch mơ hồ kia cần một ngày cụ thể. Không có ngày thì chỉ là ước mơ có bảng tính.",
+        "Hôm nay nói gì cũng dễ hiểu. Dùng nó cho cái email né cả tuần nay đi.",
       ],
       luck: [
-        "đồng ý bước vào căn phòng hơi lạ. về sau một tiếng cũng được.",
-        "một cánh cửa mở qua người bạn từng giúp. trả lời họ hôm nay.",
-        "lựa chọn dễ cũng là lựa chọn đúng hôm nay. cứ nhận, không cần xin lỗi.",
+        "Cứ đến cái buổi hơi ngại kia. Một tiếng chán thì về, có ai khóa cửa đâu.",
+        "Nhắn lại cho người từng giúp mình. Cái hay thường tới từ đó.",
+        "Hôm nay lựa chọn dễ chính là lựa chọn đúng. Chọn luôn, khỏi áy náy.",
       ],
     },
     pushing: {
       self: [
-        "bạn sẽ muốn giải thích những lựa chọn nhỏ. cứ chọn, bỏ qua đoạn giải thích.",
-        "tâm trạng đổi trước bữa trưa. ăn trước, quyết sau.",
-        "bạn mệt vì luôn là người hợp lý. dành một tiếng không ai nhận ý kiến của bạn.",
+        "Sắp giải thích dài dòng cho một lựa chọn bé tí. Chọn đi, bỏ bài văn.",
+        "Tâm trạng sẽ đổi trước bữa trưa. Ăn gì đó rồi mới quyết.",
+        "Mệt vì lúc nào cũng phải là người hợp lý rồi. Nghỉ có ý kiến một tiếng đi.",
       ],
       love: [
-        "một bực bội nhỏ muốn thành bài diễn văn. nói trong một câu, hoặc bỏ qua.",
-        "kỳ vọng hôm nay to hơn con người. hãy nghe con người.",
-        "bạn có thể đọc ra khoảng cách trong một tin nhắn chậm. thường nó chỉ là tin nhắn chậm.",
+        "Một bực bội nhỏ đang muốn thành bài diễn văn. Một câu thôi, hoặc bỏ qua.",
+        "Nhắn chậm thường chỉ là nhắn chậm. Thôi dựng phim buồn trong đầu đi.",
+        "Đang cãi với điều mình kỳ vọng chứ đâu phải với người thật. Nghe người ta nói đã.",
       ],
       work: [
-        "sau bữa trưa bạn dễ mất kiên nhẫn. viết câu trả lời, chờ một tiếng rồi gửi.",
-        "có người ép hạn chót. đồng ý ngày, không đồng ý giọng điệu.",
-        "quá nhiều thẻ, quá nhiều lời hứa. đóng ba cái trước khi mở một cái.",
+        "Qua trưa là hết kiên nhẫn. Viết trả lời xong thì chờ một tiếng rồi mới gửi.",
+        "Đồng ý hạn chót, đừng đồng ý giọng điệu. Không cần ôm hộ cơn hoảng của ai.",
+        "Quá nhiều tab, quá nhiều lời hứa. Đóng ba cái rồi mới mở cái mới.",
       ],
       luck: [
-        "một lời đề nghị tốt đi kèm điều khoản nhỏ. đọc hai lần.",
-        "hôm nay dễ nhận quá sức. nói có thể, rồi ngủ một đêm.",
-        "nhiều hơn không phải tốt hơn hôm nay. chọn phiên bản nhỏ của kế hoạch.",
+        "Lời mời ngon thì có điều khoản nhỏ. Đọc hai lần rồi hẵng mừng.",
+        "Muốn gật đầu với mọi thứ đấy. Nói để xem đã, ngủ một đêm rồi tính.",
+        "Hôm nay to hơn không có nghĩa là tốt hơn. Làm bản nhỏ mà làm cho xong.",
       ],
     },
     protect: {
       self: [
-        "năng lượng của bạn. từ chối một việc trước buổi trưa.",
-        "buổi tối của bạn. giữ một tiếng không ai đặt lịch được.",
-        "giấc ngủ của bạn. tắt màn hình sớm hơn bạn nghĩ.",
+        "Từ chối một việc trước buổi trưa. Thiếu cái gật đầu của mình thì đời vẫn chạy.",
+        "Giữ một tiếng tối nay không ai đặt lịch được, kể cả chính mình.",
+        "Bỏ điện thoại xuống sớm hơn mình nghĩ. Lướt mạng đâu phải nghỉ ngơi.",
       ],
       love: [
-        "sự mềm mỏng của bạn. không phải ai cũng xứng với bản dài hôm nay.",
-        "khoảng lặng giữa bạn và một người. đừng lấp nó bằng kế hoạch.",
-        "sự kiên nhẫn với người thân. để cuộc cãi cũ ở yên chỗ cũ.",
+        "Không phải ai cũng xứng nghe bản dài của cảm xúc hôm nay. Kể bản ngắn thôi.",
+        "Chuyện cãi cũ để yên đấy. Đào lên chẳng bao giờ kết thúc như mình muốn.",
+        "Đừng lấp mọi khoảng lặng bằng kế hoạch. Im lặng đâu phải bài toán cần giải.",
       ],
       work: [
-        "sự tập trung. một việc, một cửa sổ, đến khi xong.",
-        "thời gian của bạn. cuộc họp có thể là tin nhắn thì nên là tin nhắn.",
-        "tiêu chuẩn của bạn. làm xong cho đàng hoàng hơn là xong trước.",
+        "Một việc, một cửa sổ, làm đến khi xong. Làm nhiều việc một lúc là hỏng nhiều việc một lúc.",
+        "Cuộc họp mà nhắn tin được thì nhắn tin thôi.",
+        "Làm cho đàng hoàng thay vì làm cho nhanh. Chẳng ai nhớ ai xong trước đâu.",
       ],
       luck: [
-        "tiền của bạn. chờ một ngày trước món đồ có vẻ gấp.",
-        "tâm trạng tốt. đừng tiêu nó vào người không lắng nghe.",
-        "lời đồng ý của bạn. giữ cho việc bạn vẫn sẽ làm.",
+        "Chờ một ngày trước khi mua món có vẻ gấp. Mai là hết gấp ngay.",
+        "Đừng phí tâm trạng tốt cho người không thèm nghe.",
+        "Giữ cái gật đầu cho việc tuần sau mình vẫn muốn làm.",
       ],
     },
   },
@@ -146,22 +146,22 @@ export const textBank: Record<Lang, Record<BlockSlot, Record<AspectTheme, string
 
 export const summaryBank: Record<Lang, Record<AspectTheme, string>> = {
   en: {
-    self: "a day for your own pace. finish one thing properly.",
-    love: "a softer day. people are easier to read, and so are you.",
-    work: "a day that rewards finishing over starting.",
-    luck: "a day with a small opening in it. notice it.",
+    self: "Your day, your pace. Finish one thing properly and stop there.",
+    love: "People are easier to read today. So are you, so act like it.",
+    work: "Finishing beats starting today. Close something.",
+    luck: "There's a small opening today. Don't be too busy to notice it.",
   },
   vi: {
-    self: "một ngày theo nhịp của bạn. làm xong một việc cho đàng hoàng.",
-    love: "một ngày dịu hơn. mọi người dễ đọc hơn, bạn cũng vậy.",
-    work: "một ngày thưởng cho việc kết thúc hơn là bắt đầu.",
-    luck: "một ngày có một khe hở nhỏ. hãy để ý.",
+    self: "Ngày của mình, nhịp của mình. Làm xong một việc cho đàng hoàng rồi thôi.",
+    love: "Hôm nay dễ đọc người, người cũng dễ đọc mình. Cư xử cho đàng hoàng.",
+    work: "Hôm nay làm xong quan trọng hơn bắt đầu. Đóng được việc nào thì đóng.",
+    luck: "Có một khe cửa nhỏ hôm nay. Đừng bận tới mức không thấy.",
   },
 };
 
 export const quietBank: Record<Lang, string> = {
-  en: "a quiet day. nothing in the sky is asking for much.",
-  vi: "một ngày yên. bầu trời không đòi hỏi gì nhiều.",
+  en: "Quiet sky today. No excuses, no drama, just get on with it.",
+  vi: "Trời yên hôm nay. Không cớ, không drama, cứ thế mà làm.",
 };
 
 export function pickLine(lang: Lang, slot: BlockSlot, theme: AspectTheme, seed: number): string {
