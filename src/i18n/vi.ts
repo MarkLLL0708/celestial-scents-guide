@@ -568,7 +568,7 @@ export const vi: Dictionary = {
   matchHasThree: "Mùi này có đủ cả ba. Bản đồ sao đặt hàng giùm luôn rồi.",
   matchChartFamily: "{planet} ở {sign} cứ trôi về nhóm {family}. Mùi này đúng nhóm đó, chẳng có gì bất ngờ.",
   matchWeekReason: "Xịt khi làm {ritual}. {notes} lo giùm phần mà lúc nào cũng bỏ qua.",
-  matchShadowReason: "Cái mặt không bao giờ đăng lên mạng: {planet} ở {sign} thèm {notes}. Thử đã rồi hẵng chê.",
+  matchShadowReason: "Mặt trái mình không đăng lên mạng là {planet} lật sang {sign}, và nó muốn {notes}. Thử đã rồi hẵng chê.",
   evidenceChart: "{planet} ở {sign} ↔ {notes}",
   evidenceFamily: "{planet} ở {sign} ↔ nhóm {family}",
   evidenceWeek: "{ritual} ↔ {notes}",

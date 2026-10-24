@@ -566,7 +566,7 @@ export const en = {
   matchHasThree: "This has all three. Your chart basically ordered it already.",
   matchChartFamily: "Your {planet} in {sign} keeps drifting to {family}. This is {family}, no surprises.",
   matchWeekReason: "Wear it with {ritual}. {notes} does the part you keep skipping.",
-  matchShadowReason: "The side of you that you don't post: {planet} in {sign} wants {notes}. Try it before you judge it.",
+  matchShadowReason: "Your opposite side, the one you don't post, is {planet} flipped to {sign}, and it wants {notes}. Try it before you judge it.",
   evidenceChart: "{planet} in {sign} ↔ {notes}",
   evidenceFamily: "{planet} in {sign} ↔ {family} family",
   evidenceWeek: "{ritual} ↔ {notes}",
