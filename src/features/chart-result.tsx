@@ -370,7 +370,7 @@ export function ScentCapsule({
 
 /* ---------- your sky ---------- */
 export function ResultPage({ id, state = "" }: { id: string; state?: string }) {
-  const { t, word } = useLanguage();
+  const { t, word, lang } = useLanguage();
   const { journey, markJourney, user, notify } = useStore();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
