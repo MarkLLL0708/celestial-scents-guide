@@ -114,6 +114,7 @@ export interface Block {
   fromLibrary?: boolean;
 }
 export interface Today {
+  voice?: VoiceReading;
   date: string;
   summary: string;
   summaryFromLibrary?: boolean;
@@ -122,6 +123,17 @@ export interface Today {
   pushing: Block | null;
   protect: Block | null;
   quiet?: string;
+  ritualId: string;
+}
+export interface VoiceReading {
+  truth: string;
+  cost: string;
+  scent: string;
+  ritual: string;
+  sections: string[];
+  blocks: string[];
+  summary: string;
+  perfume: { id: string; name: string };
   ritualId: string;
 }
 export interface Reading {
