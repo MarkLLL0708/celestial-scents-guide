@@ -593,7 +593,6 @@ export function ReadingPage({
               )}
             </p>
           )}
-          <PersonalCard id={id} topic={topic} />
           <Accordion.Root type="multiple" defaultValue={["s0"]} className="reading-accordion">
             {q.data.sections.map((s, i) => (
               <Accordion.Item key={s.title} value={`s${i}`} className="reading-item">
@@ -610,6 +609,7 @@ export function ReadingPage({
               </Accordion.Item>
             ))}
           </Accordion.Root>
+          {q.data.voice && <PersonalCard value={q.data.voice} />}
           <FeedbackRow thanks={t.readingThanks} />
           <Disclaimer />
           <ScentCapsule chartId={id} ritualId={ritualForTheme[themeForTopic[topic]]} compact />
@@ -1569,25 +1569,25 @@ function AskPairing({ chartId, ritualId }: { chartId: string; ritualId: string }
   );
 }
 
-function PersonalCard({ id, topic }: { id: string; topic: Topic }) {
-  const { t, lang } = useLanguage();
-  const q = useQuery({ queryKey: ["personal", id, topic, lang], queryFn: () => api.getPersonalReading(id, topic, lang), staleTime: Infinity, retry: false });
-  if (!q.data) return null;
+export function PersonalCard({ value }: { value: api.VoiceReading }) {
+  const { t } = useLanguage();
   return (
     <section className="personal-card stack">
       <div>
         <p className="label muted">{t.personalTruth}</p>
-        <p>{q.data.truth}</p>
+        <p>{value.truth}</p>
       </div>
       <div>
         <p className="label muted">{t.personalCost}</p>
-        <p>{q.data.cost}</p>
+        <p>{value.cost}</p>
       </div>
       <article className="personal-perfume">
         <p className="label muted">{t.personalScent}</p>
-        <Link to="/shop/$id" params={{ id: q.data.perfume.id }} className="product-name">{q.data.perfume.name}</Link>
-        <p>{q.data.scent}</p>
+        <Link to="/shop/$id" params={{ id: value.perfume.id }} className="product-name">{value.perfume.name}</Link>
+        <p>{value.scent}</p>
       </article>
+      <p>{value.ritual}</p>
+      <Button asChild><Link to="/rituals/$id" params={{ id: value.ritualId }}>{t.tryRitual}</Link></Button>
     </section>
   );
 }
