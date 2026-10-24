@@ -69,7 +69,7 @@ const COPY = {
 type Intent = keyof typeof COPY;
 export function questionIntent(question: string): Intent | "unknown" | "sensitive" {
   const q = question.toLowerCase().normalize("NFD").replace(/\p{M}/gu, "").replace(/đ/g, "d");
-  if (/\b(suicid\w*|self.harm|medical|medication|diagnos\w*|pregnan\w*|lawsuit|invest\w*)\b|tu tu|tu hai|thuoc|benh|mang thai|kien tung|dau tu/.test(q)) return "sensitive";
+  if (/\b(suicid\w*|self.harm|medical|medication|diagnos\w*|pregnan\w*|lawsuit|invest\w*|tu tu|tu hai|thuoc|benh|mang thai|kien tung|dau tu)\b/.test(q)) return "sensitive";
   if (/\bex\b|nguoi cu|nyc/.test(q)) return "ex";
   if (/picky|standard|tieu chuan|ken chon/.test(q)) return "standards";
   const scentWords = /scent|perfume|fragrance|wear|nuoc hoa|mui huong|xit|\bmui\b/;
