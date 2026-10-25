@@ -47,9 +47,10 @@ export interface Reading {
   glossary: [string, string][];
 }
 
-function field(palace: string, topic: TopicKey) {
-  if (topic === "personality") return "flaw" as const;
-  return ({ 命宫: "self", 夫妻: "partner", 官禄: "work", 财帛: "money", 疾厄: "health" } as const)[palace as "命宫"] ?? ("people" as const);
+type Field = "self" | "flaw" | "partner" | "work" | "money" | "health" | "people";
+const FIELD: Record<string, Field> = { 命宫: "self", 夫妻: "partner", 官禄: "work", 财帛: "money", 疾厄: "health" };
+function field(palace: string, topic: TopicKey): Field {
+  return topic === "personality" ? "flaw" : FIELD[palace] ?? "people";
 }
 
 export function composeReading(c: TuviChart, topic: TopicKey, year: number): Reading {
