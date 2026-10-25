@@ -39,3 +39,7 @@
 - [ ] Owner confirmation needed: prices, currency, sizes, brand, strength and provisional notes before enabling purchase for the 40-name archive
 - [x] Lip pick (Dior/Armani/YSL) in every reading and Ask answer, explained by strong/weak elements
 - [ ] Owner to supply: full latest lip collections, confirmed shades, prices and sizes
+
+- [x] Tử Vi: form with 63 provinces + true solar time, 12-palace grid, 13 areas with keyed Vietnamese blocks, hooks, perfume/lip from element balance
+- [ ] Tử Vi: English reading text (waiting on owner go-ahead)
+- [ ] Tử Vi: chat panel, share image, time navigation (next turn)
