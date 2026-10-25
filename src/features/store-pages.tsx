@@ -53,6 +53,7 @@ export function Landing({ state = "" }: { state?: string }) {
               <ArrowRight size={16} />
             </Link>
           </Button>
+          <Link to="/tu-vi" className="quiet-link">{t.tuviLink}</Link>
         </section>
       </div>
       </div>
