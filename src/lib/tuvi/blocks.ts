@@ -243,7 +243,7 @@ export const STARS: Record<string, StarBlock> = {
     people: "Ở chỗ này nhiều va chạm, nhưng cũng nhờ va chạm mà lớn.",
     advice: "Trước mỗi quyết định lớn, đợi đủ ba ngày rồi mới làm.",
     verdict: "Gan là trời cho, biết lúc dừng là tự mình học.",
-    verdictDim: "Xông mà không có giáp, chuẩn bị kỹ rồi hãng lao.",
+    verdictDim: "Xông mà không có giáp, chuẩn bị kỹ rồi hẵng lao.",
   },
   破军: {
     bucket: "water",
