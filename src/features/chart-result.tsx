@@ -253,7 +253,7 @@ export function RevealPage({ state = "" }: { state?: string }) {
           </Link>
         </Button>
         <Button asChild variant="text">
-          <Link to="/chart/new" search={{ step: 1, state: "" }}>
+          <Link to="/tu-vi">
             {t.back}
           </Link>
         </Button>
@@ -393,7 +393,7 @@ export function ResultPage({ id, state = "" }: { id: string; state?: string }) {
     return (
       <div className="narrow stack">
         <p>{t.chartFirst}</p>
-        <Button asChild><Link to="/chart/new">{t.chartFirstCta}</Link></Button>
+        <Button asChild><Link to="/tu-vi">{t.chartFirstCta}</Link></Button>
       </div>
     );
   if (forced === "error" || (!forced && q.isError))
@@ -972,7 +972,7 @@ export function AskPage({ state = "" }: { state?: string }) {
         {!own ? (
           <StateMessage message={t.askGate}>
             <Button asChild>
-              <Link to="/chart/new" search={{ step: 1, state: "" }}>
+              <Link to="/tu-vi">
                 {t.readChart}
               </Link>
             </Button>

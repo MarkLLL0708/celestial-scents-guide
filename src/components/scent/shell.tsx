@@ -60,7 +60,7 @@ const tabs = [
   { to: "/rituals", key: "tabRituals", nav: "navRituals", match: "/rituals", Icon: Flame },
 ] as const;
 function useNav() {
-  const { journey } = useStore();
+
   const path = useRouterState({ select: (s) => s.location.pathname });
   return tabs.map((tab) => ({
     ...tab,
