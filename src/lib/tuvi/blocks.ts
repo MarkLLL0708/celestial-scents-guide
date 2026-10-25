@@ -280,6 +280,11 @@ export const LINES = {
     忌: (s: string, d: string) => `${s} hóa Kỵ: chuyện ${d} là món nợ đời, càng né càng vướng.`,
   } as Record<string, (s: string, d: string) => string>,
   kyAdvice: "Chỗ có Hóa Kỵ thì đối diện sớm, để lâu chỉ thêm rối.",
+  decadeQ: (year: number, age: number, past: boolean) =>
+    past ? `Năm ${year}, khoảng ${age} tuổi mụ, đời mình có đổi hướng rõ không?` : `Năm ${year}, khoảng ${age} tuổi mụ, vận sẽ sang chặng mới.`,
+  decadeYes: (palace: string, domain: string) => `Đúng nhịp đại hạn: từ năm đó trọng tâm chuyển sang cung ${palace}, tức chuyện ${domain}.`,
+  decadeNo: (domain: string) => `Có khi đổi âm thầm hơn, nhìn lại chuyện ${domain} từ năm đó sẽ thấy.`,
+  yearLine: (year: number, gz: string, palace: string, domain: string) => `Năm ${year} (${gz}) dồn vào cung ${palace}: chuyện ${domain} là chỗ nóng nhất năm nay.`,
 };
 
 export const RULES: Record<string, string> = {
