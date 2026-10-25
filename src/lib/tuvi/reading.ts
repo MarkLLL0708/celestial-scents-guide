@@ -114,7 +114,7 @@ export function composeReading(c: TuviChart, topic: TopicKey, year: number): Rea
   ];
   return {
     keys,
-    diagHead: block?.core ?? "Cung này đi theo hoàn cảnh",
+    diagHead: p.name === "命宫" && block ? block.core : `Cung ${info.vi}${stars.length ? ` có ${stars.map(viStar).join(", ")}` : " trống sao"}`,
     diag: diag.join(" "),
     adviceHead: "Lời khuyên thẳng",
     advice: advice.join(" "),
