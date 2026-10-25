@@ -31,6 +31,8 @@ import { Route as RitualsIndexRouteImport } from './routes/rituals.index'
 import { Route as RitualsIdRouteImport } from './routes/rituals.$id'
 import { Route as ShopIndexRouteImport } from './routes/shop.index'
 import { Route as ShopIdRouteImport } from './routes/shop.$id'
+import { Route as TuViIndexRouteImport } from './routes/tu-vi.index'
+import { Route as TuViLaSoRouteImport } from './routes/tu-vi.la-so'
 import { Route as ApiPublicWriteReadingRouteImport } from './routes/api/public/write-reading'
 import { Route as ChartResultIdRouteImport } from './routes/chart.result.$id'
 import { Route as ChartResultIdShelfRouteImport } from './routes/chart.result.$id_.shelf'
@@ -146,6 +148,16 @@ const ShopIdRoute = ShopIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => ShopRoute,
 } as any)
+const TuViIndexRoute = TuViIndexRouteImport.update({
+  id: '/tu-vi/',
+  path: '/tu-vi/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TuViLaSoRoute = TuViLaSoRouteImport.update({
+  id: '/tu-vi/la-so',
+  path: '/tu-vi/la-so',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicWriteReadingRoute = ApiPublicWriteReadingRouteImport.update({
   id: '/api/public/write-reading',
   path: '/api/public/write-reading',
@@ -188,8 +200,10 @@ export interface FileRoutesByFullPath {
   '/dev/voice': typeof DevVoiceRoute
   '/rituals/$id': typeof RitualsIdRoute
   '/shop/$id': typeof ShopIdRoute
+  '/tu-vi/la-so': typeof TuViLaSoRoute
   '/rituals/': typeof RitualsIndexRoute
   '/shop/': typeof ShopIndexRoute
+  '/tu-vi/': typeof TuViIndexRoute
   '/api/public/write-reading': typeof ApiPublicWriteReadingRoute
   '/chart/result/$id': typeof ChartResultIdRoute
   '/chart/result/$id/shelf': typeof ChartResultIdShelfRoute
@@ -215,8 +229,10 @@ export interface FileRoutesByTo {
   '/dev/voice': typeof DevVoiceRoute
   '/rituals/$id': typeof RitualsIdRoute
   '/shop/$id': typeof ShopIdRoute
+  '/tu-vi/la-so': typeof TuViLaSoRoute
   '/rituals': typeof RitualsIndexRoute
   '/shop': typeof ShopIndexRoute
+  '/tu-vi': typeof TuViIndexRoute
   '/api/public/write-reading': typeof ApiPublicWriteReadingRoute
   '/chart/result/$id': typeof ChartResultIdRoute
   '/chart/result/$id/shelf': typeof ChartResultIdShelfRoute
@@ -244,8 +260,10 @@ export interface FileRoutesById {
   '/dev/voice': typeof DevVoiceRoute
   '/rituals/$id': typeof RitualsIdRoute
   '/shop/$id': typeof ShopIdRoute
+  '/tu-vi/la-so': typeof TuViLaSoRoute
   '/rituals/': typeof RitualsIndexRoute
   '/shop/': typeof ShopIndexRoute
+  '/tu-vi/': typeof TuViIndexRoute
   '/api/public/write-reading': typeof ApiPublicWriteReadingRoute
   '/chart/result/$id': typeof ChartResultIdRoute
   '/chart/result/$id_/shelf': typeof ChartResultIdShelfRoute
@@ -274,8 +292,10 @@ export interface FileRouteTypes {
     | '/dev/voice'
     | '/rituals/$id'
     | '/shop/$id'
+    | '/tu-vi/la-so'
     | '/rituals/'
     | '/shop/'
+    | '/tu-vi/'
     | '/api/public/write-reading'
     | '/chart/result/$id'
     | '/chart/result/$id/shelf'
@@ -301,8 +321,10 @@ export interface FileRouteTypes {
     | '/dev/voice'
     | '/rituals/$id'
     | '/shop/$id'
+    | '/tu-vi/la-so'
     | '/rituals'
     | '/shop'
+    | '/tu-vi'
     | '/api/public/write-reading'
     | '/chart/result/$id'
     | '/chart/result/$id/shelf'
@@ -329,8 +351,10 @@ export interface FileRouteTypes {
     | '/dev/voice'
     | '/rituals/$id'
     | '/shop/$id'
+    | '/tu-vi/la-so'
     | '/rituals/'
     | '/shop/'
+    | '/tu-vi/'
     | '/api/public/write-reading'
     | '/chart/result/$id'
     | '/chart/result/$id_/shelf'
@@ -357,7 +381,9 @@ export interface RootRouteChildren {
   DevReadingsTestRoute: typeof DevReadingsTestRoute
   DevVoiceRoute: typeof DevVoiceRoute
   RitualsIdRoute: typeof RitualsIdRoute
+  TuViLaSoRoute: typeof TuViLaSoRoute
   RitualsIndexRoute: typeof RitualsIndexRoute
+  TuViIndexRoute: typeof TuViIndexRoute
   ApiPublicWriteReadingRoute: typeof ApiPublicWriteReadingRoute
   ChartResultIdRoute: typeof ChartResultIdRoute
   ChartResultIdShelfRoute: typeof ChartResultIdShelfRoute
@@ -520,6 +546,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ShopIdRouteImport
       parentRoute: typeof ShopRoute
     }
+    '/tu-vi/': {
+      id: '/tu-vi/'
+      path: '/tu-vi'
+      fullPath: '/tu-vi/'
+      preLoaderRoute: typeof TuViIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tu-vi/la-so': {
+      id: '/tu-vi/la-so'
+      path: '/tu-vi/la-so'
+      fullPath: '/tu-vi/la-so'
+      preLoaderRoute: typeof TuViLaSoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/write-reading': {
       id: '/api/public/write-reading'
       path: '/api/public/write-reading'
@@ -583,7 +623,9 @@ const rootRouteChildren: RootRouteChildren = {
   DevReadingsTestRoute: DevReadingsTestRoute,
   DevVoiceRoute: DevVoiceRoute,
   RitualsIdRoute: RitualsIdRoute,
+  TuViLaSoRoute: TuViLaSoRoute,
   RitualsIndexRoute: RitualsIndexRoute,
+  TuViIndexRoute: TuViIndexRoute,
   ApiPublicWriteReadingRoute: ApiPublicWriteReadingRoute,
   ChartResultIdRoute: ChartResultIdRoute,
   ChartResultIdShelfRoute: ChartResultIdShelfRoute,
