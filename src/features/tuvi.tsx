@@ -12,7 +12,8 @@ import { BRANCH_VI, BRIGHT_VI, BUREAU_VI, LINES, MUTAGEN_VI, PALACE, STAR_VI, ST
 import { rankForBalance } from "@/lib/reading/balance";
 import { lipLine, lipName, pickLip } from "@/lib/lips";
 
-const KEY = "natal-notes:tuvi";
+export const TUVI_KEY = "natal-notes:tuvi";
+const KEY = TUVI_KEY;
 const POS: Record<string, [number, number]> = {
   巳: [1, 1], 午: [1, 2], 未: [1, 3], 申: [1, 4], 辰: [2, 1], 酉: [2, 4],
   卯: [3, 1], 戌: [3, 4], 寅: [4, 1], 丑: [4, 2], 子: [4, 3], 亥: [4, 4],

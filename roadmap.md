@@ -43,3 +43,4 @@
 - [x] Tử Vi: form with 63 provinces + true solar time, 12-palace grid, 13 areas with keyed Vietnamese blocks, hooks, perfume/lip from element balance
 - [ ] Tử Vi: English reading text (waiting on owner go-ahead)
 - [ ] Tử Vi: chat panel, share image, time navigation (next turn)
+- [x] Convert Today and Ask to the Tử Vi chart in English and Vietnamese
