@@ -39,3 +39,4 @@
 - Lip picks come from the pure src/lib/lips.ts (deterministic by chart balance + context, shade builds weakest element, finish backs strongest) so reading text, Ask text and cards always name the same product.
 - Tử Vi charts are computed in the browser by src/lib/tuvi/engine.ts (iztro, dynamically imported, Vietnam true solar time from provinces.ts) and read by the pure keyed composer src/lib/tuvi/reading.ts from blocks.ts; no AI at render time, so every reading is traceable to block keys and tested by the shared voice validator.
 - Uploaded upstream Zi Wei Next.js files live in /reference/ziwei as read-only source material outside src, because they depend on Next-only modules and are not part of the app.
+- Today and Ask read the browser-stored Tử Vi chart through the pure src/lib/tuvi/daily.ts composers (day stem-branch palace, question-to-palace routing), so answers are keyed, tested and never AI-written at render time.
