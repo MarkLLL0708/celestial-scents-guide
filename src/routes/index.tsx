@@ -5,8 +5,8 @@ export const Route = createFileRoute("/")({
   validateSearch: validatePreview,
   head: () =>
     metadata(
-      "your sky, read properly",
-      "Readings for your whole birth chart, a daily note and small rituals. Free.",
+      "lá số tử vi, scent and shade",
+      "Your Tử Vi chart across 12 palaces, balanced with perfume and lip picks for what it lacks.",
     ),
   component: Page,
 });

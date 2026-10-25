@@ -40,9 +40,9 @@ export function ProductSkeletons() {
 }
 export const metadata = (title: string, description: string) => ({
   meta: [
-    { title: `${title} — Natal Notes` },
+    { title: `${title} — Star Notes` },
     { name: "description", content: description },
-    { property: "og:title", content: `${title} — Natal Notes` },
+    { property: "og:title", content: `${title} — Star Notes` },
     { property: "og:description", content: description },
     { property: "og:type", content: "website" },
     { name: "twitter:card", content: "summary_large_image" },

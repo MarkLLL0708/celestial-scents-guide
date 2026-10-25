@@ -80,12 +80,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Natal Notes — fragrance and your stars" },
+      { title: "Star Notes — Tử Vi chart, scent and shade" },
       {
         name: "description",
-        content: "A small perfume store with a different starting point: your birth chart.",
+        content: "A small perfume store with a different starting point: your Tử Vi chart.",
       },
-      { property: "og:title", content: "Natal Notes" },
+      { property: "og:title", content: "Star Notes" },
       { property: "og:description", content: "Perfumes, written in your stars." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

@@ -5,7 +5,7 @@ export const Route = createFileRoute("/admin/perfumes")({
   validateSearch: validatePreview,
   head: () => ({
     meta: [
-      ...metadata("perfume catalogue", "Manage the Natal Notes perfume catalogue.").meta,
+      ...metadata("perfume catalogue", "Manage the Star Notes perfume catalogue.").meta,
       { name: "robots", content: "noindex,nofollow" },
     ],
   }),
