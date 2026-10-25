@@ -1,12 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { validatePreview, metadata } from "@/features/shared";
-import { RevealPage } from "@/features/chart-result";
-function Page() {
-  const { state } = Route.useSearch();
-  return <RevealPage state={state ?? ""} />;
-}
+import { createFileRoute, redirect } from "@tanstack/react-router";
+// Western chart flow retired: Tử Vi is the only reading.
 export const Route = createFileRoute("/chart/reveal")({
-  validateSearch: validatePreview,
-  head: () => metadata("your sun, moon and rising", "The first look at your chart."),
-  component: Page,
+  beforeLoad: () => {
+    throw redirect({ to: "/tu-vi", statusCode: 301 });
+  },
 });

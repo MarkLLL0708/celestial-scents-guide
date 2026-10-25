@@ -48,12 +48,12 @@ export function Landing({ state = "" }: { state?: string }) {
           <h1 className="xl">{t.hero}</h1>
           <p className="subline muted">{t.subline}</p>
           <Button asChild>
-            <Link to="/chart/new" search={{ step: 1, state: "" }}>
+            <Link to="/tu-vi">
               {t.readChart}
               <ArrowRight size={16} />
             </Link>
           </Button>
-          <Link to="/tu-vi" className="quiet-link">{t.tuviLink}</Link>
+          <Link to="/shop" className="quiet-link">{t.browse}</Link>
         </section>
       </div>
       </div>
@@ -458,7 +458,7 @@ export function SavedList({ state = "" }: { state?: string }) {
       ) : forced === "empty" || !data.length ? (
         <StateMessage message={t.savedEmpty}>
           <Button asChild>
-            <Link to="/chart/new" search={{ step: 1, state: "" }}>
+            <Link to="/tu-vi">
               {t.readChart}
             </Link>
           </Button>
@@ -638,7 +638,7 @@ export function YouPage({ state = "" }: { state?: string }) {
       {you.isDemo && (
         <div className="you-demo">
           <p className="small muted">{t.youDemoNote}</p>
-          <Link to="/chart/new" className="quiet-link">
+          <Link to="/tu-vi" className="quiet-link">
             {t.youReadMine}
           </Link>
         </div>

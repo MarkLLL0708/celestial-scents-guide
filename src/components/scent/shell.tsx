@@ -55,7 +55,7 @@ export function LanguageToggle() {
 }
 const tabs = [
   { to: "/today", key: "tabToday", nav: "navToday", match: "/today", Icon: Sun },
-  { to: "/chart/new", key: "tabChart", nav: "navChart", match: "/chart", Icon: Orbit },
+  { to: "/tu-vi", key: "tabChart", nav: "navChart", match: "/tu-vi", Icon: Orbit },
   { to: "/ask", key: "tabAsk", nav: "navAsk", match: "/ask", Icon: MessageCircle },
   { to: "/rituals", key: "tabRituals", nav: "navRituals", match: "/rituals", Icon: Flame },
 ] as const;
@@ -64,7 +64,7 @@ function useNav() {
   const path = useRouterState({ select: (s) => s.location.pathname });
   return tabs.map((tab) => ({
     ...tab,
-    href: tab.to === "/chart/new" && journey.chartSeen ? "/chart/result/demo" : tab.to,
+    href: tab.to,
     active: path.startsWith(tab.match),
   }));
 }

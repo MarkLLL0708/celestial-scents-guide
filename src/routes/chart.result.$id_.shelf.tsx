@@ -9,6 +9,6 @@ function Page() {
 }
 export const Route = createFileRoute("/chart/result/$id_/shelf")({
   validateSearch: validatePreview,
-  head: () => metadata("Your scent shelf", "Three to five Natal Notes perfumes matched to your chart, each paired with a ritual."),
+  head: () => metadata("Your scent shelf", "Three to five Star Notes perfumes matched to your chart, each paired with a ritual."),
   component: Page,
 });

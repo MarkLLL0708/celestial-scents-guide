@@ -10,6 +10,6 @@ export const Route = createFileRoute("/shop/")({
   validateSearch: validatePreview,
   loader: ({ context }) =>
     context.queryClient.ensureQueryData(perfumeQuery({ family: "", style: "", maxPrice: 220 })),
-  head: () => metadata("Scent archive", "Explore Natal Notes’ 40 named perfumes and discover your chart-matched scent capsule."),
+  head: () => metadata("Scent archive", "Explore Star Notes’ 40 named perfumes and discover your chart-matched scent capsule."),
   component: Page,
 });
