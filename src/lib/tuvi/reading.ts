@@ -74,8 +74,7 @@ export function composeReading(c: TuviChart, topic: TopicKey, year: number): Rea
     const f = field(p.name, topic);
     keys.push(`STAR_${main.name}_${f}`);
     if (topic === "personality") diag.push(block.self.split(". ")[0] + ".", block.flaw);
-    else diag.push(block[f]);
-    if (f === "people") diag.unshift(`Chuyện ${info.domain}:`);
+    else diag.push(f === "people" ? block.people.replace(/^Ở chỗ này/, `Chuyện ${info.domain}`) : block[f]);
     if (isBright(main.brightness)) { keys.push(`BRIGHT_${main.name}`); rules.push(RULES.BRIGHT); terms.add("Miếu / Vượng / Đắc"); diag.push(LINES.bright(viStar(main), BRIGHT_VI[main.brightness])); }
     else if (isDim(main.brightness)) { keys.push(`DIM_${main.name}`); rules.push(RULES.DIM); terms.add("Bất / Hãm"); diag.push(LINES.dim(viStar(main), BRIGHT_VI[main.brightness])); }
     const second = stars[1];

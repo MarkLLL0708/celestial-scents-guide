@@ -26,7 +26,7 @@ export const PALACE: Record<string, PalaceInfo> = {
   财帛: { vi: "Tài Bạch", domain: "tiền bạc", advice: "Tách tiền tiêu và tiền để dành ra hai chỗ, ngay từ tháng này." },
   疾厄: { vi: "Tật Ách", domain: "sức khỏe", advice: "Khám định kỳ mỗi năm một lần, đừng đợi đau mới đi." },
   迁移: { vi: "Thiên Di", domain: "chuyện đi xa, ra ngoài xã hội", advice: "Ra ngoài thì giữ lời nói, người lạ nhớ mình qua cách cư xử." },
-  仆役: { vi: "Nô Bộc", domain: "bạn bè, cấp dưới, các mối quen", advice: "Chọn ít bạn mà chắc, đừng gánh hết chuyện của người ta." },
+  仆役: { vi: "Nô Bộc", domain: "các mối quen và cấp dưới", advice: "Chọn ít bạn mà chắc, đừng gánh hết chuyện của người ta." },
   官禄: { vi: "Quan Lộc", domain: "công việc, sự nghiệp", advice: "Chọn một chuyên môn rồi đào sâu, nhảy việc nhiều là mất gốc." },
   田宅: { vi: "Điền Trạch", domain: "nhà cửa, đất đai, gia đạo", advice: "Mua nhà mua đất thì xem giấy tờ kỹ, đừng mua vì nóng." },
   福德: { vi: "Phúc Đức", domain: "tâm tính, cách tự làm mình vui", advice: "Mỗi ngày có một khoảng không điện thoại, không nghĩ chuyện người khác." },
