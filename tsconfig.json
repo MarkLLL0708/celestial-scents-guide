@@ -6,6 +6,13 @@
     "vitest.config.ts",
     "eslint.config.js"
   ],
+  "exclude": [
+    "src/components/ziwei/**",
+    "src/lib/ziwei/famous.ts",
+    "src/lib/ziwei/history.ts",
+    "src/lib/ziwei/patterns.ts",
+    "src/lib/ziwei/share.ts"
+  ],
   "compilerOptions": {
     "target": "ES2022",
     "jsx": "react-jsx",
