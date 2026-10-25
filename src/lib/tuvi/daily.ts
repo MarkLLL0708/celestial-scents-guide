@@ -98,7 +98,7 @@ export function composeToday(c: TuviChart, date: string, lang: Lang, elements: E
 
 const TOPIC_WORDS: [TopicKey, RegExp][] = [
   ["love", /\b(love|date|dating|partner|relationship|marri\w*|crush|ex|boyfriend|girlfriend|husband|wife)\b|người yêu|tình cảm|tình yêu|hẹn hò|cưới|vợ|chồng|crush/iu],
-  ["career", /\b(work|job|career|boss|promotion|business|office|quit)\b|công việc|sự nghiệp|sếp|công ty|thăng chức|kinh doanh|nghỉ việc/iu],
+  ["career", /\b(work|job|jobs|career|careers|boss|promotion|business|office|quit)\b|công việc|sự nghiệp|sếp|công ty|thăng chức|kinh doanh|nghỉ việc/iu],
   ["wealth", /\b(money|salary|debt|invest\w*|saving|savings|rich|spend\w*)\b|tiền|lương|nợ|tài chính|tiết kiệm/iu],
   ["health", /\b(health|sleep|tired|stress\w*|body|energy)\b|sức khỏe|ngủ|mệt|căng thẳng/iu],
   ["parents", /\b(parent|parents|mother|father|mom|dad|mum)\b|cha mẹ|bố mẹ|ba mẹ|\bmẹ\b|\bbố\b/iu],
@@ -112,7 +112,7 @@ export const askTopic = (q: string): TopicKey => TOPIC_WORDS.find(([, re]) => re
 
 export interface AskAnswer { topic: TopicKey; palace: string; paragraphs: string[]; ritual: { id: string; action: string } }
 /** perfume: the scent name plus its actual smell words, picked by code for the weakest element. */
-export function composeAsk(c: TuviChart, question: string, lang: Lang, year: number, elements: ElementCounts, perfume: { name: string; smells: string[] } | null, pair: string): AskAnswer {
+export function composeAsk(c: TuviChart, question: string, lang: Lang, year: number, elements: ElementCounts, perfume: { name: string; smells: string[]; matched: boolean } | null, pair: string): AskAnswer {
   const topic = askTopic(question);
   const p = palaceOf(c, TOPICS.find((x) => x.key === topic)!.palace);
   const s = starText(c, p, lang);
@@ -125,11 +125,11 @@ export function composeAsk(c: TuviChart, question: string, lang: Lang, year: num
     : `${sensitive ? "That one needs a professional, a chart can't replace a doctor or a lawyer. But on how you handle it: " : "Straight answer: "}this sits in your ${palaceName(p, lang)} palace. ${s.names ? `It holds ${s.names}${s.borrowed ? ", borrowed from the opposite palace because it's empty" : ""}. ${s.core}.` : "It has no major star, so the outcome depends on who you bring along."}`;
   const yearLine = vi
     ? `Năm ${year} tiểu hạn đi qua cung ${palaceName(yp, lang)}, nên chuyện ${domainOf(yp, lang)} động trước. Việc nên làm: ${adviceOf(p, lang)}`
-    : `In ${year} the year passes through your ${palaceName(yp, lang)} palace, so ${domainOf(yp, lang)} moves first. What to do: ${adviceOf(p, lang)}`;
+    : `In ${year} the year passes through your ${palaceName(yp, lang)} palace, so ${domainOf(yp, lang)} is where things move first. What to do: ${adviceOf(p, lang)}`;
   const scent = perfume
     ? vi
-      ? `${weak ? `Lá số mình thiếu ${elementWord(weak, lang)}. ` : ""}${perfume.name} có mùi ${perfume.smells.slice(0, 3).join(", ")}, chính là phần đang hụt. ${pair}`
-      : `${weak ? `Your chart runs short on ${elementWord(weak, lang)}. ` : ""}${perfume.name} smells of ${perfume.smells.slice(0, 3).join(", ")}, which is exactly the missing piece. ${pair}`
+      ? `${weak ? `Lá số mình thiếu ${elementWord(weak, lang)}. ` : ""}${perfume.name} có mùi ${perfume.smells.slice(0, 3).join(", ")}, ${perfume.matched ? "chính là phần đang hụt" : "là chai gần nhất với phần đang hụt mà kệ đang có"}. ${pair}`
+      : `${weak ? `Your chart runs short on ${elementWord(weak, lang)}. ` : ""}${perfume.name} smells of ${perfume.smells.slice(0, 3).join(", ")}, ${perfume.matched ? "which is exactly the missing piece" : "the closest thing to the missing piece on the shelf right now"}. ${pair}`
     : pair;
   const ritual = variedRitual(`${question}${c.pillars}`, lang, 0, weak);
   return { topic, palace: palaceName(p, lang), paragraphs: [opening, yearLine, scent, ritual.action], ritual };

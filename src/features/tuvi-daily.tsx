@@ -8,7 +8,7 @@ import type { Perfume } from "@/data/types";
 import type { TuviChart } from "@/lib/tuvi/types";
 import { tuviElements } from "@/lib/tuvi/reading";
 import { composeAsk, composeToday, type AskAnswer } from "@/lib/tuvi/daily";
-import { rankForBalance } from "@/lib/reading/balance";
+import { balanceMatches, rankForBalance } from "@/lib/reading/balance";
 import { lipLine, lipName, pairLine, pickLip } from "@/lib/lips";
 import { TUVI_KEY } from "./tuvi";
 
@@ -33,6 +33,10 @@ function useTuviChart(state?: string) {
 const today = () => {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+};
+const smellsFor = (p: Perfume, e: ReturnType<typeof tuviElements>) => {
+  const hit = balanceMatches(p, e);
+  return { smells: hit.length ? hit : p.smell_words ?? [], matched: hit.length > 0 };
 };
 const pname = (p: Perfume, lang: "en" | "vi") => (lang === "vi" && p.name_vi ? p.name_vi : p.name);
 
@@ -101,7 +105,7 @@ function AskView({ chart, perfumes }: { chart: TuviChart; perfumes: Perfume[] })
     const lip = pickLip(elements, asked);
     const name = scent ? pname(scent, lang) : "";
     const pair = scent ? pairLine(lang, elements, lip, name) : lipLine(lang, elements, lip);
-    return { ...composeAsk(chart, asked, lang, new Date().getFullYear(), elements, scent ? { name, smells: scent.smell_words ?? [] } : null, pair), scent };
+    return { ...composeAsk(chart, asked, lang, new Date().getFullYear(), elements, scent ? { name, ...smellsFor(scent, elements) } : null, pair), scent };
   }, [asked, chart, elements, perfumes, lang]);
   const submit = (e: FormEvent) => {
     e.preventDefault();
