@@ -11,6 +11,7 @@ import { composeAsk, composeToday, type AskAnswer } from "@/lib/tuvi/daily";
 import { balanceMatches, rankForBalance } from "@/lib/reading/balance";
 import { lipLine, lipName, pairLine, pickLip } from "@/lib/lips";
 import { TUVI_KEY } from "./tuvi";
+import { SMELL_VI } from "@/lib/reading/fallback";
 
 type Status = { kind: "loading" } | { kind: "none" } | { kind: "error" } | { kind: "ready"; chart: TuviChart };
 function useTuviChart(state?: string) {
@@ -73,7 +74,7 @@ function TodayView({ chart, perfumes }: { chart: TuviChart; perfumes: Perfume[] 
       <section className="tuvi-article">{plan.lines.map((l) => <p key={l}>{l}</p>)}</section>
       <section className="tuvi-balance" aria-labelledby="tv-day-scent">
         <h2 id="tv-day-scent">{t.tvDayScent}</h2>
-        {scent && <p><Link to="/shop/$id" params={{ id: scent.id }}>{pname(scent, lang)}</Link><span className="muted"> — {(scent.smell_words ?? []).slice(0, 3).join(", ")}</span></p>}
+        {scent && <p><Link to="/shop/$id" params={{ id: scent.id }}>{pname(scent, lang)}</Link><span className="muted"> — {(scent.smell_words ?? []).slice(0, 3).map((w) => (lang === "vi" ? SMELL_VI[w] ?? w : w)).join(", ")}</span></p>}
         <h3>{t.tuviLip}</h3>
         <p><strong>{lipName(lip)}</strong></p>
         <p>{lipLine(lang, elements, lip)}</p>

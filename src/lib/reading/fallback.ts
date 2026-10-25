@@ -82,7 +82,7 @@ const NEED: Record<Lang, Record<Element, string>> = {
   en: { fire: "starting things is the part you stall on", earth: "follow-through is the part that goes missing", air: "stepping back to think gets skipped", water: "feelings get filed away instead of felt" },
   vi: { fire: "khoản bắt đầu là khoản hay bị chần chừ", earth: "làm đến nơi đến chốn là khoản hay rơi rớt", air: "lùi lại nghĩ cho thoáng là khoản hay bị bỏ qua", water: "cảm xúc toàn bị cất đi thay vì được cảm" },
 };
-const SMELL_VI: Record<string, string> = {
+export const SMELL_VI: Record<string, string> = {
   "spicy kitchen": "gian bếp nhiều gia vị", "orange peel": "vỏ cam", "warm blanket": "chăn ấm", "warm bread": "bánh mì mới nướng",
   "cut grass": "cỏ vừa cắt", "cold air": "không khí lạnh", "your skin but better": "làn da mình nhưng thơm hơn", garden: "khu vườn",
   "clean laundry": "quần áo mới giặt", bitter: "vị đắng", smoke: "khói", "old library": "thư viện cũ", "wet pavement": "vỉa hè sau mưa", sea: "biển",

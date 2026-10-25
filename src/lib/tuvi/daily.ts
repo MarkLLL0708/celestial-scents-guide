@@ -3,6 +3,7 @@ import { chartBalance, variedRitual, type ElementCounts } from "@/lib/reading/ba
 import { BRANCH_VI, PALACE, STARS, STAR_VI, STEM_VI, type Bucket } from "./blocks";
 import { palaceOf, rulers, TOPICS, type TopicKey } from "./reading";
 import type { TuviChart, TuviPalace } from "./types";
+import { SMELL_VI } from "@/lib/reading/fallback";
 
 type Lang = "en" | "vi";
 const BRANCHES = ["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"];
@@ -128,7 +129,7 @@ export function composeAsk(c: TuviChart, question: string, lang: Lang, year: num
     : `In ${year} the year passes through your ${palaceName(yp, lang)} palace, so ${domainOf(yp, lang)} is where things move first. What to do: ${adviceOf(p, lang)}`;
   const scent = perfume
     ? vi
-      ? `${weak ? `Lá số mình thiếu ${elementWord(weak, lang)}. ` : ""}${perfume.name} có mùi ${perfume.smells.slice(0, 3).join(", ")}, ${perfume.matched ? "chính là phần đang hụt" : "là chai gần nhất với phần đang hụt mà kệ đang có"}. ${pair}`
+      ? `${weak ? `Lá số mình thiếu ${elementWord(weak, lang)}. ` : ""}${perfume.name} có mùi ${perfume.smells.slice(0, 3).map((w) => SMELL_VI[w] ?? w).join(", ")}, ${perfume.matched ? "chính là phần đang hụt" : "là chai gần nhất với phần đang hụt mà kệ đang có"}. ${pair}`
       : `${weak ? `Your chart runs short on ${elementWord(weak, lang)}. ` : ""}${perfume.name} smells of ${perfume.smells.slice(0, 3).join(", ")}, ${perfume.matched ? "which is exactly the missing piece" : "the closest thing to the missing piece on the shelf right now"}. ${pair}`
     : pair;
   const ritual = variedRitual(`${question}${c.pillars}`, lang, 0, weak);
